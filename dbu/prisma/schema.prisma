@@ -18,8 +18,10 @@ model Users{
   email String @unique
   role String
   name String
+  gender String?
+  status String?
   password String
-
+  // pcuser Pcuser[]
   @@map("users")
 }
 
@@ -30,17 +32,28 @@ model Pcuser{
   firstname String
   lastname  String
   description String
+  gender String?
+  phonenumber String?
   image   String
   brand  String
-  serialnumber String
+  serialnumber String?
+
 
 
   createdAT DateTime @default(now())
   updatedAT DateTime @updatedAt
-  //user_Id Int  
-  //user Users @relation(fields: [user_Id], references: [id])
+  // user_Id Int  
+  // user Users @relation(fields: [user_Id], references: [id])
 
   @@map("pcuser")
+}
+
+model Staff {
+
+  id Int @id @default(autoincrement())
+  userId    String @unique
+  pcowner String
+  @@map("staff")
 }
 
 model Reset {
