@@ -11,7 +11,7 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthDto, ResetEmailDto } from './dto';
+import { AuthDto } from './dto';
 import { AuthGuard } from './guard/auth.guard';
 import { Roles } from './decorator/roles.decorator';
 import { Role } from './decorator/enums/role.enum';
