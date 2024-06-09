@@ -15,6 +15,18 @@ export class AuthDto {
 
   @IsString()
   password: string;
+
+  @IsString()
+  gender: string;
+
+  @IsString()
+  address: string;
+
+  @IsString()
+  phonenumber: string;
+
+  @IsString()
+  status: string;
 }
 
 export class ResetEmailDto {

@@ -28,6 +28,9 @@ export class NewPcService {
           brand: dto.brand,
           description: dto.description,
           serialnumber: dto.serialnumber,
+          gender: dto.gender,
+          phonenumber: dto.phonenumber,
+          pcowner: dto.pcowner,
           image: photo, // Associate the newPc with the user
         },
       });

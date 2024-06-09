@@ -19,8 +19,10 @@ model Users{
   role String
   name String
   gender String?
+  address String?
   status String?
   password String
+  phonenumer String?
   // pcuser Pcuser[]
   @@map("users")
 }
@@ -38,7 +40,7 @@ model Pcuser{
   brand  String
   serialnumber String?
 
-
+  pcowner String?
 
   createdAT DateTime @default(now())
   updatedAT DateTime @updatedAt
@@ -48,13 +50,13 @@ model Pcuser{
   @@map("pcuser")
 }
 
-model Staff {
+// model Staff {
 
-  id Int @id @default(autoincrement())
-  userId    String @unique
-  pcowner String
-  @@map("staff")
-}
+//   id Int @id @default(autoincrement())
+//   userId    String @unique
+//   pcowner String
+//   @@map("staff")
+// }
 
 model Reset {
   id Int @id @default(autoincrement())

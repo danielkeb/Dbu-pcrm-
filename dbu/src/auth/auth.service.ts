@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthDto, ResetEmailDto } from './dto';
+import { AuthDto } from './dto';
 import * as argon from 'argon2';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -35,6 +35,10 @@ export class AuthService {
           email: dto.email,
           role: dto.role,
           name: dto.name,
+          address: dto.address,
+          gender: dto.gender,
+          status: dto.status,
+          phonenumer: dto.phonenumber,
           password: hash,
         },
       });
@@ -112,6 +116,10 @@ export class AuthService {
           email: true,
           name: true,
           password: true,
+          gender: true,
+          status: true,
+          address: true,
+          phonenumer: true,
         },
       });
       delete user.password;
@@ -137,7 +145,6 @@ export class AuthService {
     } else {
       throw new NotFoundException('User not found');
     }
-    return null;
   }
   async getAll(): Promise<any> {
     const userList = await this.prisma.users.findMany({

@@ -28,4 +28,16 @@ export class NewPcDto {
   @IsString()
   @IsNotEmpty()
   image: string;
+
+  @IsString()
+  @IsNotEmpty()
+  gender: string;
+
+  @IsString()
+  @IsNotEmpty()
+  phonenumber: string;
+
+  @IsString()
+  @IsOptional()
+  pcowner: string;
 }
