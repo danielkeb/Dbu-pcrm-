@@ -21,11 +21,13 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _serialnumberController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _pcownerController = TextEditingController();
+  //final TextEditingController _pcownerController = TextEditingController();
   final TextEditingController _phonenumberController = TextEditingController();
   String? _selectedGender; 
   String? _selectedDescription; // To store the selected value for the dropdown
   File? _imageFile;
+   String? _selectedPcowner;
+
   CameraController? _cameraController;
 
   Future<void> _register() async {
@@ -46,7 +48,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final uri = Uri.parse('http://10.18.151.21:3333/pcuser/add');
     var request = http.MultipartRequest('POST', uri);
     request.fields['address'] = _addressController.text;
-    request.fields['pcowner'] = _pcownerController.text;
+    //request.fields['pcowner'] = _pcownerController.text;
     request.fields['gender'] = _selectedGender ?? '';
     request.fields['phonenumber'] = _phonenumberController.text;
     request.fields['userId'] = _userIdController.text;
@@ -55,6 +57,7 @@ class _RegisterPageState extends State<RegisterPage> {
     request.fields['serialnumber'] = _serialnumberController.text;
     request.fields['brand'] = _brandController.text;
     request.fields['description'] = _selectedDescription ?? '';
+    request.fields['pcowner'] = _selectedPcowner ?? '';
 
     final mimeTypeData = lookupMimeType(_imageFile!.path, headerBytes: [0xFF, 0xD8])?.split('/');
     final file = await http.MultipartFile.fromPath(
@@ -266,7 +269,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'phonenumber is required';
+                          return 'phone number is required';
                         }
                         return null;
                       },
@@ -275,13 +278,17 @@ class _RegisterPageState extends State<RegisterPage> {
                     TextFormField(
                       controller: _serialnumberController,
                       decoration: InputDecoration(
-                        labelText: 'Serial Number (Optional)',
+                        labelText: 'Serial Number',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
                       validator: (value) {
-                        return null; // Serial Number is optional
+
+                        if (value == null || value.isEmpty) {
+                          return 'Serial Number is required';
+                        }
+                        return null;
                       },
                     ),
                     SizedBox(height: 10),
@@ -300,55 +307,63 @@ class _RegisterPageState extends State<RegisterPage> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 10),
-DropdownButtonFormField<String>(
-  value: _selectedDescription,
-  decoration: InputDecoration(
-    labelText: 'Description',
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12.0),
-    ),
-  ),
-  items: ['Student', 'Staff', 'Guest'].map((String category) {
-    return DropdownMenuItem<String>(
-      value: category,
-      child: Text(category),
-    );
-  }).toList(),
-  onChanged: (newValue) {
-    setState(() {
-      _selectedDescription = newValue;
-    });
-  },
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'Description is required';
-    }
-    return null;
-  },
-),
-if (_selectedDescription == 'Staff')
-  Column(
-    children: [
-      SizedBox(height: 10),
-      TextFormField(
-        controller: _pcownerController,
-        decoration: InputDecoration(
-          labelText: 'pcowner',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-        ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'pcowner is required';
-          }
-          return null;
-        },
-      ),
-    ],
-  ),
 SizedBox(height: 10),
+        DropdownButtonFormField<String>(
+          value: _selectedDescription,
+          decoration: InputDecoration(
+            labelText: 'Description',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+          ),
+          items: ['Student', 'Staff', 'Guest'].map((String category) {
+            return DropdownMenuItem<String>(
+              value: category,
+              child: Text(category),
+            );
+          }).toList(),
+          onChanged: (newValue) {
+            setState(() {
+              _selectedDescription = newValue;
+            });
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Description is required';
+            }
+            return null;
+          },
+        ),
+        if (_selectedDescription == 'Staff') ...[
+          SizedBox(height: 10),
+          DropdownButtonFormField<String>(
+            value: _selectedPcowner,
+            decoration: InputDecoration(
+              labelText: 'PC Owner',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+            ),
+            items: ['DBU', 'Personal'].map((String owner) {
+              return DropdownMenuItem<String>(
+                value: owner,
+                child: Text(owner),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                _selectedPcowner = newValue;
+              });
+            },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'PC Owner is required';
+              }
+              return null;
+            },
+          ),
+        ],
+        SizedBox(height: 10),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
