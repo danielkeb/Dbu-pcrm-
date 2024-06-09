@@ -20,7 +20,10 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _serialnumberController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
-
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _pcownerController = TextEditingController();
+  final TextEditingController _phonenumberController = TextEditingController();
+  String? _selectedGender; 
   String? _selectedDescription; // To store the selected value for the dropdown
   File? _imageFile;
   CameraController? _cameraController;
@@ -42,7 +45,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
     final uri = Uri.parse('http://10.18.151.21:3333/pcuser/add');
     var request = http.MultipartRequest('POST', uri);
-
+    request.fields['address'] = _addressController.text;
+    request.fields['pcowner'] = _pcownerController.text;
+    request.fields['gender'] = _selectedGender ?? '';
+    request.fields['phonenumber'] = _phonenumberController.text;
     request.fields['userId'] = _userIdController.text;
     request.fields['firstname'] = _firstnameController.text;
     request.fields['lastname'] = _lastnameController.text;
@@ -205,6 +211,66 @@ class _RegisterPageState extends State<RegisterPage> {
                         return null;
                       },
                     ),
+                     SizedBox(height: 10),
+                    TextFormField(
+                      controller: _addressController,
+                      decoration: InputDecoration(
+                        labelText: 'Addres',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Addres is required';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 10),
+          DropdownButtonFormField<String>(
+            value: _selectedGender,
+            decoration: InputDecoration(
+              labelText: 'Gender',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+            ),
+            items: ['Male', 'Female'].map((String gender) {
+              return DropdownMenuItem<String>(
+                value: gender,
+                child: Text(gender),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                _selectedGender = newValue;
+              });
+            },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Gender is required';
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 10),
+
+                    TextFormField(
+                      controller: _phonenumberController,
+                      decoration: InputDecoration(
+                        labelText: 'phonenumber',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'phonenumber is required';
+                        }
+                        return null;
+                      },
+                    ),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _serialnumberController,
@@ -235,33 +301,55 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                     ),
                     SizedBox(height: 10),
-                    DropdownButtonFormField<String>(
-                      value: _selectedDescription,
-                      decoration: InputDecoration(
-                        labelText: 'Description',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                      ),
-                      items: ['Student', 'Staff', 'Guest'].map((String category) {
-                        return DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(category),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          _selectedDescription = newValue;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Description is required';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 10),
+DropdownButtonFormField<String>(
+  value: _selectedDescription,
+  decoration: InputDecoration(
+    labelText: 'Description',
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12.0),
+    ),
+  ),
+  items: ['Student', 'Staff', 'Guest'].map((String category) {
+    return DropdownMenuItem<String>(
+      value: category,
+      child: Text(category),
+    );
+  }).toList(),
+  onChanged: (newValue) {
+    setState(() {
+      _selectedDescription = newValue;
+    });
+  },
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Description is required';
+    }
+    return null;
+  },
+),
+if (_selectedDescription == 'Staff')
+  Column(
+    children: [
+      SizedBox(height: 10),
+      TextFormField(
+        controller: _pcownerController,
+        decoration: InputDecoration(
+          labelText: 'pcowner',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'pcowner is required';
+          }
+          return null;
+        },
+      ),
+    ],
+  ),
+SizedBox(height: 10),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
