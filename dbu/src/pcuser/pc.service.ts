@@ -46,6 +46,7 @@ export class NewPcService {
           phonenumber: dto.phonenumber,
           pcowner: dto.pcowner,
           image: photo, // Associate the newPc with the user
+          barcode: barcodePath,
         },
       });
       if (newPc) {
