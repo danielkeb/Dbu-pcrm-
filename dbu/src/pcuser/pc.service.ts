@@ -8,9 +8,9 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { NewPcDto } from './dto';
 import { Pcuser } from '@prisma/client';
-import * as bwipjs from 'bwip-js';
-import { writeFileSync } from 'fs';
 import { join } from 'path';
+import { writeFileSync, mkdirSync, existsSync } from 'fs';
+import * as bwipjs from 'bwip-js';
 @Injectable()
 export class NewPcService {
   constructor(private prisma: PrismaService) {}
@@ -31,9 +31,25 @@ export class NewPcService {
         textxalign: 'center', // Always good to set this
       });
 
-      // Save barcode to a file or store it as needed
-      const barcodePath = join(__dirname, `../barcodes/${dto.userId}.png`);
+      // Define the path where the barcode will be saved
+      const barcodeDir = join(
+        __dirname,
+        '../../../barcodes',
+        dto.userId.replace(/\//g, '_'),
+      );
+      const barcodePath = `${barcodeDir}.png`;
+      console.log('ddd', barcodePath);
+
+      // Ensure the directory exists
+      const barcodeBaseDir = join(__dirname, '../../../barcodes');
+      if (!existsSync(barcodeBaseDir)) {
+        mkdirSync(barcodeBaseDir, { recursive: true });
+      }
+
+      // Save the barcode image to the specified path
       writeFileSync(barcodePath, barcodeBuffer);
+      const relativeBarcodePath = `barcodes/${dto.userId}.png`;
+
       const newPc = await this.prisma.pcuser.create({
         data: {
           userId: dto.userId,
@@ -46,9 +62,10 @@ export class NewPcService {
           phonenumber: dto.phonenumber,
           pcowner: dto.pcowner,
           image: photo, // Associate the newPc with the user
-          barcode: barcodePath,
+          barcode: relativeBarcodePath,
         },
       });
+
       if (newPc) {
         return newPc;
       } else {
@@ -56,6 +73,7 @@ export class NewPcService {
       }
     }
   }
+
   // async getNewPc(limit = 5, search: string | null = null) {
   //   const queryOptions: any = {
   //     take: limit, // Limit the number of users returned

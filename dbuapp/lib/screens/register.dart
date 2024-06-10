@@ -45,7 +45,7 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    final uri = Uri.parse('http://localhost:3333/pcuser/add');
+    final uri = Uri.parse('http://10.18.51.50:3333/pcuser/add');
     var request = http.MultipartRequest('POST', uri);
     request.fields['address'] = _addressController.text;
     //request.fields['pcowner'] = _pcownerController.text;
