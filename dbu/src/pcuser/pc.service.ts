@@ -8,7 +8,9 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { NewPcDto } from './dto';
 import { Pcuser } from '@prisma/client';
-
+import * as bwipjs from 'bwip-js';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
 @Injectable()
 export class NewPcService {
   constructor(private prisma: PrismaService) {}
@@ -20,6 +22,18 @@ export class NewPcService {
     if (user) {
       throw new ForbiddenException(`User already found`);
     } else {
+      const barcodeBuffer = await bwipjs.toBuffer({
+        bcid: 'code128', // Barcode type
+        text: dto.userId, // Text to encode
+        scale: 3, // 3x scaling factor
+        height: 10, // Bar height, in millimeters
+        includetext: true, // Show human-readable text
+        textxalign: 'center', // Always good to set this
+      });
+
+      // Save barcode to a file or store it as needed
+      const barcodePath = join(__dirname, `../barcodes/${dto.userId}.png`);
+      writeFileSync(barcodePath, barcodeBuffer);
       const newPc = await this.prisma.pcuser.create({
         data: {
           userId: dto.userId,
