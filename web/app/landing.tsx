@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ShieldCheckmarkOutline,
   EarthOutline,
@@ -100,6 +101,12 @@ export default function DrawerAppBar(props: Props) {
                 Portal
               </button>
             </Link>
+
+            <Link href="/dashboard">
+              <button className="bg-blue-500 text-white py-2 px-4">
+                SignUp
+              </button>
+            </Link>
           </div>
         </nav>
       </header>
@@ -109,7 +116,7 @@ export default function DrawerAppBar(props: Props) {
       <main className="w-full pt-16">
         <section className="hero h-screen flex items-center justify-center bg-[#141b2b]">
           <div className="flex flex-col md:flex-row items-center md:px-32 px-8">
-            <div className="text-center md:text-left space-y-4">
+            <div className="text-center md:text-left space-y-4 mr-12">
               <h2 className="text-blue-400 text-2xl font-medium">
                 Welcome To Our Website!
               </h2>
@@ -130,7 +137,15 @@ export default function DrawerAppBar(props: Props) {
                 </button>
               </div>
             </div>
-            <img src="/pcsecurity.jpeg" className="md:w-1/2 w-full" alt="" />
+            {/* <img src="/pcsecurity.jpeg" className="md:w-1/2 w-full" alt="" /> */}
+        <Image
+        src="/pcsecurity.jpeg"
+        alt="Description of image"
+        width={500}
+        height={300}
+        layout="responsive"
+        className="md:w-1/2 w-full"
+      />
           </div>
         </section>
         <section className="py-20 px-8 md:px-32 space-y-16">

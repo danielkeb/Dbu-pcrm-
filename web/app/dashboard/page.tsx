@@ -1,11 +1,16 @@
-import { Main } from "next/document";
+"use client"
 
-const Dashboard=()=>{
-return (
-    <Main>
+//import { Main } from "next/document";
+import RegisterPage from "./pcuser";
+//import Page from "./pcuser/page";
 
-    </Main>
-);
+const Dashboard = () => {
+
+    <div>
+        <RegisterPage/>
+        </div>
+  
+  
 }
 
 export default Dashboard;
