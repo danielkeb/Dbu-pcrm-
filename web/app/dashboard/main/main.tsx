@@ -3,7 +3,8 @@ import { useEffect, useLayoutEffect, useContext, useState, useRef } from 'react'
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import axios from 'axios';
-import { MenuIcon, ChevronLeftIcon, LockOpenTwoToneIcon } from '@heroicons/react/outline';
+import { SchoolOutline, FingerPrintOutline
+  } from 'react-ionicons';
 import MainListItems from '../listItems/ListItems';
 import Image from 'next/image';
 import { AppContext } from '@/components/UserContext';
@@ -44,7 +45,7 @@ const Main: React.FC<MainProps> = ({ children }) => {
     if (decodedToken.status === "inactive") {
       logout();
     }
-  }, []);
+  }, [decodedToken, logout]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,7 +59,7 @@ const Main: React.FC<MainProps> = ({ children }) => {
       }
     };
     fetchData();
-  }, []);
+  }, [decodedToken, logout]);
 
   const user = {
     name: decodedToken?.first_name,
@@ -72,14 +73,14 @@ const Main: React.FC<MainProps> = ({ children }) => {
         <aside className={`fixed h-full transition-all duration-300 bg-gray-800 text-gray-200 ${open ? 'w-[240px]' : 'w-[60px]'} overflow-y-auto overflow-x-hidden z-50 border-r border-gray-700`}>
           <div className="flex items-center justify-between h-16 px-4 border-b border-gray-700">
             <button onClick={toggleDrawer} className="text-gray-200 focus:outline-none focus:text-gray-400 transition-colors duration-200">
-              {open ? <ChevronLeftIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
+              {open ? <div className="w-6 h-6"/> : <div className="w-6 h-6" />}
             </button>
             <h1 className="text-lg font-semibold">Dashboard</h1>
             <div className="flex items-center">
               <button onClick={handleOpen} className="focus:outline-none">
                 <Image src="/user-avatar.jpg" alt="User Avatar" className="w-8 h-8 rounded-full" />
               </button>
-              <Popover
+              <div
                 open={isOpen}
                 anchorEl={ref.current}
                 onClose={handleClose}
@@ -112,12 +113,12 @@ const Main: React.FC<MainProps> = ({ children }) => {
                   </div>
                   <div className="p-4">
                     <button onClick={logout} className="w-full flex items-center justify-center py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600 transition duration-200">
-                      <LockOpenTwoToneIcon className="w-5 h-5 mr-2" />
+                      <div className="w-5 h-5 mr-2" />
                       Sign out
                     </button>
                   </div>
                 </div>
-              </Popover>
+              </div>
             </div>
           </div>
           <nav className="mt-4">
