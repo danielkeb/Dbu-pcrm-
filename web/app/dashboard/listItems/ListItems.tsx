@@ -24,7 +24,7 @@ interface AppContextType {
 const MainListItems: React.FC = () => {
   const router = useRouter();
   const path = usePathname(); 
-  const { decodedToken } = React.useContext<AppContextType>(AppContext); // Adjust the type here
+  const { decodedToken } = React.useContext(AppContext); // Adjust the type here
   const [userRole, setUserRole] = useState('');
 
   // Get user role from decoded token
