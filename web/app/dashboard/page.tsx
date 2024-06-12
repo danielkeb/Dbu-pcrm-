@@ -1,16 +1,14 @@
-"use client"
+import React from 'react';
+import Main from './main/main';
+//import Main from '@/components/Main';
 
-//import { Main } from "next/document";
-import RegisterPage from "./pcuser";
-//import Page from "./pcuser/page";
+const DashboardPage: React.FC = () => {
+  return (
+    <Main>
+      <h1>Welcome to the Dashboard</h1>
+      {/* Add your dashboard content here */}
+    </Main>
+  );
+};
 
-const Dashboard = () => {
-
-    <div>
-        <RegisterPage/>
-        </div>
-  
-  
-}
-
-export default Dashboard;
+export default DashboardPage;

@@ -1,53 +1,39 @@
+
+"use client"
 import * as React from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation'; // Import useClient
+import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/components/UserContext'; // Correct the import path
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-
-// Define roles
-const ROLES = {
-  STUDENT: 'student',
-  ADMIN: 'admin',
-  TEACHER: 'teacher',
-  SUPER_ADMIN: 'superadmin',
-};
-
-// Define the interface for your context
-interface AppContextType {
-  decodedToken: {
-    role: string;
-    // Add other properties if needed
-  } | null;
-}
+import Link from 'next/link';
+import { SchoolOutline } from 'react-ionicons';
 
 const MainListItems: React.FC = () => {
+  // Use useClient hook to ensure component runs on client side
+  
   const router = useRouter();
   const path = usePathname(); 
-  const { decodedToken } = React.useContext(AppContext); // Adjust the type here
+  const { decodedToken } = useContext(AppContext);
   const [userRole, setUserRole] = useState('');
 
-  // Get user role from decoded token
   useEffect(() => {
     setUserRole(decodedToken?.role || '');
-  }, [decodedToken])
+  }, [decodedToken]);
 
-  // Function to check if the current user has access to a certain route
   const hasAccess = (allowedRoles: string[]) =>
     allowedRoles.some((role) => role === userRole);
 
   return (
     <React.Fragment>
-     
-   
-      {/* Roles route accessible only to super admin */}
-      {userRole && userRole === ROLES.SUPER_ADMIN && (
-        <React.Fragment>
-          {/* <SchoolList/> */}
-        </React.Fragment>
-      )}
-      
-     
+      <Link href="/dashboard/pcuser">
+        <div className={`${path.startsWith('/dashboard/pcuser') ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+          <SchoolOutline>
+          
+  <span className={`${path.startsWith('/dashboard/pcuser') ? 'text-blue' : ''}`}>
+    School Directors
+  </span>
+</SchoolOutline>
+        </div>
+      </Link>
     </React.Fragment>
   );
 };
