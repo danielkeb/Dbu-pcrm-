@@ -28,7 +28,7 @@ const MainListItems: React.FC = () => {
         <div className={`${path.startsWith('/dashboard/pcuser') ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
           <SchoolOutline>
           
-  <span className={`${path.startsWith('/dashboard/pcuser') ? 'text-blue' : ''}`}>
+  <span className={`${path.startsWith('/dashboard/pcuser') ? 'text-white' : ''}`}>
     School Directors
   </span>
 </SchoolOutline>

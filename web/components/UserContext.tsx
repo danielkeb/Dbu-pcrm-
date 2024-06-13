@@ -24,28 +24,37 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('authToken') || "";
+      return localStorage.getItem('authToken');
     }
     return null;
   });
 
-  const [decodedToken, setDecodedToken] = useState<{ [key: string]: any } | null>(() => {
-    try {
-      if (token) {
-        return jwt.decode(token);
+  const [decodedToken, setDecodedToken] = useState<{ [key: string]: any } | null>(null);
+
+  useEffect(() => {
+    if (token) {
+      try {
+        const decoded = jwt.decode(token);
+        if (decoded && typeof decoded === 'object') {
+          setDecodedToken(decoded as { [key: string]: any });
+        } else {
+          setDecodedToken(null);
+        }
+        localStorage.setItem('authToken', token);
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        setDecodedToken(null);
       }
-      return null;
-    } catch (error) {
-      console.error('Error decoding token:', error);
-      return null;
+    } else {
+      setDecodedToken(null);
     }
-  });
+  }, [token]);
 
   const logout = () => {
     setToken(null);
     setDecodedToken(null);
     if (typeof window !== 'undefined') {
-      localStorage.setItem('authToken', "");
+      localStorage.removeItem('authToken');
       router.push('/login');
     }
   };

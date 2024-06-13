@@ -1,13 +1,14 @@
 "use client"
 import { AppContext } from '@/components/UserContext';
-import  { useRouter } from 'next/navigation';
-import React, { useState, FormEvent } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React, { useState, FormEvent, useContext } from 'react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const {setToken, setDecodedToken}=React.useContext(AppContext);
+  const { setToken } = useContext(AppContext);
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -22,24 +23,14 @@ const Login = () => {
       body: JSON.stringify({ email, password }),
     });
 
-
     if (response.ok) {
       const data = await response.json();
-      const tokk = data.access_token;
-      console.log("Here is your token",tokk, response)
-      //const user = data.user;
-      //const decodedToken = jwt.decode(tokk);
-     // const userString = JSON.stringify(user);
-      // const tokkString = JSON.stringify(tokk);
-      
-      
-      localStorage.setItem("authToken", tokk);
-      
-      setToken(tokk);
-      // setDecodedToken(decodedToken);
+      const token = data.access_token;
+      console.log("Here is your token", token, response);
+
+      setToken(token);
       console.log('Login successful', data);
-      // Handle successful login (e.g., redirect to another page or store token)
-      router.push("/dashboard/pcuser");//
+      router.push("/dashboard/pcuser");
     } else {
       const errorData = await response.json();
       setError(errorData.message || 'An error occurred');
@@ -90,9 +81,9 @@ const Login = () => {
 
           <div className="flex items-center justify-between">
             <div className="text-sm">
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link href="#" className="font-medium text-blue-600 hover:text-blue-500">
                 Forgot your password?
-              </a>
+              </Link>
             </div>
           </div>
 
