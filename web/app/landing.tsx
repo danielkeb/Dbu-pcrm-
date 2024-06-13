@@ -60,7 +60,7 @@ export default function DrawerAppBar(props: Props) {
             <button className="w-full text-center">{item}</button>
           </li>
         ))}
-        <button className="bg-blue-500 text-white w-full py-2">Portal</button>
+        <button className="bg-blue-500 text-white w-full py-2">SignIn</button>
       </ul>
     </div>
   );
@@ -90,15 +90,15 @@ export default function DrawerAppBar(props: Props) {
             ))}
             <Link href="/login">
               <button className="bg-blue-500 text-white py-2 px-4">
-                Portal
+                SignIn
               </button>
             </Link>
 
-            <Link href="/dashboard">
+            {/* <Link href="/dashboard">
               <button className="bg-blue-500 text-white py-2 px-4">
                 SignUp
               </button>
-            </Link>
+            </Link> */}
           </div>
         </nav>
       </header>
@@ -130,7 +130,7 @@ export default function DrawerAppBar(props: Props) {
               </div>
             </div>
             {/* <img src="/pcsecurity.jpeg" className="md:w-1/2 w-full" alt="" /> */}
-        <div style={{ position: 'relative', width: '100%', height: '500px' }}>
+        <div style={{ position: 'relative', width: '100%', height: '500px'}}>
       <Image
         src="/pcsecurity.jpeg"
         fill
