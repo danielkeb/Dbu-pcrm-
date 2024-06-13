@@ -2,16 +2,8 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  ShieldCheckmarkOutline,
-  EarthOutline,
-  BedOutline,
-  CheckmarkCircleOutline,
-  AccessibilityOutline,
-  FingerPrintOutline,
-  SchoolOutline,
-} from "react-ionicons";
 
+import { AcademicCapIcon, AnnotationIcon, ArchiveIcon } from '@heroicons/react/solid';
 interface Props {
   window?: () => Window;
 }
@@ -30,7 +22,7 @@ export default function DrawerAppBar(props: Props) {
   const featuresList = [
     {
       icon: (
-        <AccessibilityOutline
+        <AnnotationIcon
           color="blue"
           style={{ width: 60, height: 60 }}
         />
@@ -41,7 +33,7 @@ export default function DrawerAppBar(props: Props) {
     },
     {
       icon: (
-        <FingerPrintOutline
+        <ArchiveIcon
           color="blue"
           style={{ width: 60, height: 60 }}
         />
@@ -51,7 +43,7 @@ export default function DrawerAppBar(props: Props) {
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
     },
     {
-      icon: <SchoolOutline color="blue" style={{ width: 60, height: 60 }} />,
+      icon: <AcademicCapIcon color="blue" style={{ width: 60, height: 60 }} />,
       title: "Guest PcOwner",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
@@ -87,7 +79,7 @@ export default function DrawerAppBar(props: Props) {
               aria-label="open drawer"
               onClick={handleDrawerToggle}
             >
-              <BedOutline />
+              <AcademicCapIcon />
             </button>
           </div>
           <div className="hidden md:flex space-x-4">
@@ -138,14 +130,14 @@ export default function DrawerAppBar(props: Props) {
               </div>
             </div>
             {/* <img src="/pcsecurity.jpeg" className="md:w-1/2 w-full" alt="" /> */}
-        <Image
+        <div style={{ position: 'relative', width: '100%', height: '500px' }}>
+      <Image
         src="/pcsecurity.jpeg"
-        alt="Description of image"
-        width={500}
-        height={300}
-        layout="responsive"
-        className="md:w-1/2 w-full"
+        fill
+        style={{ objectFit: 'cover' }}
+        alt="PC Security"
       />
+    </div>
           </div>
         </section>
         <section className="py-20 px-8 md:px-32 space-y-16">
@@ -197,15 +189,15 @@ export default function DrawerAppBar(props: Props) {
             </p>
             <ul className="space-y-3">
               <li className="flex items-center space-x-2">
-                <CheckmarkCircleOutline color="blue" />
+                <AcademicCapIcon color="blue" />
                 <span>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
               </li>
               <li className="flex items-center space-x-2">
-                <CheckmarkCircleOutline color="blue" />
+                <AcademicCapIcon color="blue" />
                 <span>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
               </li>
               <li className="flex items-center space-x-2">
-                <CheckmarkCircleOutline color="blue" />
+                <AcademicCapIcon color="blue" />
                 <span>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
               </li>
             </ul>

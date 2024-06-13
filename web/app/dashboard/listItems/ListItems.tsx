@@ -5,8 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'; // Import useClient
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/components/UserContext'; // Correct the import path
 import Link from 'next/link';
-import { SchoolOutline } from 'react-ionicons';
-
+import { AcademicCapIcon, AnnotationIcon, ArchiveIcon } from '@heroicons/react/solid';
 const MainListItems: React.FC = () => {
   // Use useClient hook to ensure component runs on client side
   
@@ -26,12 +25,12 @@ const MainListItems: React.FC = () => {
     <React.Fragment>
       <Link href="/dashboard/pcuser">
         <div className={`${path.startsWith('/dashboard/pcuser') ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
-          <SchoolOutline>
+          <AcademicCapIcon>
           
   <span className={`${path.startsWith('/dashboard/pcuser') ? 'text-white' : ''}`}>
     School Directors
   </span>
-</SchoolOutline>
+</AcademicCapIcon>
         </div>
       </Link>
     </React.Fragment>
