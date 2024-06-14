@@ -54,7 +54,7 @@ const Visualization: React.FC = () => {
           <h4 className="text-blue-400 font-semibold">Female</h4>
           <p>{data.numberFemaleStaffDbu}</p>
           <h4 className="text-blue-400 font-semibold">Male</h4>
-          <p>{data.numberMaleStaffDbu}</p>
+          <p>{data.maleNumberOfStaffDbu}</p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
           <h3 className="text-blue-500 font-bold">Personal Pc</h3>
@@ -65,7 +65,7 @@ const Visualization: React.FC = () => {
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
           <h3 className="text-blue-500 font-bold"> Total Guests</h3>
-          <p>{data.numberOfFemaleGuest }+{data.numberOfMaleGuest}</p>
+          <p>{data.numberOfFemaleGuest + data.numberOfMaleGuest}</p>
           <h4 className="text-blue-400 font-semibold">Female</h4>
           <p>{data.numberOfFemaleGuest}</p>
           <h4 className="text-blue-400 font-semibold">Male</h4>

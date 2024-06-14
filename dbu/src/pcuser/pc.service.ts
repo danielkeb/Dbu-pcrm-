@@ -206,7 +206,7 @@ export class NewPcService {
       femaleGuest: femaleguest,
       maleGuest: maleguest,
 
-      totalNumberOfStaffDbu: malestaffDBU,
+      maleNumberOfStaffDbu: malestaffDBU,
       femaleStaffPersonal: femalestaffPersonal,
       femaleStaffDbu: femalestaffDBU,
       maleStaffPersonal: malestaffPersonal,

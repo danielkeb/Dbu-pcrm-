@@ -25,15 +25,13 @@ const MainListItems: React.FC = () => {
     <React.Fragment>
 
 <Link href="/dashboard">
-        <div className={`${path.startsWith('/dashboard') ? 'bg-green-500 hover:bg-blue-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
-        
-          
-  <span className={`${path.startsWith('/dashboard') ? 'text-white' : ''}`}>
-    Dashboard
-  </span>
-
-        </div>
-      </Link>
+      <div className={`${path.startsWith('/dashboard') ? 'bg-green-500 text-white' : 'bg-blue-500 hover:bg-blue-700 text-white'} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+        <span className={`${path.startsWith('/dashboard') ? 'text-white' : ''}`}>
+          Dashboard
+        </span>
+      </div>
+    </Link>
+    
   <Link href="/dashboard/pcuser">
         <div className={`${path.startsWith('/dashboard/pcuser') ? 'bg-green-500 hover:bg-blue-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
         
