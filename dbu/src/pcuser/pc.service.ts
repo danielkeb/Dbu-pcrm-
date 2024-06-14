@@ -165,7 +165,24 @@ export class NewPcService {
       (staff) => staff.gender === 'Female',
     ).length;
     const malestaff = staff.filter((staff) => staff.gender === 'Male').length;
+    const dbuStaff = staff.filter((staff) => staff.pcowner === 'DBU');
+    const personalStaff = staff.filter((staff) => staff.pcowner === 'Personal');
 
+    // Count DBU staff by gender
+    const femalestaffDBU = dbuStaff.filter(
+      (staff) => staff.gender === 'Female',
+    ).length;
+    const malestaffDBU = dbuStaff.filter(
+      (staff) => staff.gender === 'Male',
+    ).length;
+
+    // Count Personal staff by gender
+    const femalestaffPersonal = personalStaff.filter(
+      (staff) => staff.gender === 'Female',
+    ).length;
+    const malestaffPersonal = personalStaff.filter(
+      (staff) => staff.gender === 'Male',
+    ).length;
     const guest = await this.prisma.pcuser.findMany({
       where: {
         description: 'Guest',
@@ -188,6 +205,11 @@ export class NewPcService {
       totalNumberOfGuest: numberofguest,
       femaleGuest: femaleguest,
       maleGuest: maleguest,
+
+      totalNumberOfStaffDbu: malestaffDBU,
+      femaleStaffPersonal: femalestaffPersonal,
+      femaleStaffDbu: femalestaffDBU,
+      maleStaffPersonal: malestaffPersonal,
     };
   }
 }
