@@ -219,7 +219,7 @@ const Security = () => {
             <div className="w-full px-4">
             <button
                 type="submit"
-                className="blue-green-600 border-0 text-white w-full p-3 rounded-md"
+                className="bg-green-600 border-0 text-white w-full p-3 rounded-md"
             >
                 Submit
             </button>

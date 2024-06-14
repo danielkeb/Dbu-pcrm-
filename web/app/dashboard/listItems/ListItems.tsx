@@ -39,7 +39,7 @@ const MainListItems: React.FC = () => {
         
           
   <span className={`${path.startsWith('/dashboard/pcuser') ? 'text-white' : ''}`}>
-    School Directors
+    Pc User
   </span>
 
         </div>
