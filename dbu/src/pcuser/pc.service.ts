@@ -143,39 +143,39 @@ export class NewPcService {
     // Find all students
     const students = await this.prisma.pcuser.findMany({
       where: {
-        description: 'student',
+        description: 'Student',
       },
     });
     const std = students.length;
     const femalestd = students.filter(
-      (student) => student.gender === 'female',
+      (student) => student.gender === 'Female',
     ).length;
     const malestd = students.filter(
-      (student) => student.gender === 'male',
+      (student) => student.gender === 'Male',
     ).length;
 
     // Find all staff
     const staff = await this.prisma.pcuser.findMany({
       where: {
-        description: 'staff',
+        description: 'Staff',
       },
     });
     const numberofstaff = staff.length;
     const femalestaff = staff.filter(
-      (staff) => staff.gender === 'female',
+      (staff) => staff.gender === 'Female',
     ).length;
-    const malestaff = staff.filter((staff) => staff.gender === 'male').length;
+    const malestaff = staff.filter((staff) => staff.gender === 'Male').length;
 
     const guest = await this.prisma.pcuser.findMany({
       where: {
-        description: 'guest',
+        description: 'Guest',
       },
     });
     const numberofguest = guest.length;
     const femaleguest = guest.filter(
-      (guest) => guest.gender === 'female',
+      (guest) => guest.gender === 'Female',
     ).length;
-    const maleguest = guest.filter((guest) => guest.gender === 'male').length;
+    const maleguest = guest.filter((guest) => guest.gender === 'Male').length;
 
     return {
       totalNumberOfPcuser: pcuser,
