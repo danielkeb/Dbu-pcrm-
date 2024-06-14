@@ -7,10 +7,8 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
   Put,
-  Query,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -106,5 +104,9 @@ export class NewPcController {
   @Get('get/:userId')
   getUser(@Param('userId', ParseIntPipe) userId: number) {
     return this.newPcService.getUser(userId);
+  }
+  @Get('visualize')
+  visualize() {
+    return this.newPcService.visualize();
   }
 }

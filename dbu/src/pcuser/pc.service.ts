@@ -136,4 +136,58 @@ export class NewPcService {
 
     return user;
   }
+  async visualize() {
+    // Count total number of pcusers
+    const pcuser = await this.prisma.pcuser.count();
+
+    // Find all students
+    const students = await this.prisma.pcuser.findMany({
+      where: {
+        description: 'student',
+      },
+    });
+    const std = students.length;
+    const femalestd = students.filter(
+      (student) => student.gender === 'female',
+    ).length;
+    const malestd = students.filter(
+      (student) => student.gender === 'male',
+    ).length;
+
+    // Find all staff
+    const staff = await this.prisma.pcuser.findMany({
+      where: {
+        description: 'staff',
+      },
+    });
+    const numberofstaff = staff.length;
+    const femalestaff = staff.filter(
+      (staff) => staff.gender === 'female',
+    ).length;
+    const malestaff = staff.filter((staff) => staff.gender === 'male').length;
+
+    const guest = await this.prisma.pcuser.findMany({
+      where: {
+        description: 'guest',
+      },
+    });
+    const numberofguest = guest.length;
+    const femaleguest = guest.filter(
+      (guest) => guest.gender === 'female',
+    ).length;
+    const maleguest = guest.filter((guest) => guest.gender === 'male').length;
+
+    return {
+      totalNumberOfPcuser: pcuser,
+      NumberOfstudent: std,
+      numberOfFemaleStudent: femalestd,
+      numberOfMaleStudent: malestd,
+      numberOfFemaleStaff: femalestaff,
+      numberOfMaleStaff: malestaff,
+      totalNumberOfStaff: numberofstaff,
+      totalNumberOfGuest: numberofguest,
+      femaleGuest: femaleguest,
+      maleGuest: maleguest,
+    };
+  }
 }
