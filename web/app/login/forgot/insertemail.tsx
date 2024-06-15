@@ -15,7 +15,10 @@ const Login = () => {
   const [shortcodeSent, setShortcodeSent] = useState(false);
   const [shortcode, setShortcode] = useState('');
   const [resetError, setResetError] = useState('');
-  const [userId, setUserId]= useState('');
+  const [userId, setUserId] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [changePasswordError, setChangePasswordError] = useState('');
   const { setToken } = useContext(AppContext);
   const router = useRouter();
 
@@ -23,25 +26,28 @@ const Login = () => {
     e.preventDefault();
     setError('');
 
-    const response = await fetch('http://localhost:3333/auth/signin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const response = await fetch('http://localhost:3333/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (response.ok) {
-      const data = await response.json();
-      const token = data.access_token;
-      console.log("Here is your token", token, response);
-
-      setToken(token);
-      console.log('Login successful', data);
-      router.push("/dashboard/pcuser");
-    } else {
-      const errorData = await response.json();
-      setError(errorData.message || 'An error occurred');
+      if (response.ok) {
+        const data = await response.json();
+        const token = data.access_token;
+        setToken(token);
+        console.log('Login successful', data);
+        router.push('/dashboard/pcuser');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'An error occurred');
+      }
+    } catch (error) {
+      setError('An error occurred. Please try again.');
+      console.error('Error during login:', error);
     }
   };
 
@@ -49,23 +55,27 @@ const Login = () => {
     e.preventDefault();
     setForgotError('');
 
-    const response = await fetch('http://localhost:3333/auth/forget/shortcode', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email: forgotEmail }),
-    });
+    try {
+      const response = await fetch('http://localhost:3333/auth/forget/shortcode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: forgotEmail }),
+      });
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Forgot password request successful', data);
-      setUserId(data.userId);
-
-      setShortcodeSent(true);
-    } else {
-      const errorData = await response.json();
-      setForgotError(errorData.message || 'An error occurred');
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Forgot password request successful', data);
+        setUserId(data.userId);
+        setShortcodeSent(true);
+      } else {
+        const errorData = await response.json();
+        setForgotError(errorData.message || 'An error occurred');
+      }
+    } catch (error) {
+      setForgotError('An error occurred. Please try again.');
+      console.error('Error during forgot password:', error);
     }
   };
 
@@ -73,23 +83,55 @@ const Login = () => {
     e.preventDefault();
     setResetError('');
 
-    const response = await fetch(`http://localhost:3333/verify/shortcode/${userId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email: forgotEmail, shortcode }),
-    });
+    try {
+      const response = await fetch(`http://localhost:3333/verify/shortcode/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: forgotEmail, shortcode }),
+      });
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Password reset successful', data);
-      setForgotPassword(false);
-      setShortcodeSent(false);
-      // Optionally, you could redirect the user to the login page here
-    } else {
-      const errorData = await response.json();
-      setResetError(errorData.message || 'An error occurred');
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Password reset successful', data);
+        setForgotPassword(false);
+        setShortcodeSent(true);
+        // Optionally, you could redirect the user to the login page here
+      } else {
+        const errorData = await response.json();
+        setResetError(errorData.message || 'An error occurred');
+      }
+    } catch (error) {
+      setResetError('An error occurred. Please try again.');
+      console.error('Error during password reset:', error);
+    }
+  };
+
+  const handleChangePassword = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setChangePasswordError('');
+
+    try {
+      const response = await fetch(`http://localhost:3333/verify/updatePassword/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: forgotEmail, newPassword, confirmPassword }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Password change successful', data);
+        router.push('/login'); // Redirect to login after successful password change
+      } else {
+        const errorData = await response.json();
+        setChangePasswordError(errorData.message || 'An error occurred');
+      }
+    } catch (error) {
+      setChangePasswordError('An error occurred. Please try again.');
+      console.error('Error during password change:', error);
     }
   };
 
@@ -200,32 +242,47 @@ const Login = () => {
           </>
         ) : (
           <>
-            <h2 className="text-2xl font-bold text-center text-blue-600">Reset Password</h2>
-            <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
+            <h2 className="text-2xl font-bold text-center text-blue-600">Create New Password</h2>
+            <form className="mt-8 space-y-6" onSubmit={handleChangePassword}>
               <div className="rounded-md shadow-sm -space-y-px">
                 <div>
-                  <label htmlFor="shortcode" className="sr-only">Shortcode</label>
+                  <label htmlFor="new-password" className="sr-only">New Password</label>
                   <input
-                    id="shortcode"
-                    name="shortcode"
-                    type="text"
+                    id="new-password"
+                    name="new-password"
+                    type="password"
+                    autoComplete="new-password"
+                    required
+                    className="relative block                  w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    placeholder="New Password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="confirm-password" className="sr-only">Confirm Password</label>
+                  <input
+                    id="confirm-password"
+                    name="confirm-password"
+                    type="password"
+                    autoComplete="new-password"
                     required
                     className="relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    placeholder="Shortcode"
-                    value={shortcode}
-                    onChange={(e) => setShortcode(e.target.value)}
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                   />
                 </div>
               </div>
 
-              {resetError && <div className="text-red-500 text-sm">{resetError}</div>}
+              {changePasswordError && <div className="text-red-500 text-sm">{changePasswordError}</div>}
 
               <div>
                 <button
                   type="submit"
                   className="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md group hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
-                  Reset Password
+                  Change Password
                 </button>
               </div>
 
@@ -234,8 +291,8 @@ const Login = () => {
                   type="button"
                   className="font-medium text-blue-600 hover:text-blue-500"
                   onClick={() => {
-                    setShortcodeSent(false);
                     setForgotPassword(false);
+                    setShortcodeSent(false);
                   }}
                 >
                   Back to login
@@ -250,3 +307,4 @@ const Login = () => {
 };
 
 export default Login;
+
