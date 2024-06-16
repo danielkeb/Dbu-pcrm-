@@ -167,6 +167,6 @@ export class AuthService {
     const userId = user.id;
 
     this.emailService.sendSecurityAlert(user.email, userId);
-    return { userId, message: 'send success', statuscode: 200 };
+    return { userId, message: 'send success' };
   }
 }

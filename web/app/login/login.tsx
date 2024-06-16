@@ -81,12 +81,10 @@ const Login = () => {
       body: JSON.stringify({ email: forgotEmail, shortcode }),
     });
 
-    if (response.ok) {
+    if (response.status ===201) {
       const data = await response.json();
       console.log('Password reset successful', data);
-      setForgotPassword(false);
-      setShortcodeSent(false);
-      // Optionally, you could redirect the user to the login page here
+      router.push('/dashboard/reset');
     } else {
       const errorData = await response.json();
       setResetError(errorData.message || 'An error occurred');
