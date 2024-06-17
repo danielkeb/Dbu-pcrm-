@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import * as argon from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PasswordDto } from './dto/pass.dto';
 @Injectable()
 export class ShortcodeEmailService {
   private readonly logger = new Logger(ShortcodeEmailService.name);
@@ -111,7 +112,7 @@ export class ShortcodeEmailService {
     return code;
   }
 
-  async resetPassword(userId: number, dto: any) {
+  async resetPassword(userId: number, dto: PasswordDto) {
     const user = await this.prismaService.users.findUnique({
       where: {
         id: userId,

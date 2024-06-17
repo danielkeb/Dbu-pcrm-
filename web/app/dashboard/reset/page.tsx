@@ -6,7 +6,7 @@ import React, { useState, FormEvent, useContext, useEffect } from 'react';
 
 const Page = () => {
   const [forgotEmail, setForgotEmail] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [password, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [changePasswordError, setChangePasswordError] = useState('');
   const [createNewPassword, setCreateNewPassword] = useState(true);
@@ -15,12 +15,17 @@ const Page = () => {
   const searchParams = useSearchParams();
   const [shortcode, setShortcode] = useState('');
   const [resetError, setResetError] = useState('');
-  const [userId, setUserId] = useState('');
+  const [userId, setUserId] = useState(0);
 
   useEffect(() => {
     const userIdFromQuery = searchParams.get('userId');
     if (userIdFromQuery) {
-      setUserId(userIdFromQuery);
+      const userIdParsed = parseInt(userIdFromQuery, 10); // Parse the userId to an integer
+      if (!isNaN(userIdParsed)) { // Check if the parsing was successful
+        setUserId(userIdParsed);
+      } else {
+        console.error('Invalid userId in query params');
+      }
     }
   }, [searchParams]);
 
@@ -28,13 +33,20 @@ const Page = () => {
     e.preventDefault();
     setChangePasswordError('');
 
+    // Validate passwords on the frontend
+    if (password !== confirmPassword) {
+      setChangePasswordError('Passwords do not match');
+      return;
+    }
+
+
     try {
       const response = await fetch(`http://localhost:3333/verify/updatePassword/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: forgotEmail, newPassword, confirmPassword }),
+        body: JSON.stringify({ email: forgotEmail, password, confirmPassword }),
       });
 
       if (response.ok) {
@@ -130,7 +142,7 @@ const Page = () => {
                     required
                     className="relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     placeholder="New Password"
-                    value={newPassword}
+                    value={password}
                     onChange={(e) => setNewPassword(e.target.value)}
                   />
                 </div>

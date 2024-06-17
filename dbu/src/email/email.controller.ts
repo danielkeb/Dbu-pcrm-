@@ -8,6 +8,7 @@ import {
   NotAcceptableException,
 } from '@nestjs/common';
 import { ShortcodeEmailService } from './email.service';
+import { PasswordDto } from './dto/pass.dto';
 
 @Controller('verify')
 export class PasswordResetController {
@@ -42,7 +43,10 @@ export class PasswordResetController {
   }
 
   @Patch('/updatePassword/:id')
-  async resetPassword(@Param('id', ParseIntPipe) id: number, @Body() dto: any) {
+  async resetPassword(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: PasswordDto,
+  ) {
     await this.shortcodeEmailService.resetPassword(id, dto);
   }
 }
