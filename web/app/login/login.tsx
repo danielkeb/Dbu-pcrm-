@@ -58,7 +58,7 @@ const Login = () => {
       const data = await response.json();
       console.log('Forgot password request successful', data);
       setUserId(data.userId);
-      router.push(`/reset?userId=${data.userId}`);
+      router.push(`/dashboard/reset?userId=${data.userId}`);
       setShortcodeSent(true);
     } else {
       const errorData = await response.json();

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState, FormEvent, useContext, useEffect } from 'react';
 
 const Page = () => {
+  const [forgotEmail, setForgotEmail] = useState('');
   const [password, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [changePasswordError, setChangePasswordError] = useState('');
@@ -31,44 +32,30 @@ const Page = () => {
   const handleChangePassword = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setChangePasswordError('');
-  
+
     // Validate passwords on the frontend
     if (password !== confirmPassword) {
       setChangePasswordError('Passwords do not match');
       return;
     }
-  
+
+
     try {
       const response = await fetch(`http://localhost:3333/verify/updatePassword/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ email: forgotEmail, password, confirmPassword }),
       });
-  
+
       if (response.ok) {
-        router.push('/login');
-        // try {
-        //   const responseData = await response.text(); 
-        //   console.log(responseData)// Get the response text
-        //   if (responseData) { // Check if the response is not empty
-        //     const data = JSON.parse(responseData); // Parse the response text as JSON
-        //     console.log('Password change successful', data);
-        //     router.push('/login'); // Redirect to login after successful password change
-        //   } else {
-        //     setChangePasswordError(`status code ${response.status}`);
-        //   }
-        // } catch (parseError) {
-        //   setChangePasswordError('Invalid JSON response');
-        // }
+        const data = await response.json();
+        console.log('Password change successful', data);
+        router.push('/login'); // Redirect to login after successful password change
       } else {
-        try {
-          const errorData = await response.json(); // Attempt to parse error response as JSON
-          setChangePasswordError(errorData.message || 'An error occurred');
-        } catch (jsonError) {
-          setChangePasswordError(`An error occurred with status: ${response.status}`);
-        }
+        const errorData = await response.json();
+        setChangePasswordError(errorData.message || 'An error occurred');
       }
     } catch (error) {
       setChangePasswordError('An error occurred. Please try again.');
@@ -86,7 +73,7 @@ const Page = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ shortcode }),
+        body: JSON.stringify({ email: forgotEmail, shortcode }),
       });
 
       if (response.status === 201) {
@@ -94,13 +81,8 @@ const Page = () => {
         console.log('Shortcode verification successful', data);
         setCreateNewPassword(false);
       } else {
-        const text = await response.text();
-        if (text) {
-          const errorData = JSON.parse(text);
-          setResetError(errorData.message || 'Invalid shortcode');
-        } else {
-          setResetError('Invalid shortcode');
-        }
+        const errorData = await response.json();
+        setResetError(errorData.message || 'Invalid shortcode');
       }
     } catch (error) {
       setResetError('An error occurred. Please try again.');
@@ -111,7 +93,8 @@ const Page = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
-        {createNewPassword ? (
+       
+          {createNewPassword && (
           <>
             <h2 className="text-2xl font-bold text-center text-blue-600">Verify Shortcode</h2>
             <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
@@ -142,8 +125,9 @@ const Page = () => {
                 </button>
               </div>
             </form>
-          </>
-        ) : (
+            </>
+        )},
+          {!createNewPassword && (
           <>
             <h2 className="text-2xl font-bold text-center text-blue-600">Create New Password</h2>
             <form className="mt-8 space-y-6" onSubmit={handleChangePassword}>
