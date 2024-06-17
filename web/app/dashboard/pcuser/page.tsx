@@ -1,17 +1,7 @@
-"use client"
-
 import RegisterPage from "./index";
-import Main from "../main/main";
 
-
-//import Page from "./pcuser/page";
 const Page = () => {
-        return (
-          <Main>
-            <RegisterPage />
-          </Main>
-        );
-      }
-      
+  return <RegisterPage />;
+};
+
 export default Page;
-      

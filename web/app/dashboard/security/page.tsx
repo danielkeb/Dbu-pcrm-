@@ -1,16 +1,8 @@
-"use client"
+"use client";
 
 import Security from "./index";
-import Main from "../main/main";
 
-const Page:React.FC=()=>{
-return (
-    <Main>
-        <>
-    <Security/>
-    </>
-        
-    </Main>
-)
+const Page: React.FC = () => {
+  return <Security />;
 };
 export default Page;
