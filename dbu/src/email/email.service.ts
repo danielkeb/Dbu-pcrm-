@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  Logger,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import * as argon from 'argon2';
@@ -109,9 +104,7 @@ export class ShortcodeEmailService {
       },
     });
 
-    console.log('Retrieved code:', code); // Log the retrieved code
-
-    if (!code) {
+    if (!code || code == null) {
       throw new NotFoundException('Invalid or expired short code');
     }
 
@@ -119,7 +112,12 @@ export class ShortcodeEmailService {
   }
 
   async resetPassword(userId: number, dto: any) {
-    try {
+    const user = await this.prismaService.users.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if (user) {
       const hash = await argon.hash(dto.password);
       await this.prismaService.users.update({
         where: {
@@ -130,8 +128,9 @@ export class ShortcodeEmailService {
         },
       });
       return { msg: 'Password reseted !' };
-    } catch {
-      throw new UnauthorizedException();
+    } else {
+      console.log('user not found');
+      throw new NotFoundException(`user int this id ${userId}`);
     }
   }
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import { AppContext } from '@/components/UserContext';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState, FormEvent, useContext } from 'react';
 
@@ -13,9 +12,7 @@ const Login = () => {
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotError, setForgotError] = useState('');
   const [shortcodeSent, setShortcodeSent] = useState(false);
-  const [shortcode, setShortcode] = useState('');
-  const [resetError, setResetError] = useState('');
-  const [userId, setUserId]= useState('');
+  const [userId, setUserId] = useState('');
   const { setToken } = useContext(AppContext);
   const router = useRouter();
 
@@ -61,33 +58,11 @@ const Login = () => {
       const data = await response.json();
       console.log('Forgot password request successful', data);
       setUserId(data.userId);
-
+      router.push(`/dashboard/reset?userId=${data.userId}`);
       setShortcodeSent(true);
     } else {
       const errorData = await response.json();
       setForgotError(errorData.message || 'An error occurred');
-    }
-  };
-
-  const handleResetPassword = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setResetError('');
-
-    const response = await fetch(`http://localhost:3333/verify/shortcode/${userId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email: forgotEmail, shortcode }),
-    });
-
-    if (response.status ===201) {
-      const data = await response.json();
-      console.log('Password reset successful', data);
-      router.push('/dashboard/reset');
-    } else {
-      const errorData = await response.json();
-      setResetError(errorData.message || 'An error occurred');
     }
   };
 
@@ -197,50 +172,7 @@ const Login = () => {
             </form>
           </>
         ) : (
-          <>
-            <h2 className="text-2xl font-bold text-center text-blue-600">Reset Password</h2>
-            <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
-              <div className="rounded-md shadow-sm -space-y-px">
-                <div>
-                  <label htmlFor="shortcode" className="sr-only">Shortcode</label>
-                  <input
-                    id="shortcode"
-                    name="shortcode"
-                    type="text"
-                    required
-                    className="relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    placeholder="Shortcode"
-                    value={shortcode}
-                    onChange={(e) => setShortcode(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              {resetError && <div className="text-red-500 text-sm">{resetError}</div>}
-
-              <div>
-                <button
-                  type="submit"
-                  className="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md group hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  Reset Password
-                </button>
-              </div>
-
-              <div className="text-sm text-center">
-                <button
-                  type="button"
-                  className="font-medium text-blue-600 hover:text-blue-500"
-                  onClick={() => {
-                    setShortcodeSent(false);
-                    setForgotPassword(false);
-                  }}
-                >
-                  Back to login
-                </button>
-              </div>
-            </form>
-          </>
+          <></>
         )}
       </div>
     </div>
