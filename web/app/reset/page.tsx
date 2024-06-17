@@ -9,7 +9,7 @@ const Page = () => {
   const [password, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [changePasswordError, setChangePasswordError] = useState('');
-  const [createNewPassword, setCreateNewPassword] = useState(true);
+  const [createNewPassword, setCreateNewPassword] = useState(false); // Initialize as false initially
   const { setToken } = useContext(AppContext);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -32,30 +32,45 @@ const Page = () => {
   const handleChangePassword = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setChangePasswordError('');
-
+  
     // Validate passwords on the frontend
     if (password !== confirmPassword) {
       setChangePasswordError('Passwords do not match');
       return;
     }
-
-
+  
     try {
       const response = await fetch(`http://localhost:3333/verify/updatePassword/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: forgotEmail, password, confirmPassword }),
+        body: JSON.stringify({ password }),
       });
-
+  
+      console.log('Response status:', response.status); // Log the status code
+  
       if (response.ok) {
-        const data = await response.json();
-        console.log('Password change successful', data);
-        router.push('/login'); // Redirect to login after successful password change
+        router.push('/login');
+        // try {
+        //   const responseData = await response.text(); // Get the response text
+        //   if (responseData) { // Check if the response is not empty
+        //     const data = JSON.parse(responseData); // Parse the response text as JSON
+        //     console.log('Password change successful', data);
+        //     router.push('/login'); // Redirect to login after successful password change
+        //   } else {
+        //     setChangePasswordError('Empty response from API');
+        //   }
+        // } catch (parseError) {
+        //   setChangePasswordError('Invalid JSON response');
+        // }
       } else {
-        const errorData = await response.json();
-        setChangePasswordError(errorData.message || 'An error occurred');
+        try {
+          const errorData = await response.json(); // Attempt to parse error response as JSON
+          setChangePasswordError(errorData.message || 'An error occurred');
+        } catch (jsonError) {
+          setChangePasswordError(`An error occurred with status: ${response.status}`);
+        }
       }
     } catch (error) {
       setChangePasswordError('An error occurred. Please try again.');
@@ -79,7 +94,7 @@ const Page = () => {
       if (response.status === 201) {
         const data = await response.json();
         console.log('Shortcode verification successful', data);
-        setCreateNewPassword(false);
+        setCreateNewPassword(true); // Set createNewPassword to true upon successful verification
       } else {
         const errorData = await response.json();
         setResetError(errorData.message || 'Invalid shortcode');
@@ -94,7 +109,7 @@ const Page = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
        
-          {createNewPassword && (
+          {!createNewPassword && (
           <>
             <h2 className="text-2xl font-bold text-center text-blue-600">Verify Shortcode</h2>
             <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
@@ -126,8 +141,9 @@ const Page = () => {
               </div>
             </form>
             </>
-        )},
-          {!createNewPassword && (
+        )}
+
+          {createNewPassword && (
           <>
             <h2 className="text-2xl font-bold text-center text-blue-600">Create New Password</h2>
             <form className="mt-8 space-y-6" onSubmit={handleChangePassword}>

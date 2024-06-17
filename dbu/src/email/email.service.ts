@@ -83,11 +83,14 @@ export class ShortcodeEmailService {
         // Delete expired entries from the database
         await Promise.all(
           expiredEntries.map(async (entry) => {
-            await this.prismaService.reset.delete({
+            const user = await this.prismaService.reset.delete({
               where: {
                 id: entry.id,
               },
             });
+            if (!user) {
+              throw new NotFoundException('not found');
+            }
             this.logger.log(`Expired verification code deleted: ${entry.id}`);
           }),
         );

@@ -1,23 +1,28 @@
-"use client";
-
-import { AppContext } from "@/components/UserContext"; // Correct the import path
-import Link from "next/link";
-import { usePathname } from "next/navigation"; // Import useClient
+"use client"
 import * as React from "react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { AppContext } from "@/components/UserContext"; // Correct import path for AppContext
+import { usePathname } from "next/navigation";
+
+type ListItem = {
+  name: string;
+  href: string;
+  icon: React.ReactNode;
+};
 
 type ListItemsProps = {
-  isOpen: boolean; // Boolean value to determine if the sidebar is open
+  isOpen: boolean;
 };
 
 const MainListItems = ({ isOpen }: ListItemsProps) => {
-  // Use useClient hook to ensure component runs on client side
   const path = usePathname();
   const { decodedToken } = useContext(AppContext);
-  const [userRole, setUserRole] = useState("");
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [userRole, setUserRole] = useState<string>("");
+  const [activeIndex, setActiveIndex] = useState<number>(0);
 
-  const LIST_ITEMS = [
+  // Memoize LIST_ITEMS initialization to prevent unnecessary re-renders
+  const LIST_ITEMS: ListItem[] = useMemo(() => [
     {
       name: "Dashboard",
       href: "/dashboard",
@@ -72,10 +77,7 @@ const MainListItems = ({ isOpen }: ListItemsProps) => {
         </svg>
       ),
     },
-  ];
-
-  const hasAccess = (allowedRoles: string[]) =>
-    allowedRoles.some((role) => role === userRole);
+  ], []);
 
   useEffect(() => {
     setUserRole(decodedToken?.role || "");
@@ -87,24 +89,22 @@ const MainListItems = ({ isOpen }: ListItemsProps) => {
         setActiveIndex(index);
       }
     });
-  }, [path]);
+  }, [LIST_ITEMS, path]); // Include LIST_ITEMS and path in the dependency array
 
   return (
     <React.Fragment>
-      {LIST_ITEMS.map((item, index) => {
-        return (
-          <Link key={index} href={item.href}>
-            <div
-              className={`${
-                activeIndex === index && "bg-green-500"
-              } flex items-center text-white py-3 gap-4 pl-4 w-full`}
-            >
-              {item.icon}
-              {isOpen && <span>{item.name}</span>}
-            </div>
-          </Link>
-        );
-      })}
+      {LIST_ITEMS.map((item, index) => (
+        <Link key={index} href={item.href}>
+          <div
+            className={`${
+              activeIndex === index && "bg-green-500"
+            } flex items-center text-white py-3 gap-4 pl-4 w-full`}
+          >
+            {item.icon}
+            {isOpen && <span>{item.name}</span>}
+          </div>
+        </Link>
+      ))}
     </React.Fragment>
   );
 };
