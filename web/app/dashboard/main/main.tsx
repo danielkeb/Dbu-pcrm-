@@ -1,4 +1,4 @@
-'use client';  // Add this directive at the top
+'use client';
 
 import * as React from 'react';
 import { useEffect, useLayoutEffect, useContext, useState } from 'react';
@@ -31,7 +31,15 @@ const Main: React.FC<MainProps> = ({ children }) => {
     setIsOpen(false);
   };
 
-  // useLayoutEffect(() => {
+  const handleLogout = () => {
+    // Clear the token from local storage
+    localStorage.removeItem('token');
+    // Call the context logout function
+    logout();
+    // Redirect to the login page
+    router.push('/login');
+  };
+// useLayoutEffect(() => {
   //   if (!decodedToken) {
   //     router.push('/login');
   //   } else if (decodedToken?.status === 'inactive') {
@@ -94,17 +102,17 @@ const Main: React.FC<MainProps> = ({ children }) => {
                   <ul className="divide-y divide-gray-200">
                     <li>
                       <Link href="/dashboard/profile">
-                        <Link className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 transition duration-200" href={''}>Profile</Link>
+                        <div className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 transition duration-200">Profile</div>
                       </Link>
                     </li>
                   </ul>
                 </div>
                 <div className="p-4">
-                  <button onClick={logout} className="w-full flex items-center justify-center py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600 transition duration-200">
+                  <button onClick={handleLogout} className="w-full flex items-center justify-center py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600 transition duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2" />
                     </svg>
-                    Sign out
+                    Logout
                   </button>
                 </div>
               </div>
