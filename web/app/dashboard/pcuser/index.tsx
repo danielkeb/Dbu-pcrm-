@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { useDropzone } from 'react-dropzone';
+import axios from "axios";
+import { useFormik } from "formik";
+import { useState } from "react";
+import { useDropzone } from "react-dropzone";
+import * as Yup from "yup";
 
 type FormValues = {
   userId: string;
@@ -23,27 +23,27 @@ const RegisterPage = () => {
 
   const formik = useFormik<FormValues>({
     initialValues: {
-      userId: '',
-      firstname: '',
-      lastname: '',
-      serialnumber: '',
-      brand: '',
-      address: '',
-      phonenumber: '',
-      gender: '',
-      description: '',
-      pcowner: ''
+      userId: "",
+      firstname: "",
+      lastname: "",
+      serialnumber: "",
+      brand: "",
+      address: "",
+      phonenumber: "",
+      gender: "",
+      description: "",
+      pcowner: "",
     },
     validationSchema: Yup.object({
-      userId: Yup.string().required('User ID is required'),
-      firstname: Yup.string().required('First Name is required'),
-      lastname: Yup.string().required('Last Name is required'),
-      address: Yup.string().required('Address is required'),
-      phonenumber: Yup.string().required('Phone number is required'),
-      serialnumber: Yup.string().required('Serial Number is required'),
-      brand: Yup.string().required('Brand is required'),
-      gender: Yup.string().required('Gender is required'),
-      description: Yup.string().required('Description is required'),
+      userId: Yup.string().required("User ID is required"),
+      firstname: Yup.string().required("First Name is required"),
+      lastname: Yup.string().required("Last Name is required"),
+      address: Yup.string().required("Address is required"),
+      phonenumber: Yup.string().required("Phone number is required"),
+      serialnumber: Yup.string().required("Serial Number is required"),
+      brand: Yup.string().required("Brand is required"),
+      gender: Yup.string().required("Gender is required"),
+      description: Yup.string().required("Description is required"),
       // pcowner: Yup.string().when('description', {
       //   is: (value: string) => value === 'Staff',
       //   then: Yup.string().required('PC Owner is required'),
@@ -52,29 +52,35 @@ const RegisterPage = () => {
     }),
     onSubmit: async (values) => {
       if (!imageFile) {
-        alert('Please upload an image');
+        alert("Please upload an image");
         return;
       }
 
       const formData = new FormData();
-      (Object.keys(values) as (keyof FormValues)[]).forEach(key => formData.append(key, values[key]));
-      formData.append('image', imageFile);
+      (Object.keys(values) as (keyof FormValues)[]).forEach((key) =>
+        formData.append(key, values[key])
+      );
+      formData.append("image", imageFile);
 
       try {
-        const response = await axios.post('http://10.18.51.50:3333/pcuser/add', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
+        const response = await axios.post(
+          "http://10.18.51.50:3333/pcuser/add",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           }
-        });
+        );
         if (response.status === 201) {
-          alert('Registration successful!');
+          alert("Registration successful!");
         } else {
-          alert('Registration failed!');
+          alert("Registration failed!");
         }
-      } catch (error) {
+      } catch (error: any) {
         alert(`Unable to connect to the internet: ${error.message}`);
       }
-    }
+    },
   });
 
   const onDrop = (acceptedFiles: File[]) => {
@@ -96,7 +102,10 @@ const RegisterPage = () => {
         <div className="flex flex-wrap">
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="userId">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="userId"
+              >
                 User ID
               </label>
               <input
@@ -115,7 +124,10 @@ const RegisterPage = () => {
           </div>
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="firstname">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="firstname"
+              >
                 First Name
               </label>
               <input
@@ -128,13 +140,18 @@ const RegisterPage = () => {
                 onBlur={formik.handleBlur}
               />
               {formik.errors.firstname && formik.touched.firstname && (
-                <small className="text-red-500">{formik.errors.firstname}</small>
+                <small className="text-red-500">
+                  {formik.errors.firstname}
+                </small>
               )}
             </div>
           </div>
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="lastname">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="lastname"
+              >
                 Last Name
               </label>
               <input
@@ -153,7 +170,10 @@ const RegisterPage = () => {
           </div>
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="gender">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="gender"
+              >
                 Gender
               </label>
               <select
@@ -163,7 +183,9 @@ const RegisterPage = () => {
                 onBlur={formik.handleBlur}
                 className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
               >
-                <option value="" disabled>Select an option</option>
+                <option value="" disabled>
+                  Select an option
+                </option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
               </select>
@@ -174,7 +196,10 @@ const RegisterPage = () => {
           </div>
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="address">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="address"
+              >
                 Address
               </label>
               <input
@@ -193,7 +218,10 @@ const RegisterPage = () => {
           </div>
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="phonenumber">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="phonenumber"
+              >
                 Phone Number
               </label>
               <input
@@ -206,13 +234,18 @@ const RegisterPage = () => {
                 onBlur={formik.handleBlur}
               />
               {formik.errors.phonenumber && formik.touched.phonenumber && (
-                <small className="text-red-500">{formik.errors.phonenumber}</small>
+                <small className="text-red-500">
+                  {formik.errors.phonenumber}
+                </small>
               )}
             </div>
           </div>
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="serialnumber">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="serialnumber"
+              >
                 Serial Number
               </label>
               <input
@@ -225,13 +258,18 @@ const RegisterPage = () => {
                 onBlur={formik.handleBlur}
               />
               {formik.errors.serialnumber && formik.touched.serialnumber && (
-                <small className="text-red-500">{formik.errors.serialnumber}</small>
+                <small className="text-red-500">
+                  {formik.errors.serialnumber}
+                </small>
               )}
             </div>
           </div>
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="brand">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="brand"
+              >
                 Brand
               </label>
               <input
@@ -250,7 +288,10 @@ const RegisterPage = () => {
           </div>
           <div className="w-full px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="description">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="description"
+              >
                 Description
               </label>
               <input
@@ -263,14 +304,19 @@ const RegisterPage = () => {
                 onBlur={formik.handleBlur}
               />
               {formik.errors.description && formik.touched.description && (
-                <small className="text-red-500">{formik.errors.description}</small>
+                <small className="text-red-500">
+                  {formik.errors.description}
+                </small>
               )}
             </div>
           </div>
-          {formik.values.description === 'Staff' && (
+          {formik.values.description === "Staff" && (
             <div className="w-full px-4">
               <div className="relative w-full mb-3">
-                <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="pcowner">
+                <label
+                  className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                  htmlFor="pcowner"
+                >
                   PC Owner
                 </label>
                 <input
@@ -283,7 +329,9 @@ const RegisterPage = () => {
                   onBlur={formik.handleBlur}
                 />
                 {formik.errors.pcowner && formik.touched.pcowner && (
-                  <small className="text-red-500">{formik.errors.pcowner}</small>
+                  <small className="text-red-500">
+                    {formik.errors.pcowner}
+                  </small>
                 )}
               </div>
             </div>
@@ -296,10 +344,16 @@ const RegisterPage = () => {
         <div className="flex flex-wrap">
           <div className="w-full lg:w-12/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="photo">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="photo"
+              >
                 Upload Image
               </label>
-              <div {...getRootProps()} className="w-full bg-white p-5 flex justify-center items-center border border-gray-400 rounded cursor-pointer">
+              <div
+                {...getRootProps()}
+                className="w-full bg-white p-5 flex justify-center items-center border border-gray-400 rounded cursor-pointer"
+              >
                 <input {...getInputProps()} name="photo" />
                 {selectedFileName ? (
                   <span className="text-green-700">{selectedFileName}</span>
@@ -336,4 +390,3 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
-

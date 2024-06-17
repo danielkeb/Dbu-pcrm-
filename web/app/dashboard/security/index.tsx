@@ -1,45 +1,47 @@
-import React from 'react';
-import { useFormik } from 'formik';
-import * as yup from 'yup'; // Import Yup for validation
+import { useFormik } from "formik";
+import * as yup from "yup"; // Import Yup for validation
 
 const validationSchema = yup.object({
-  email: yup.string().email('Invalid email address').required('Email is required'),
-  password: yup.string().required('Password is required'),
-  name: yup.string().required('Name is required'),
-  role: yup.string().required('Role is required'),
-  status: yup.string().required('Status is required'),
-  address: yup.string().required('Address is required'),
-  gender: yup.string().required('Gender is required'),
-  phonenumber: yup.string().required('Phone Number is required'),
+  email: yup
+    .string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: yup.string().required("Password is required"),
+  name: yup.string().required("Name is required"),
+  role: yup.string().required("Role is required"),
+  status: yup.string().required("Status is required"),
+  address: yup.string().required("Address is required"),
+  gender: yup.string().required("Gender is required"),
+  phonenumber: yup.string().required("Phone Number is required"),
 });
 
 const Security = () => {
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '12345678',
-      name: '',
-      role: '', // Admin or Security
-      status: 'active', // Active or Inactive
-      address: '',
-      gender: '', // Male or Female
-      phonenumber: '',
+      email: "",
+      password: "12345678",
+      name: "",
+      role: "", // Admin or Security
+      status: "active", // Active or Inactive
+      address: "",
+      gender: "", // Male or Female
+      phonenumber: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await fetch('http://localhost:3333/auth/signup', {
-          method: 'POST',
+        const response = await fetch("http://localhost:3333/auth/signup", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(values),
         });
         const data = await response.json();
-        console.log('Form submitted:', data);
+        console.log("Form submitted:", data);
         // Reset form values or handle success state
       } catch (error) {
-        console.error('Error submitting form:', error);
+        console.error("Error submitting form:", error);
         // Handle error state or feedback to user
       }
     },
@@ -55,7 +57,10 @@ const Security = () => {
           {/* Email */}
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="email">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="email"
+              >
                 Email
               </label>
               <input
@@ -95,7 +100,10 @@ const Security = () => {
           {/* Name */}
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="name">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="name"
+              >
                 Name
               </label>
               <input
@@ -115,7 +123,10 @@ const Security = () => {
           {/* Role (Dropdown) */}
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="role">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="role"
+              >
                 Role
               </label>
               <select
@@ -125,7 +136,9 @@ const Security = () => {
                 onBlur={formik.handleBlur}
                 className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
               >
-                <option value="" disabled>Select Role</option>
+                <option value="" disabled>
+                  Select Role
+                </option>
                 <option value="admin">Admin</option>
                 <option value="security">Security</option>
               </select>
@@ -137,7 +150,10 @@ const Security = () => {
           {/* Status (Dropdown) */}
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="status">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="status"
+              >
                 Status
               </label>
               <select
@@ -158,7 +174,10 @@ const Security = () => {
           {/* Address */}
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="address">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="address"
+              >
                 Address
               </label>
               <input
@@ -178,7 +197,10 @@ const Security = () => {
           {/* Gender */}
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="gender">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="gender"
+              >
                 Gender
               </label>
               <select
@@ -188,7 +210,9 @@ const Security = () => {
                 onBlur={formik.handleBlur}
                 className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
               >
-                <option value="" disabled>Select Gender</option>
+                <option value="" disabled>
+                  Select Gender
+                </option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
               </select>
@@ -200,7 +224,10 @@ const Security = () => {
           {/* Phone Number */}
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="phonenumber">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="phonenumber"
+              >
                 Phone Number
               </label>
               <input
@@ -213,20 +240,20 @@ const Security = () => {
                 onBlur={formik.handleBlur}
               />
               {formik.errors.phonenumber && formik.touched.phonenumber}
-                  {/* Submit Button */}
-                  </div>
-                  </div>
-            <div className="w-full px-4">
+              {/* Submit Button */}
+            </div>
+          </div>
+          <div className="w-full px-4">
             <button
-                type="submit"
-                className="bg-green-600 border-0 text-white w-full p-3 rounded-md"
+              type="submit"
+              className="bg-green-600 border-0 text-white w-full p-3 rounded-md"
             >
-                Submit
+              Submit
             </button>
-            </div>
-            </div>
-        </form>
+          </div>
         </div>
-    );
+      </form>
+    </div>
+  );
 };
 export default Security;
