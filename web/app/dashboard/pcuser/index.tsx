@@ -286,56 +286,61 @@ const RegisterPage = () => {
               )}
             </div>
           </div>
-          <div className="w-full px-4">
+          <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="description"
-              >
-                Description
-              </label>
-              <input
-                type="text"
-                className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
-                placeholder="Description"
-                name="description"
-                value={formik.values.description}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.errors.description && formik.touched.description && (
-                <small className="text-red-500">
-                  {formik.errors.description}
-                </small>
-              )}
-            </div>
+        <label
+          className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+          htmlFor="description"
+        >
+          Description
+        </label>
+        <select
+          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
+          name="description"
+          value={formik.values.description}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+        >
+          <option value="">Select Description</option>
+          <option value="Staff">Staff</option>
+          <option value="Student">Student</option>
+          <option value="Guest">Guest</option>
+        </select>
+        {formik.errors.description && formik.touched.description && (
+          <small className="text-red-500">
+            {formik.errors.description}
+          </small>
+        )}
+      </div>
           </div>
           {formik.values.description === "Staff" && (
-            <div className="w-full px-4">
-              <div className="relative w-full mb-3">
-                <label
-                  className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                  htmlFor="pcowner"
-                >
-                  PC Owner
-                </label>
-                <input
-                  type="text"
-                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
-                  placeholder="PC Owner"
-                  name="pcowner"
-                  value={formik.values.pcowner}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.errors.pcowner && formik.touched.pcowner && (
-                  <small className="text-red-500">
-                    {formik.errors.pcowner}
-                  </small>
-                )}
-              </div>
-            </div>
+             <div className="w-full lg:w-6/12 px-4">
+             <div className="relative w-full mb-3">
+         <label
+           className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+           htmlFor="description"
+         >
+           Description
+         </label>
+         <select
+           className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
+           name="pcowner"
+            value={formik.values.pcowner}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+         >
+           <option value="">Select Pc owner</option>
+           <option value="DBU">Dbu</option>
+           <option value="Personal">personal</option>
+         </select>
+         {formik.errors.pcowner && formik.touched.pcowner && (
+            <small className="text-red-500">
+              {formik.errors.pcowner}
+            </small>
           )}
+       </div>
+        </div>
+      )}
         </div>
         <hr className="mt-6 border-b-1 border-blueGray-300" />
         <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">

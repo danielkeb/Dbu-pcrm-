@@ -1,11 +1,11 @@
 "use client"
-import UserListPage from "./index"
+import UserUpdatePage from "./id"
 
 const Page=()=>{
     return(
         
-            <UserListPage/>
-       
+        <UserUpdatePage/>
+        
     )
 }
 export default Page;

@@ -20,9 +20,17 @@ export interface User {
   };
   
   export const fetchUser = async (id: number): Promise<User> => {
-    const response = await fetch(`${BASE_URL}/get/${id}`);
-    if (!response.ok) throw new Error("Failed to fetch user");
-    return response.json();
+    try {
+      const response = await fetch(`${BASE_URL}/get/${id}`);
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(`Failed to fetch user: ${errorMessage}`);
+      }
+      return response.json();
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      throw error; // Rethrow the error to propagate it to the caller
+    }
   };
   
   export const updateUser = async (id: number, user: Partial<User>): Promise<void> => {
