@@ -38,7 +38,6 @@ export class NewPcService {
         dto.userId.replace(/\//g, '_'),
       );
       const barcodePath = `${barcodeDir}.png`;
-      console.log('ddd', barcodePath);
 
       // Ensure the directory exists
       const barcodeBaseDir = join(__dirname, '../../../barcodes');

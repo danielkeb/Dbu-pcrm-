@@ -48,9 +48,9 @@ const Visualization: React.FC = () => {
     labels: ['Students', 'Staff', 'Guests'],
     datasets: [
       {
-        label: 'Total',
+        label: `Total: ${data.totalNumberOfPcuser}`,
         data: [data.NumberOfstudent, data.totalNumberOfStaff, data.totalNumberOfGuest],
-        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        backgroundColor: ['rgba(54, 62, 135, 0.6)','rgba(54, 162, 235, 0.6)', 'rgba(75, 192, 192, 0.6)'],
       },
     ],
   };
