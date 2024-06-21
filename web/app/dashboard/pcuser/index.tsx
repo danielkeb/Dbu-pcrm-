@@ -44,11 +44,7 @@ const RegisterPage = () => {
       brand: Yup.string().required("Brand is required"),
       gender: Yup.string().required("Gender is required"),
       description: Yup.string().required("Description is required"),
-      // pcowner: Yup.string().when('description', {
-      //   is: (value: string) => value === 'Staff',
-      //   then: Yup.string().required('PC Owner is required'),
-      //   otherwise: Yup.string().notRequired(),
-      // }),
+      pcowner: Yup.string(),
     }),
     onSubmit: async (values) => {
       if (!imageFile) {
