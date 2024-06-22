@@ -108,10 +108,12 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
           console.error('Error decoding token:', error);
           setDecodedToken(null);
         }
+      } else {
+        setToken(null);
+        setDecodedToken(null);
       }
     }
   }, []);
-
   const logout = () => {
     setToken(null);
     setDecodedToken(null);

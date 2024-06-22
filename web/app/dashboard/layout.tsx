@@ -23,7 +23,7 @@ export default function DashboardLayout({ children }: Props) {
   };
 
   const user = {
-    name: decodedToken?.first_name,
+    name: decodedToken?.name,
     avatar: "",
     jobTitle: decodedToken?.role,
   };
@@ -94,7 +94,7 @@ export default function DashboardLayout({ children }: Props) {
             {isDrawerOpen && (
               <div className="ml-3">
                 <h2 className="text-lg font-semibold">
-                  {user.name || "Testing name"}
+                  {user.name || 'test name'}
                 </h2>
                 <p className="text-sm text-gray-500">
                   {user.jobTitle || "testing job title"}

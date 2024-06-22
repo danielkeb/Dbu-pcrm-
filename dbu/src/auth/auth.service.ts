@@ -61,22 +61,24 @@ export class AuthService {
         throw new ForbiddenException('Incorrect password');
       }
       // const token = await this.signToken(user.id, user.role);
-      return this.signToken(user.id, user.role);
+      return this.signToken(user.id, user.role, user.name);
     }
   }
 
   async signToken(
     userId: number,
     role: string,
+    name: string,
   ): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
       role,
+      name,
     };
     const secret = this.config.get('JWT_SECRET');
 
     const token = await this.jwt.signAsync(payload, {
-      expiresIn: '15m',
+      expiresIn: '100m',
       secret: secret,
     });
 

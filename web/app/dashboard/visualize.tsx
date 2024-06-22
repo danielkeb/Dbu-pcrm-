@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
+import { AppContext, useAppContext } from '@/components/UserContext';
 
 Chart.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const Visualization: React.FC = () => {
   const [data, setData] = useState<any>(null);
-
+  const { token, decodedToken } = useAppContext();
   const fetchData = async () => {
     try {
       const response = await axios.get('http://localhost:3333/pcuser/visualize');
