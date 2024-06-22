@@ -1,5 +1,6 @@
 "use client"
 
+import { AppWrapper } from "@/components/UserContext";
 import DrawerAppBar from "./landing";
 
 
@@ -8,7 +9,8 @@ export default function Home() {
     <main >
       <div >
         {/* <Login/> */}
-        <DrawerAppBar/>
+        <AppWrapper><DrawerAppBar/></AppWrapper>
+        
       </div>
     </main>
   );

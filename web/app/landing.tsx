@@ -73,7 +73,7 @@ export default function DrawerAppBar(props: Props) {
       <header className="bg-white w-full fixed z-50 shadow-lg lg:pl-8 lg:pr-8">
         <nav className="flex justify-between items-center p-4">
           <div className="flex items-center justify-between w-full md:w-auto text-black">
-            <b>AGSMS</b>
+            <b>PCRMS</b>
             <button
               className="md:hidden text-black"
               aria-label="open drawer"
@@ -106,40 +106,40 @@ export default function DrawerAppBar(props: Props) {
         {drawer}
       </nav>
       <main className="w-full pt-16">
-        <section className="hero h-screen flex items-center justify-center bg-[#141b2b]">
-          <div className="flex flex-col md:flex-row items-center md:px-32 px-8">
-            <div className="text-center md:text-left space-y-4 mr-12">
-              <h2 className="text-blue-400 text-2xl font-medium">
-                Welcome To Our Website!
-              </h2>
-              <h1 className="text-white text-3xl md:text-4xl font-bold">
-                Dbu  Pc Management System.
-              </h1>
-              <p className="text-white max-w-md text-justify">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Quisquam nulla ipsa unde inventore minus commodi saepe? Eos
-                cumque aliquam consequatur id optio dolorum modi quod?
-              </p>
-              <div className="flex space-x-4 mt-5">
-                <button className="bg-blue-400 px-6 py-3 text-gray-900 font-semibold rounded-full">
-                  Get Started
-                </button>
-                <button className="border-2 border-blue-400 px-6 py-3 text-white font-semibold rounded-full">
-                  Contact Us
-                </button>
-              </div>
-            </div>
-            {/* <img src="/pcsecurity.jpeg" className="md:w-1/2 w-full" alt="" /> */}
-        <div style={{ position: 'relative', width: '100%', height: '500px'}}>
+      <section className="hero h-screen flex items-center justify-center bg-[#141b2b]">
+  <div className="flex flex-col md:flex-row items-center w-full h-full md:px-32 px-8">
+    <div className="text-center md:text-left space-y-4 md:mr-12 w-full md:w-1/2">
+      <h2 className="text-blue-400 text-2xl font-medium">
+        Welcome To Our Website!
+      </h2>
+      <h1 className="text-white text-3xl md:text-4xl font-bold">
+        Dbu PC Management System.
+      </h1>
+      <p className="text-white max-w-md text-justify">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        Quisquam nulla ipsa unde inventore minus commodi saepe? Eos
+        cumque aliquam consequatur id optio dolorum modi quod?
+      </p>
+      <div className="flex space-x-4 mt-5">
+        <button className="bg-blue-400 px-6 py-3 text-gray-900 font-semibold rounded-full">
+          Get Started
+        </button>
+        <button className="border-2 border-blue-400 px-6 py-3 text-white font-semibold rounded-full">
+          Contact Us
+        </button>
+      </div>
+    </div>
+    <div className="relative w-full md:w-1/2 md:h-1/2">
       <Image
         src="/pcsecurity.jpeg"
-        fill
-        style={{ objectFit: 'cover' }}
+        layout="fill"
+        objectFit="cover"
         alt="PC Security"
       />
     </div>
-          </div>
-        </section>
+  </div>
+</section>
+
         <section className="py-20 px-8 md:px-32 space-y-16">
           <div className="text-center space-y-2">
             <h2 className="text-blue-500 font-semibold">Our Features</h2>
@@ -188,19 +188,20 @@ export default function DrawerAppBar(props: Props) {
               doloribus porro expedita eius. Magnam, laudantium velit.
             </p>
             <ul className="space-y-3">
-              <li className="flex items-center space-x-2">
-                <AcademicCapIcon color="blue" />
-                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <AcademicCapIcon color="blue" />
-                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <AcademicCapIcon color="blue" />
-                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-              </li>
-            </ul>
+  <li className="flex items-center space-x-2">
+    <AcademicCapIcon className="h-4 w-4 text-blue-500" />
+    <span>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
+  </li>
+  <li className="flex items-center space-x-2">
+    <AcademicCapIcon className="h-4 w-4 text-blue-500" />
+    <span>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
+  </li>
+  <li className="flex items-center space-x-2">
+    <AcademicCapIcon className="h-4 w-4 text-blue-500" />
+    <span>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
+  </li>
+</ul>
+
             <button className="bg-blue-700 px-6 py-3 text-white font-semibold rounded-full mt-6 shadow-md">
               Discover More
             </button>

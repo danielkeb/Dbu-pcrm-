@@ -1,7 +1,6 @@
-"use client"
 import { createContext, useContext, useState, useEffect } from "react";
 import jwt from "jsonwebtoken";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 
 // Define the type for your context
 interface DAppContextType {
@@ -27,34 +26,28 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
   const [decodedToken, setDecodedToken] = useState<{ [key: string]: any } | null>(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedToken = localStorage.getItem('authToken');
-      if (storedToken) {
-        setToken(storedToken);
-        try {
-          const decoded = jwt.decode(storedToken);
-          if (decoded && typeof decoded === 'object') {
-            setDecodedToken(decoded as { [key: string]: any });
-          } else {
-            setDecodedToken(null);
-          }
-        } catch (error) {
-          console.error('Error decoding token:', error);
+    const storedToken = localStorage.getItem('authToken');
+    if (storedToken) {
+      setToken(storedToken);
+      try {
+        const decoded = jwt.decode(storedToken);
+        if (decoded && typeof decoded === 'object') {
+          setDecodedToken(decoded as { [key: string]: any });
+        } else {
           setDecodedToken(null);
         }
-      } else {
-        setToken(null);
+      } catch (error) {
+        console.error('Error decoding token:', error);
         setDecodedToken(null);
       }
     }
   }, []);
+
   const logout = () => {
     setToken(null);
     setDecodedToken(null);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('authToken');
-      router.push('/login');
-    }
+    localStorage.removeItem('authToken');
+    router.push('/login');
   };
 
   return (

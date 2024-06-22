@@ -61,7 +61,7 @@ export class AuthService {
         throw new ForbiddenException('Incorrect password');
       }
       // const token = await this.signToken(user.id, user.role);
-      return this.signToken(user.id, user.role, user.name);
+      return this.signToken(user.id, user.role, user.name, user.email);
     }
   }
 
@@ -69,11 +69,13 @@ export class AuthService {
     userId: number,
     role: string,
     name: string,
+    email: string,
   ): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
       role,
       name,
+      email,
     };
     const secret = this.config.get('JWT_SECRET');
 
@@ -81,7 +83,14 @@ export class AuthService {
       expiresIn: '100m',
       secret: secret,
     });
-
+    // await this.prisma.users.update({
+    //   where:{
+    //     email: email,
+    //   },
+    //   data:{
+    //     token: token,
+    //   }
+    // });
     return {
       access_token: token,
     };
@@ -122,6 +131,7 @@ export class AuthService {
           status: true,
           address: true,
           phonenumer: true,
+          token: true,
         },
       });
       delete user.password;

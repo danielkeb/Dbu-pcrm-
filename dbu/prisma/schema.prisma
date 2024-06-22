@@ -23,6 +23,7 @@ model Users{
   status String?
   password String
   phonenumer String?
+  token String?
   // pcuser Pcuser[]
   @@map("users")
 }
