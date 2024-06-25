@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'package:dbuapp/screens/about.dart';
 import 'package:dbuapp/screens/login.dart';
 import 'package:dbuapp/screens/register.dart';
 import 'package:dbuapp/screens/scanner.dart';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -100,53 +102,104 @@ class HomePageContent extends StatefulWidget {
 }
 
 class _HomePageContentState extends State<HomePageContent> {
-  double _opacity = 0.0;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 1), () {
-      setState(() {
-        _opacity = 1.0;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'DBU PC Security Application!',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: AnimatedOpacity(
-                    opacity: _opacity,
-                    duration: Duration(seconds: 2),
-                    child: Image.asset(
-                      'assets/images/mob-re.png',
-                      width: 300,
-                      height: 400,
-                    ),
-                  ),
-                ),
-                
-              ],
-            ),
+    return FutureBuilder<Map<String, dynamic>>(
+    future: fetchUser(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData) {
+          return Center(child: Text('No data available'));
+        }
+
+        final data = snapshot.data!;
+       return Center(
+          child: GridView.count(
+            crossAxisCount: 2, // 2 columns
+            shrinkWrap: true, // Center the grid
+            mainAxisSpacing: 16.0,
+            crossAxisSpacing: 16.0,
+            padding: EdgeInsets.all(16.0),
+            children: [
+              buildBox('Total PC Users', data['totalNumberOfPcuser']),
+              buildBox('Students', data['NumberOfstudent']),
+              buildBox('Total Staff', data['totalNumberOfStaff']),
+              buildBox('Total Guests', data['totalNumberOfGuest']),
+            ],
           ),
-        ),
-      ],
+        );
+
+      },
     );
   }
+
+  Widget buildBox(String title, int count) {
+    return Container(
+      width: 100,
+      height: 100,
+      margin: EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+         gradient: LinearGradient(
+        colors: [Colors.white, Colors.blue],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+      ),
+        borderRadius: BorderRadius.circular(10.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 10),
+          Text(
+            count.toString(),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Colors.blue,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  
+  Future<Map<String, dynamic>> fetchUser() async {
+  String url = 'http://localhost:3333/pcuser/visualize';
+  final response = await http.get(Uri.parse(url));
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw Exception('Failed to load users');
+  }
+}
 }
