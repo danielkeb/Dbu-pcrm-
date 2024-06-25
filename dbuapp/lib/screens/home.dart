@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     // Start the animation after a short delay
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         _opacity = 1.0;
       });
@@ -32,8 +32,8 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     HomePageContent(),
     RegisterPage(),
-    ScannerScreen(),
-    About(),
+    const ScannerScreen(),
+    const About(),
     LoginPage(),
   ];
 
@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         body: _pages[_currentIndex],
         bottomNavigationBar: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 Color.fromARGB(255, 165, 189, 214),
@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
             onTap: _onTabTapped,
             selectedItemColor: Colors.white,
             unselectedItemColor: Colors.white70,
-            items: [
+            items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 backgroundColor: Colors.blue,
@@ -114,26 +114,33 @@ class _HomePageContentState extends State<HomePageContent> {
     future: fetchUser(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData) {
-          return Center(child: Text('No data available'));
+          return const Center(child: Text('No data available'));
         }
 
-        final data = snapshot.data!;
+      final data = snapshot.data!;
+      int dbu= data['maleStaffPersonal'] + data['femaleStaffPersonal'];
+      int personal = data['maleNumberOfStaffDbu'] + data['femaleStaffDbu'];
+
        return Center(
+      
           child: GridView.count(
             crossAxisCount: 2, // 2 columns
             shrinkWrap: true, // Center the grid
             mainAxisSpacing: 16.0,
             crossAxisSpacing: 16.0,
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
+            
             children: [
               buildBox('Total PC Users', data['totalNumberOfPcuser']),
               buildBox('Students', data['NumberOfstudent']),
               buildBox('Total Staff', data['totalNumberOfStaff']),
               buildBox('Total Guests', data['totalNumberOfGuest']),
+              buildBox('DBU Pc', dbu),
+              buildBox('Personal Pc', personal),
             ],
           ),
         );
@@ -146,11 +153,11 @@ class _HomePageContentState extends State<HomePageContent> {
     return Container(
       width: 100,
       height: 100,
-      margin: EdgeInsets.all(8.0),
-      padding: EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-         gradient: LinearGradient(
-        colors: [Colors.white, Colors.blue],
+         gradient: const LinearGradient(
+        colors: [Color.fromARGB(255, 241, 238, 238), Color.fromARGB(255, 225, 230, 235)],
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
       ),
@@ -160,7 +167,7 @@ class _HomePageContentState extends State<HomePageContent> {
             color: Colors.grey.withOpacity(0.1),
             spreadRadius: 1,
             blurRadius: 1,
-            offset: Offset(0, 1),
+            offset: const Offset(0, 1),
           ),
         ],
       ),
@@ -170,16 +177,16 @@ class _HomePageContentState extends State<HomePageContent> {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14,
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             count.toString(),
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
               color: Colors.blue,
