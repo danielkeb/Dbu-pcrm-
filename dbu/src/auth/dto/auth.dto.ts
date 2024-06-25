@@ -5,7 +5,7 @@ export class AuthDto {
   id: number;
   @IsString()
   name: string;
-
+  last_name: string;
   @IsEmail()
   @IsString()
   email: string;
@@ -29,8 +29,42 @@ export class AuthDto {
   status: string;
 }
 
+export class UpdateDto {
+  @IsInt()
+  id: number;
+  @IsString()
+  name: string;
+
+  @IsEmail()
+  @IsString()
+  email: string;
+  @IsString()
+  last_name: string;
+
+  @IsString()
+  role: string;
+
+  @IsString()
+  password: string;
+
+  @IsString()
+  gender: string;
+
+  @IsString()
+  address: string;
+
+  @IsString()
+  phonenumber: string;
+
+  @IsString()
+  status: string;
+}
 export class ResetEmailDto {
   @IsEmail()
   @IsString()
   email: string;
+}
+export class ResetDto{
+  @IsString()
+  password: string;
 }

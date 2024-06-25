@@ -9,9 +9,11 @@ import {
   UseGuards,
   HttpStatus,
   HttpCode,
+  Patch,
+  Put,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthDto } from './dto';
+import { AuthDto, ResetDto, UpdateDto } from './dto';
 import { AuthGuard } from './guard/auth.guard';
 import { Roles } from './decorator/roles.decorator';
 import { Role } from './decorator/enums/role.enum';
@@ -39,13 +41,21 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'sign in' })
   @ApiResponse({
-    description: 'The news has been successfully logged.',
+    description: 'The pc user added success.',
   })
   @Post('signin')
   signIn(@Body() dto: AuthDto) {
     return this.authService.signIn(dto);
   }
+@Put('update')
+updateUser(@Param('id', ParseIntPipe) id: number , dto: UpdateDto){
+  return this.authService.updateUser(id, dto);
+}
 
+@Put('resetpassword')
+resetPassword(@Param('id', ParseIntPipe) id: number, dto: ResetDto){
+  return this.authService.resetPassword(id, dto);
+}
   @Get('get')
   //@UseGuards(AuthGuard)
   //@Roles(Role.Admin)
@@ -76,4 +86,6 @@ export class AuthController {
   async forgetPasswordShortCode(@Body() dto: any) {
     return this.authService.forgetPasswordShortCode(dto);
   }
+
+  
 }

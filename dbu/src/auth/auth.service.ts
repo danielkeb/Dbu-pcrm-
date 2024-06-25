@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthDto } from './dto';
+import { AuthDto, ResetDto, UpdateDto } from './dto';
 import * as argon from 'argon2';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -35,6 +35,7 @@ export class AuthService {
           email: dto.email,
           role: dto.role,
           name: dto.name,
+          last_name: dto.last_name,
           address: dto.address,
           gender: dto.gender,
           status: dto.status,
@@ -96,6 +97,36 @@ export class AuthService {
     };
   }
 
+  async updateUser(id: number, dto: UpdateDto){
+    const user= await this.prisma.users.update({
+      where: {
+        id: id,
+      },
+      data:{
+        ...dto,
+      }
+    });
+    if(!user){
+      throw new ForbiddenException('update failed');
+    }
+ return {msq: 'updated success'};
+  }
+async resetPassword(Id: number, dto: ResetDto){
+  const hash = await argon.hash(dto.password);
+  const user= await this.prisma.users.update({
+    where:{
+      id: Id,
+    },
+    data:{
+      password: hash,
+    }
+  });
+
+  if(!user){
+    throw new ForbiddenException('failed reset password');
+  }
+  return {msg: 'password reset success'};
+}
   async getAllUsers() {
     const user = await this.prisma.users.findMany({
       select: {
@@ -126,6 +157,7 @@ export class AuthService {
           role: true,
           email: true,
           name: true,
+          last_name: true,
           password: true,
           gender: true,
           status: true,

@@ -1,13 +1,16 @@
+import React, { useState } from 'react';
 import { useFormik } from "formik";
 import * as yup from "yup"; // Import Yup for validation
 
 const validationSchema = yup.object({
+  id: yup.number().required("Id required"),
   email: yup
     .string()
     .email("Invalid email address")
     .required("Email is required"),
   password: yup.string().required("Password is required"),
   name: yup.string().required("Name is required"),
+  last_name: yup.string().required("Last name required"),
   role: yup.string().required("Role is required"),
   status: yup.string().required("Status is required"),
   address: yup.string().required("Address is required"),
@@ -16,11 +19,16 @@ const validationSchema = yup.object({
 });
 
 const Security = () => {
+  const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const formik = useFormik({
     initialValues: {
+      id: "", // Initialize id as an empty string
       email: "",
       password: "12345678",
       name: "",
+      last_name: "",
       role: "", // Admin or Security
       status: "active", // Active or Inactive
       address: "",
@@ -37,12 +45,18 @@ const Security = () => {
           },
           body: JSON.stringify(values),
         });
+
+        if (!response.ok) {
+          throw new Error('Registration failed');
+        }
+
         const data = await response.json();
-        console.log("Form submitted:", data);
-        // Reset form values or handle success state
+        setMessage("Registration successful!");
+        setIsSuccess(true);
+        formik.resetForm();
       } catch (error) {
-        console.error("Error submitting form:", error);
-        // Handle error state or feedback to user
+        setMessage("Registration failed. Please try again.");
+        setIsSuccess(false);
       }
     },
   });
@@ -54,13 +68,73 @@ const Security = () => {
           User Information
         </h6>
         <div className="flex flex-wrap">
+          {/* User ID */}
+          <div className="w-full lg:w-6/12 px-4">
+            <div className="relative w-full mb-3">
+              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="id">
+                User Id
+              </label>
+              <input
+                type="number"
+                className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
+                placeholder="User ID"
+                name="id"
+                value={formik.values.id}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.errors.id && formik.touched.id && (
+                <small className="text-red-500">{formik.errors.id}</small>
+              )}
+            </div>
+          </div>
+
+          {/* First Name */}
+          <div className="w-full lg:w-6/12 px-4">
+            <div className="relative w-full mb-3">
+              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="name">
+                First Name
+              </label>
+              <input
+                type="text"
+                className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
+                placeholder="Name"
+                name="name"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.errors.name && formik.touched.name && (
+                <small className="text-red-500">{formik.errors.name}</small>
+              )}
+            </div>
+          </div>
+
+          {/* Last Name */}
+          <div className="w-full lg:w-6/12 px-4">
+            <div className="relative w-full mb-3">
+              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="last_name">
+                Last Name
+              </label>
+              <input
+                type="text"
+                className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
+                placeholder="Last Name"
+                name="last_name"
+                value={formik.values.last_name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.errors.last_name && formik.touched.last_name && (
+                <small className="text-red-500">{formik.errors.last_name}</small>
+              )}
+            </div>
+          </div>
+
           {/* Email */}
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="email"
-              >
+              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="email">
                 Email
               </label>
               <input
@@ -77,56 +151,11 @@ const Security = () => {
               )}
             </div>
           </div>
-          {/* Password */}
-          {/* <div className="w-full lg:w-6/12 px-4">
-            <div className="relative w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="password">
-                Password
-              </label>
-              <input
-                type="password"
-                className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
-                placeholder="Password"
-                name="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.errors.password && formik.touched.password && (
-                <small className="text-red-500">{formik.errors.password}</small>
-              )}
-            </div>
-          </div> */}
-          {/* Name */}
-          <div className="w-full lg:w-6/12 px-4">
-            <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="name"
-              >
-                Name
-              </label>
-              <input
-                type="text"
-                className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
-                placeholder="Name"
-                name="name"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.errors.name && formik.touched.name && (
-                <small className="text-red-500">{formik.errors.name}</small>
-              )}
-            </div>
-          </div>
+
           {/* Role (Dropdown) */}
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="role"
-              >
+              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="role">
                 Role
               </label>
               <select
@@ -147,13 +176,11 @@ const Security = () => {
               )}
             </div>
           </div>
+
           {/* Status (Dropdown) */}
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="status"
-              >
+              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="status">
                 Status
               </label>
               <select
@@ -171,13 +198,11 @@ const Security = () => {
               )}
             </div>
           </div>
+
           {/* Address */}
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="address"
-              >
+              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="address">
                 Address
               </label>
               <input
@@ -194,13 +219,11 @@ const Security = () => {
               )}
             </div>
           </div>
+
           {/* Gender */}
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="gender"
-              >
+              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="gender">
                 Gender
               </label>
               <select
@@ -221,13 +244,11 @@ const Security = () => {
               )}
             </div>
           </div>
+
           {/* Phone Number */}
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="phonenumber"
-              >
+              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="phonenumber">
                 Phone Number
               </label>
               <input
@@ -239,21 +260,32 @@ const Security = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
-              {formik.errors.phonenumber && formik.touched.phonenumber}
-              {/* Submit Button */}
+              {formik.errors.phonenumber && formik.touched.phonenumber && (
+                <small className="text-red-500">{formik.errors.phonenumber}</small>
+              )}
             </div>
           </div>
+
+          {/* Submit Button */}
           <div className="w-full px-4">
             <button
               type="submit"
-              className="bg-green-600 border-0 text-white w-full p-3 rounded-md"
+              className="bg-blue-500 border-0 text-white w-full p-3 rounded-md"
             >
               Submit
             </button>
+            
+            
           </div>
+          {message && (
+          <div className={`mt-4 text-sm ${isSuccess ? 'text-green-500' : 'text-red-500'}`}>
+            {message}
+          </div>
+        )}
         </div>
       </form>
     </div>
   );
 };
+
 export default Security;

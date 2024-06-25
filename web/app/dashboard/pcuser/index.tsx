@@ -381,7 +381,7 @@ const RegisterPage = () => {
         <br />
         <button
           type="submit"
-          className="bg-green-700 border-0 text-white w-full p-3 rounded-md"
+          className="bg-blue-500 border-0 text-white w-full p-3 rounded-md"
         >
           Submit
         </button>

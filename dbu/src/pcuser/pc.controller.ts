@@ -88,6 +88,27 @@ export class NewPcController {
     }
   }
 
+  @Get('barcodes/:filename')
+  async barcode(
+    @Param('filename') filename: string,
+    @Res() res: Response,
+  ): Promise<void> {
+    try {
+      const filePath = join(process.cwd(), 'barcodes', `${filename}`);
+      const readableStream = createReadStream(filePath);
+
+      // Set response headers
+      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Content-Disposition', `inline; filename=${filename}`);
+
+      // Pipe the stream to the response
+      readableStream.pipe(res);
+    } catch (error) {
+      console.error('Error opening barcode:', error);
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Error opening barcode');
+    }
+  }
+
   @Put('update/:userId')
   pcUserUpdate(
     @Param('userId', ParseIntPipe) userId: number,
