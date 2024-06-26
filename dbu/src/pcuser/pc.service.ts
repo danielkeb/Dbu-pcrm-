@@ -215,41 +215,54 @@ export class NewPcService {
       maleStaffPersonal: malestaffPersonal,
     };
   }
-
-  // async trashedUser(year: number){
-  //   const users= await this.prisma.pcuser.findMany({
-  //     where:{
-  //       endYear: year,
-  //     }
-  //   });
-  //   if(!users){
-  //     throw new NotFoundException('user not found');
-  //   }
-    
-  // }
-
   async trashedUser(year: number) {
-    const usersToTrash = await this.prisma.pcuser.findMany({
-      where:{
-       endYear:{
-        gte: new Date(year, 0, 1),
-        lt: new Date(year + 1, 0, 1),
-      },
-      }});
-    if(usersToTrash.length != 0){
-    for (const user of usersToTrash) {
-      await this.prisma.pcuser.update({
-        where: { id: user.id },
-        data: {
-          status: 'trashed',
+    try {
+      const usersToTrash = await this.prisma.pcuser.findMany({
+        where: {
+          endYear: {
+            gte: new Date(year, 0, 1),
+            lt: new Date(year + 1, 0, 1),
+          },
         },
       });
+  
+      if (usersToTrash.length !== 0) {
+        for (const user of usersToTrash) {
+          // Create inactive user
+          const inuser = await this.prisma.inactive.create({
+            data: {
+              userId: user.userId,
+              firstname: user.firstname,
+              lastname: user.lastname,
+              brand: user.brand,
+              description: user.description,
+              endYear: user.endYear,
+              gender: user.gender,
+              serialnumber: user.serialnumber,
+              phonenumber: user.phonenumber,
+              pcowner: user.pcowner,
+              image: user.image,
+              barcode: user.barcode,
+            },
+          });
+  
+          // Delete pcuser if inactive user creation was successful
+          if (inuser) {
+            await this.prisma.pcuser.delete({
+              where: {
+                userId: user.userId,
+              },
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error trashing users:", error);
+      throw new Error("Failed to trash users.");
     }
   }
-    else{
-      throw new NotFoundException('user not found');
-    }
-  }
+    
+  
 
   async autoDeleteTrashedUsers(): Promise<void> {
     const thresholdDate = new Date();
