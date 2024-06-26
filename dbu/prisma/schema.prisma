@@ -41,6 +41,8 @@ model Pcuser{
   image   String
   brand  String
   serialnumber String?
+  endYear Int?
+  status String?
 
   pcowner String?
   barcode String?
