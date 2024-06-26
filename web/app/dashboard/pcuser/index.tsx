@@ -354,30 +354,26 @@ const RegisterPage = () => {
       )}
         </div>
         <div className="w-full lg:w-6/12 px-4">
-            <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="brand"
-              >
-                select End year
-        </label>
-        <DatePicker
-        className=""
-        selected={formik.values.endYear}
-        onChange={handleDateChange}
-        dateFormat="yyyy-MM-dd"
-        id="endYear"
-      />
-       {formik.errors.endYear && formik.touched.endYear && (
-            <small className="text-red-500">
-          {formik.errors.endYear ? (
-            <div style={{ color: 'red' }}></div>
-      ) : null}
-            </small>
-          )}
+  <div className="relative w-full mb-3">
+    <label
+      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+      htmlFor="brand"
+    >
+      Select End Year
+    </label>
+    <DatePicker
+      className="border border-gray-300 rounded px-3 py-2 w-full"
+      selected={formik.values.endYear}
+      onChange={handleDateChange}
+      dateFormat="yyyy-MM-dd"
+      id="endYear"
+    />
+    {formik.errors.endYear && formik.touched.endYear && (
+      <small className="text-red-500">{formik.errors.endYear}</small>
+    )}
+  </div>
+</div>
 
-        </div>
-          </div>
         <hr className="mt-6 border-b-1 border-blueGray-300" />
         <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
           Photo
