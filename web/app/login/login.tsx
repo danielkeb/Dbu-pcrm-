@@ -3,6 +3,8 @@
 import { AppContext } from '@/components/UserContext';
 import { useRouter } from 'next/navigation';
 import React, { useState, FormEvent, useContext } from 'react';
+import { useAppContext } from '../appContext';
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -13,9 +15,10 @@ const Login = () => {
   const [forgotError, setForgotError] = useState('');
   const [shortcodeSent, setShortcodeSent] = useState(false);
   const [userId, setUserId] = useState('');
-  const { setToken } = useContext(AppContext);
+  // const { setToken } = useContext(AppContext);
   const router = useRouter();
-
+  
+  const { token, setToken, decodedToken, setDecodedToken } = useContext(AppContext);
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -30,12 +33,17 @@ const Login = () => {
 
     if (response.ok) {
       const data = await response.json();
-      const token = data.access_token;
-      localStorage.setItem('authToken', token);
-      console.log("Here is your token", token, response);
+      const new_token = data.access_token;
+      localStorage.setItem('authToken', new_token);
 
-      setToken(token);
-      console.log('Login successful', data);
+
+      // console.log("Here is your token", new_token, response);
+     
+      setToken(new_token);
+      const dec=jwt.decode(new_token); 
+      
+     setDecodedToken(dec)
+      console.log('Login successful here is ...', token);
       router.push("/dashboard");
     } else {
       const errorData = await response.json();

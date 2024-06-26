@@ -6,12 +6,16 @@ import DrawerAppBar from "./landing";
 
 export default function Home() {
   return (
+ 
     <main >
       <div >
         {/* <Login/> */}
-        <AppWrapper><DrawerAppBar/></AppWrapper>
+  
+          <DrawerAppBar/>
+     
         
       </div>
     </main>
+
   );
 }
