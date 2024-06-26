@@ -77,23 +77,6 @@ export class NewPcService {
     }
   }
 
-  // async getNewPc(limit = 5, search: string | null = null) {
-  //   const queryOptions: any = {
-  //     take: limit, // Limit the number of users returned
-  //   };
-
-  //   // If search criteria is provided, add it to the query options
-  //   if (search) {
-  //     queryOptions.where = {
-  //       userId: {
-  //         contains: search, // Assuming userId is the field to search for
-  //       },
-  //     };
-  //   }
-
-  //   const newPc = await this.prisma.pcuser.findMany(queryOptions);
-  //   return newPc;
-  // }
   async getNewPc() {
     const newPc = await this.prisma.pcuser.findMany();
     return newPc;
@@ -215,13 +198,15 @@ export class NewPcService {
       maleStaffPersonal: malestaffPersonal,
     };
   }
-  async trashedUser(year: number) {
+  async trashedUser(year: Date) {
     try {
+      const futureDate = new Date(year);
+      futureDate.setFullYear(year.getFullYear() + 1);
       const usersToTrash = await this.prisma.pcuser.findMany({
         where: {
           endYear: {
-            gte: new Date(year, 0, 1),
-            lt: new Date(year + 1, 0, 1),
+            gte: new Date(year),
+            lt: new Date(futureDate),
           },
         },
       });
@@ -261,26 +246,32 @@ export class NewPcService {
       throw new Error("Failed to trash users.");
     }
   }
-    
-  
-
-  async autoDeleteTrashedUsers(): Promise<void> {
-    const thresholdDate = new Date();
-    thresholdDate.setDate(thresholdDate.getDate() + 30); // 30 days threshold
-
-    const usersToDelete = await this.prisma.pcuser.findMany({
-      where: {
-        status: 'trashed',
+  async restore(year: Date){
+    const users= await this.prisma.inactive.findMany({
+      where:{
+        endYear: year,
       },
     });
 
-    for (const user of usersToDelete) {
-      await this.prisma.pcuser.delete({
-        where:{
-          id: user.id,
-        }
-      });
+    if(users){
+      for(const user of users ){
+        await this.prisma.pcuser.create({
+          data: {
+            userId: user.userId,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            brand: user.brand,
+            description: user.description,
+            endYear: user.endYear,
+            gender: user.gender,
+            serialnumber: user.serialnumber,
+            phonenumber: user.phonenumber,
+            pcowner: user.pcowner,
+            image: user.image,
+            barcode: user.barcode,
+          },
+        });
+      }
     }
   }
-  
 }

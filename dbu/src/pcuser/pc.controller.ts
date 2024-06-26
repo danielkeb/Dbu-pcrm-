@@ -133,7 +133,12 @@ export class NewPcController {
   }
 
   @Put('trash/year/:year')
-  async trashedUser(@Param('year') year: number): Promise<void> {
+  trashedUser(@Param('year') year: Date): Promise<void> {
     return this.newPcService.trashedUser(year);
   }
+ @Put('restore')
+ restoreAll(@Param('year') year: Date){
+  return this.newPcService.restore(year);
+ }
+
 }
