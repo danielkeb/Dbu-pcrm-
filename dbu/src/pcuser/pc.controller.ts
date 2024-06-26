@@ -133,10 +133,10 @@ export class NewPcController {
   }
 
   @Put('trash/year/:year')
-  trashedUser(@Param('year') year: Date): Promise<void> {
+  trashedUser(@Param('year') year: Date) {
     return this.newPcService.trashedUser(year);
   }
- @Put('restore')
+ @Put('restore/year/:year')
  restoreAll(@Param('year') year: Date){
   return this.newPcService.restore(year);
  }

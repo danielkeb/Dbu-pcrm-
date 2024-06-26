@@ -198,80 +198,148 @@ export class NewPcService {
       maleStaffPersonal: malestaffPersonal,
     };
   }
-  async trashedUser(year: Date) {
+  async trashedUser(year: any) {
     try {
-      const futureDate = new Date(year);
-      futureDate.setFullYear(year.getFullYear() + 1);
-      const usersToTrash = await this.prisma.pcuser.findMany({
-        where: {
-          endYear: {
-            gte: new Date(year),
-            lt: new Date(futureDate),
+      // Ensure year is a Date object
+      const yearDate = new Date(year);
+  
+      if (isNaN(yearDate.getTime())) {
+        throw new Error('Invalid date');
+      }
+  
+      const futureDate = new Date(yearDate);
+      futureDate.setFullYear(yearDate.getFullYear() + 1);
+  
+      let usersToTrash;
+      try {
+        usersToTrash = await this.prisma.pcuser.findMany({
+          where: {
+            endYear: {
+              gte: yearDate,
+              lt: futureDate,
+            },
           },
-        },
-      });
+        });
+      } catch (error) {
+        console.error("Error finding pcuser records:", error);
+        throw new Error("Failed to find pcuser records.");
+      }
   
       if (usersToTrash.length !== 0) {
         for (const user of usersToTrash) {
-          // Create inactive user
-          const inuser = await this.prisma.inactive.create({
-            data: {
-              userId: user.userId,
-              firstname: user.firstname,
-              lastname: user.lastname,
-              brand: user.brand,
-              description: user.description,
-              endYear: user.endYear,
-              gender: user.gender,
-              serialnumber: user.serialnumber,
-              phonenumber: user.phonenumber,
-              pcowner: user.pcowner,
-              image: user.image,
-              barcode: user.barcode,
-            },
-          });
-  
-          // Delete pcuser if inactive user creation was successful
-          if (inuser) {
-            await this.prisma.pcuser.delete({
-              where: {
+          let inuser;
+          try {
+            inuser = await this.prisma.inactive.create({
+              data: {
                 userId: user.userId,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                brand: user.brand,
+                description: user.description,
+                endYear: user.endYear,
+                gender: user.gender,
+                serialnumber: user.serialnumber,
+                phonenumber: user.phonenumber,
+                pcowner: user.pcowner,
+                image: user.image,
+                barcode: user.barcode,
               },
             });
+          } catch (error) {
+            console.error("Error creating inactive user:", error);
+            throw new Error("Failed to create inactive user.");
+          }
+  
+          if (inuser) {
+            try {
+              await this.prisma.pcuser.delete({
+                where: {
+                  userId: user.userId,
+                },
+              });
+            } catch (error) {
+              console.error("Error deleting pcuser:", error);
+              throw new Error("Failed to delete pcuser.");
+            }
           }
         }
       }
+      return { msg: "deactivated successfully" };
     } catch (error) {
       console.error("Error trashing users:", error);
       throw new Error("Failed to trash users.");
     }
   }
-  async restore(year: Date){
-    const users= await this.prisma.inactive.findMany({
-      where:{
-        endYear: year,
-      },
-    });
-
-    if(users){
-      for(const user of users ){
-        await this.prisma.pcuser.create({
-          data: {
-            userId: user.userId,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            brand: user.brand,
-            description: user.description,
-            endYear: user.endYear,
-            gender: user.gender,
-            serialnumber: user.serialnumber,
-            phonenumber: user.phonenumber,
-            pcowner: user.pcowner,
-            image: user.image,
-            barcode: user.barcode,
+  
+  
+  async restore(year: any) {
+    try {
+      const yearDate = new Date(year);
+  
+      if (isNaN(yearDate.getTime())) {
+        throw new Error('Invalid date');
+      }
+  
+      const futureDate = new Date(yearDate);
+      futureDate.setFullYear(yearDate.getFullYear() + 1);
+  
+      let users;
+      try {
+        users = await this.prisma.inactive.findMany({
+          where: {
+            endYear: yearDate,
           },
         });
+      } catch (error) {
+        console.error("Error finding inactive users:", error);
+        throw new Error("Failed to find inactive users.");
       }
+  
+      if (users) {
+        for (const user of users) {
+          let inuser;
+          try {
+            inuser = await this.prisma.pcuser.create({
+              data: {
+                userId: user.userId,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                brand: user.brand,
+                description: user.description,
+                endYear: user.endYear,
+                gender: user.gender,
+                serialnumber: user.serialnumber,
+                phonenumber: user.phonenumber,
+                pcowner: user.pcowner,
+                image: user.image,
+                barcode: user.barcode,
+              },
+            });
+          } catch (error) {
+            console.error("Error creating pcuser:", error);
+            throw new Error("Failed to create pcuser.");
+          }
+  
+          if (inuser) {
+            try {
+              await this.prisma.inactive.delete({
+                where: {
+                  userId: user.userId,
+                },
+              });
+            } catch (error) {
+              console.error("Error deleting inactive user:", error);
+              throw new Error("Failed to delete inactive user.");
+            }
+          }
+        }
+      }
+  
+      return { msg: "restore success" };
+    } catch (error) {
+      console.error("Error restoring users:", error);
+      throw new Error("Failed to restore users.");
     }
   }
+  
 }

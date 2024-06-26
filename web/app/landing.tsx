@@ -130,13 +130,14 @@ export default function DrawerAppBar(props: Props) {
       </div>
     </div>
     <div className="relative w-full md:w-1/2 md:h-1/2">
-      <Image
-        src="/pcsecurity.jpeg"
-        layout="fill"
-        objectFit="cover"
-        alt="PC Security"
-      />
-    </div>
+  <Image
+    src="/pcsecurity.jpeg"
+    fill
+    style={{ objectFit: 'cover' }}
+    alt="PC Security"
+  />
+</div>
+
   </div>
 </section>
 
