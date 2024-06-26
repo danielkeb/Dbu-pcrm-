@@ -23,7 +23,7 @@ export class NewPcDto {
 
   @IsInt()
   @IsNotEmpty()
-  endYear: number;
+  endYear: Date;
 
   @IsString()
   @IsNotEmpty()

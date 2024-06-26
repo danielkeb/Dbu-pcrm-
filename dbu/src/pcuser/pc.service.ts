@@ -231,7 +231,10 @@ export class NewPcService {
   async trashedUser(year: number) {
     const usersToTrash = await this.prisma.pcuser.findMany({
       where:{
-       endYear: year,
+       endYear:{
+        gte: new Date(year, 0, 1),
+        lt: new Date(year + 1, 0, 1),
+      },
       }});
     if(usersToTrash.length != 0){
     for (const user of usersToTrash) {

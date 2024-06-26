@@ -2,6 +2,8 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import * as Yup from "yup";
 
 type FormValues = {
@@ -15,6 +17,7 @@ type FormValues = {
   gender: string;
   description: string;
   pcowner: string;
+  endYear: Date; // Add endYear to FormValues
 };
 
 const RegisterPage = () => {
@@ -33,6 +36,7 @@ const RegisterPage = () => {
       gender: "",
       description: "",
       pcowner: "",
+      endYear: new Date(), // Initialize endYear with current date
     },
     validationSchema: Yup.object({
       userId: Yup.string().required("User ID is required"),
@@ -45,19 +49,25 @@ const RegisterPage = () => {
       gender: Yup.string().required("Gender is required"),
       description: Yup.string().required("Description is required"),
       pcowner: Yup.string(),
+      endYear: Yup.date().required("End Year is required"), // Add validation for endYear
     }),
     onSubmit: async (values) => {
       if (!imageFile) {
         alert("Please upload an image");
         return;
       }
-
+    
       const formData = new FormData();
-      (Object.keys(values) as (keyof FormValues)[]).forEach((key) =>
-        formData.append(key, values[key])
-      );
+      Object.keys(values).forEach((key) => {
+        const formKey = key as keyof FormValues; // Type assertion to keyof FormValues
+        if (formKey === 'endYear') {
+          formData.append(formKey, values[formKey].toISOString()); // Convert endYear to ISO string
+        } else {
+          formData.append(formKey, values[formKey] as string);
+        }
+      });
       formData.append("image", imageFile);
-
+    
       try {
         const response = await axios.post(
           "http://10.18.51.50:3333/pcuser/add",
@@ -77,7 +87,12 @@ const RegisterPage = () => {
         alert(`Unable to connect to the internet: ${error.message}`);
       }
     },
+    
   });
+
+  const handleDateChange = (date: Date | null) => {
+    formik.setFieldValue('endYear', date); // Update formik state for endYear
+  };
 
   const onDrop = (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -338,6 +353,31 @@ const RegisterPage = () => {
         </div>
       )}
         </div>
+        <div className="w-full lg:w-6/12 px-4">
+            <div className="relative w-full mb-3">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="brand"
+              >
+                select End year
+        </label>
+        <DatePicker
+        className=""
+        selected={formik.values.endYear}
+        onChange={handleDateChange}
+        dateFormat="yyyy-MM-dd"
+        id="endYear"
+      />
+       {formik.errors.endYear && formik.touched.endYear && (
+            <small className="text-red-500">
+          {formik.errors.endYear ? (
+            <div style={{ color: 'red' }}></div>
+      ) : null}
+            </small>
+          )}
+
+        </div>
+          </div>
         <hr className="mt-6 border-b-1 border-blueGray-300" />
         <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
           Photo
