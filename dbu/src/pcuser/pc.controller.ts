@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -25,7 +26,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { createReadStream } from 'fs';
 import { join } from 'path';
-import type { Response } from 'express';
+import { query, type Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('pcuser')
@@ -130,4 +131,14 @@ export class NewPcController {
   visualize() {
     return this.newPcService.visualize();
   }
+
+  @Put('trash/year/:year')
+  trashedUser(@Param('year') year: Date) {
+    return this.newPcService.trashedUser(year);
+  }
+ @Put('restore/year/:year')
+ restoreAll(@Param('year') year: Date){
+  return this.newPcService.restore(year);
+ }
+
 }
