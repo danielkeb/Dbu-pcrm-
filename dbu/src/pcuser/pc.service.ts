@@ -239,7 +239,6 @@ export class NewPcService {
         where: { id: user.id },
         data: {
           status: 'trashed',
-          deactivatedAt: year,
         },
       });
     }
@@ -251,16 +250,20 @@ export class NewPcService {
 
   async autoDeleteTrashedUsers(): Promise<void> {
     const thresholdDate = new Date();
-    thresholdDate.setDate(thresholdDate.getDate() - 30); // 30 days threshold
+    thresholdDate.setDate(thresholdDate.getDate() + 30); // 30 days threshold
 
-    const usersToDelete = await this.pcuser.find({
+    const usersToDelete = await this.prisma.pcuser.findMany({
       where: {
         status: 'trashed',
       },
     });
 
     for (const user of usersToDelete) {
-      await this.prisma. pcuser.delete(user);
+      await this.prisma.pcuser.delete({
+        where:{
+          id: user.id,
+        }
+      });
     }
   }
   
