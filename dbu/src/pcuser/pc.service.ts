@@ -2,7 +2,7 @@ import {
   ForbiddenException,
   Injectable,
   NotAcceptableException,
-  NotFoundException,
+  NotFoundException
   //NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -13,6 +13,8 @@ import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import * as bwipjs from 'bwip-js';
 @Injectable()
 export class NewPcService {
+  pcuser: any;
+  userRepository: any;
   constructor(private prisma: PrismaService) {}
 
   async addNewPc(dto: NewPcDto, photo: string): Promise<Pcuser> {
@@ -55,6 +57,8 @@ export class NewPcService {
           firstname: dto.firstname,
           lastname: dto.lastname,
           brand: dto.brand,
+          endYear: dto.endYear,
+          status: dto.status,
           description: dto.description,
           serialnumber: dto.serialnumber,
           gender: dto.gender,
@@ -211,4 +215,53 @@ export class NewPcService {
       maleStaffPersonal: malestaffPersonal,
     };
   }
+
+  // async trashedUser(year: number){
+  //   const users= await this.prisma.pcuser.findMany({
+  //     where:{
+  //       endYear: year,
+  //     }
+  //   });
+  //   if(!users){
+  //     throw new NotFoundException('user not found');
+  //   }
+    
+  // }
+
+  async trashedUser(year: number) {
+    const usersToTrash = await this.prisma.pcuser.findMany({
+      where:{
+       endYear: year,
+      }});
+    if(usersToTrash.length != 0){
+    for (const user of usersToTrash) {
+      await this.prisma.pcuser.update({
+        where: { id: user.id },
+        data: {
+          status: 'trashed',
+          deactivatedAt: year,
+        },
+      });
+    }
+  }
+    else{
+      throw new NotFoundException('user not found');
+    }
+  }
+
+  async autoDeleteTrashedUsers(): Promise<void> {
+    const thresholdDate = new Date();
+    thresholdDate.setDate(thresholdDate.getDate() - 30); // 30 days threshold
+
+    const usersToDelete = await this.pcuser.find({
+      where: {
+        status: 'trashed',
+      },
+    });
+
+    for (const user of usersToDelete) {
+      await this.prisma. pcuser.delete(user);
+    }
+  }
+  
 }

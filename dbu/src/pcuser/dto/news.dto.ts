@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class NewPcDto {
   @IsString()
@@ -20,6 +20,14 @@ export class NewPcDto {
   @IsString()
   @IsNotEmpty()
   brand: string;
+
+  @IsInt()
+  @IsNotEmpty()
+  endYear: number;
+
+  @IsString()
+  @IsNotEmpty()
+  status: string;
 
   @IsString()
   @IsNotEmpty()
