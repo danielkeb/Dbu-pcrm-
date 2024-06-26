@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AppWrapper } from "@/components/UserContext";
+
 
 export const metadata: Metadata = {
   title: "website for dbu personal computter managment",
@@ -13,7 +15,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+
+      <body>
+      <AppWrapper>
+     {children}
+     </AppWrapper>
+        </body>
       <body>{children}</body>
+
     </html>
   );
 }
