@@ -4,6 +4,12 @@ import * as nodemailer from 'nodemailer';
 import * as argon from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PasswordDto } from './dto/pass.dto';
+// require('dotenv').config();
+
+// // Now you can access the environment variables
+// const databaseUrl = process.env.DATABASE_URL;
+// const secretKey = process.env.SECRET_KEY;
+
 @Injectable()
 export class ShortcodeEmailService {
   private readonly logger = new Logger(ShortcodeEmailService.name);
@@ -15,8 +21,8 @@ export class ShortcodeEmailService {
   async sendSecurityAlert(email: string, userId: number) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
-      host: 'smtp.gmail.com',
-      port: 465,
+      host: this.config.get('HOST'),
+      port: this.config.get('PORT'),
       secure: true,
       auth: {
         user: this.config.get('EMAIL_ADDRESS'),
