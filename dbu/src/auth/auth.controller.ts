@@ -65,8 +65,8 @@ resetPassword(@Param('id', ParseIntPipe) id: number, dto: ResetDto){
   //@UseGuards()
 
   @Get('get/:id')
-  @UseGuards(AuthGuard, RoleGuard)
-  @Roles(Role.MODERATOR)
+  //@UseGuards(AuthGuard, RoleGuard)
+  //@Roles(Role.MODERATOR)
   searchUser(@Param('id', ParseIntPipe) id: number) {
     return this.authService.searchUser(id);
   }

@@ -125,7 +125,7 @@ export default function DashboardLayout({ children }: Props) {
                     <Link href="/dashboard/profile">
                       <Link
                         className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 transition duration-200"
-                        href={""}
+                        href={`/dashboard/profile?id=${decodedToken?.sub}`}
                       >
                         Profile
                       </Link>
