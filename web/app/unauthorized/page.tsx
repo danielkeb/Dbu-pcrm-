@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 
-const Unauthorized: NextPage = () => {
+const Page: NextPage = () => {
   return (
     <div>
       <h1>Unauthorized Access</h1>
@@ -9,4 +9,4 @@ const Unauthorized: NextPage = () => {
   );
 };
 
-export default Unauthorized;
+export default Page;
