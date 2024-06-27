@@ -7,6 +7,7 @@ const UserProfilePage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [id, setId] = useState<number | null>(null);
+  const [successMessage, setSuccessMessage]= useState("");
   const [user, setUser] = useState<User>({
     id: 0,
     name: "",
@@ -57,7 +58,8 @@ const UserProfilePage = () => {
     if (id !== null) {
       try {
         await updateUser(id, user); // Assuming updateUser function exists and updates the user
-        router.push("/"); // Redirect to homepage after update
+        // router.push("/dashboard/profile"); // Redirect to homepage after update
+        setSuccessMessage("profile updated successfully");
       } catch (error) {
         setError("Failed to update user");
       }
@@ -70,20 +72,23 @@ const UserProfilePage = () => {
 
   return (
     <div className="flex-auto px-4 lg:px-10 py-10 pt-0 align-middle">
-      <div className="p-4 flex items-center">
-        <Image
-          src="/avator.png"
-          alt="User Avatar"
-          className="w-12 h-12 rounded-full"
-          width={48}
-          height={48}
-        />
-        <div className="ml-3">
-          <h2 className="text-lg font-semibold">{user.name}</h2>
-          <p className="text-sm text-gray-500">{user.role}</p>
-          <p className="text-sm text-gray-500">status {user.status}</p>
-        </div>
-      </div>
+      <div className="p-4 flex items-center justify-center"> {/* Center align flex items */}
+  <div className="flex items-center"> {/* Align items inside flex container */}
+    <Image
+      src="/avator.png"
+      alt="User Avatar"
+      className="w-24 h-24 rounded-full"
+      width={100}
+      height={100}
+    />
+    <div className="ml-3">
+      <h2 className="text-lg font-bold">{user.name}</h2>
+      <p className="text-sm text-gray-500">{user.role}</p>
+      <p className="text-sm text-gray-500">Status: {user.status}</p>
+    </div>
+  </div>
+</div>
+
       <form onSubmit={handleSubmit}>
         <div className="flex flex-wrap">
           <div className="w-full lg:w-6/12 px-4">
@@ -226,11 +231,12 @@ const UserProfilePage = () => {
 
         <button
           type="submit"
-          className="bg-green-700 border-0 text-white w-full p-3 rounded-md mt-4"
+          className="bg-blue-500 border-0 text-white w-1/2 mx-auto p-3 rounded-md mt-4 block"
         >
           Update
         </button>
       </form>
+      <small className="text-red-500">{successMessage}</small>
     </div>
   );
 };

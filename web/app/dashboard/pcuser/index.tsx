@@ -369,7 +369,7 @@ const RegisterPage = () => {
       id="endYear"
     />
     {formik.errors.endYear && formik.touched.endYear && (
-      <small className="text-red-500">{formik.errors.endYear}</small>
+      <small className="text-red-500">{formik.errors.endYear && ''}</small>
     )}
   </div>
 </div>
