@@ -34,22 +34,21 @@ export class NewPcService {
       });
 
       // Define the path where the barcode will be saved
-      const barcodeDir = join(
-        __dirname,
-        '../../../barcodes',
-        dto.userId.replace(/\//g, '_'),
-      );
-      const barcodePath = `${barcodeDir}.png`;
+  const barcodeBaseDir = join(__dirname, '../../../barcodes');
 
-      // Ensure the directory exists
-      const barcodeBaseDir = join(__dirname, '../../../barcodes');
-      if (!existsSync(barcodeBaseDir)) {
-        mkdirSync(barcodeBaseDir, { recursive: true });
-      }
+// Ensure the base directory exists
+if (!existsSync(barcodeBaseDir)) {
+  mkdirSync(barcodeBaseDir, { recursive: true });
+}
 
-      // Save the barcode image to the specified path
-      writeFileSync(barcodePath, barcodeBuffer);
-      const relativeBarcodePath = `barcodes/${dto.userId}.png`;
+// Define the full path to save the barcode image
+const barcodePath = join(barcodeBaseDir, `${dto.userId.replace(/\//g, '_')}.png`);
+
+// Save the barcode image to the specified path
+writeFileSync(barcodePath, barcodeBuffer);
+
+// Generate the relative path for storing in the database
+const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
 
       const newPc = await this.prisma.pcuser.create({
         data: {
