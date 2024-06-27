@@ -111,13 +111,20 @@ const Visualization: React.FC = () => {
             <Pie data={pieData} options={{ responsive: true }} />
           </div>
         </div>
-        {decodedToken?.role !== "admin" && (
+        {decodedToken?.role == "admin" ? (
           <div className="bg-white p-4 rounded-lg shadow">
             <h3 className="text-blue-500 font-bold">DBU Security Users</h3>
             <div className="w-64 h-64 mx-auto">
               <Pie data={pieSecurity} options={{ responsive: true }} />
             </div>
           </div>
+        ):(
+            <div className="bg-white p-4 rounded-lg shadow">
+              <h3 className="text-blue-500 font-bold">DBU Security Users</h3>
+              <div className="w-64 h-64 mx-auto">
+                <Bar data={pieSecurity} options={{ responsive: true }} />
+              </div>
+            </div>
         )}
       </div>
     </div>
