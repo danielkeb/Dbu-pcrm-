@@ -16,12 +16,12 @@ export default function RootLayout({
   return (
     <html lang="en">
 
-      <body>
+      <body >
       <AppWrapper>
      {children}
      </AppWrapper>
         </body>
-      <body>{children}</body>
+      {/* <body>{children}</body> */}
 
     </html>
   );

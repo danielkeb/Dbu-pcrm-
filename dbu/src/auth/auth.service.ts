@@ -127,22 +127,39 @@ async resetPassword(Id: number, dto: ResetDto){
   }
   return {msg: 'password reset success'};
 }
-  async getAllUsers() {
-    const user = await this.prisma.users.findMany({
+async getAllUsers() {
+  const [users, totalUsers, maleUsers, femaleUsers, activeUsers, inactiveUsers] = await Promise.all([
+    this.prisma.users.findMany({
       select: {
         id: true,
         name: true,
         role: true,
         email: true,
-        password: true,
+        gender: true,
+        status: true,
+        // password: true,
       },
-    });
-    user.forEach((user) => {
-      delete user.password;
-    });
+    }),
+    this.prisma.users.count(),
+    this.prisma.users.count({ where: { gender: 'Male' } }),
+    this.prisma.users.count({ where: { gender: 'Female' } }),
+    this.prisma.users.count({ where: { status: 'active' } }),
+    this.prisma.users.count({ where: { status: 'inactive' } }),
+  ]);
 
-    return user;
-  }
+  // Remove password from each user
+  // const sanitizedUsers = users.map(({ password, ...rest }) => rest);
+
+  return {
+    // users: sanitizedUsers,
+    totalUsers,
+    maleUsers,
+    femaleUsers,
+    activeUsers,
+    inactiveUsers,
+  };
+}
+
   async searchUser(userid: number): Promise<Users> {
     const existid = await this.prisma.users.findUnique({
       where: { id: userid },
