@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import * as React from "react";
 import { useContext, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -17,7 +17,7 @@ type ListItemsProps = {
 
 const MainListItems = ({ isOpen }: ListItemsProps) => {
   const path = usePathname();
-  const router=useRouter();
+  const router = useRouter();
   const { decodedToken } = useContext(AppContext);
   const [userRole, setUserRole] = useState<string>("");
   const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -129,22 +129,29 @@ const MainListItems = ({ isOpen }: ListItemsProps) => {
     }
   }, [isAuthenticated, router]);
 
+  // Redirect to unauthorized page if user tries to access restricted routes
+  useEffect(() => {
+    if (
+      (isAuthenticated && userRole !== "admin" && path === "/dashboard/security") ||
+      (isAuthenticated && userRole !== "security" && path === "/dashboard/pcuser")
+    ) {
+      router.push("/unauthorized"); // Replace with your actual unauthorized page route
+    }
+  }, [isAuthenticated, userRole, path, router]);
+
   return (
     <React.Fragment>
       {LIST_ITEMS.map((item, index) => (
-        // Conditionally render link based on authentication and user role
-        (isAuthenticated && (userRole === "admin" || path !== "/dashboard/pcuser")) || (isAuthenticated && (userRole === "security" || path !== "/dashboard/security")) ? (
-          <Link key={index} href={item.href}>
-            <div
-              className={`${
-                activeIndex === index && "bg-green-500"
-              } flex items-center text-white py-3 gap-4 pl-4 w-full cursor-pointer`}
-            >
-              {item.icon}
-              {isOpen && <span className="ml-2">{item.name}</span>}
-            </div>
-          </Link>
-        ) : null
+        <Link key={index} href={item.href}>
+          <div
+            className={`${
+              activeIndex === index && "bg-green-500"
+            } flex items-center text-white py-3 gap-4 pl-4 w-full cursor-pointer`}
+          >
+            {item.icon}
+            {isOpen && <span className="ml-2">{item.name}</span>}
+          </div>
+        </Link>
       ))}
     </React.Fragment>
   );
