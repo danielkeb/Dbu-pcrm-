@@ -122,18 +122,23 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
     return user;
   }
 
-  async getUserScanner(id: number) {
+  async getUserScanner(id: string) {
     const user = await this.prisma.pcuser.findUnique({
       where: {
-        id: id,
+        userId: id,
       },
     });
 
     if (!user) {
       throw new NotFoundException('user not found');
     }
+    const currentUser=await this.prisma.recent.create({
+      data:{
+        userId: user.userId,
+      },
+    });
 
-    return user;
+    return {user, currentUser};
   }
   async visualize() {
     // Count total number of pcusers

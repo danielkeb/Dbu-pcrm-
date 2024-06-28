@@ -128,7 +128,7 @@ export class NewPcController {
     return this.newPcService.getUser(userId);
   }
   @Get('scanner/:userId')
-  getUserScanner(@Param('userId', ParseIntPipe) userId: number) {
+  getUserScanner(@Param('userId') userId: string) {
     return this.newPcService.getUserScanner(userId);
   }
   @Get('visualize')
