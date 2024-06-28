@@ -62,6 +62,11 @@ resetPassword(@Param('id', ParseIntPipe) id: number, dto: ResetDto){
   getAllUsers() {
     return this.authService.getAllUsers();
   }
+
+  @Get('getAllSecurity')
+  getAllSecurity() {
+    return this.authService.getAllSecurity();
+  }
   //@UseGuards()
 
   @Get('get/:id')
