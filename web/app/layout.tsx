@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { AppWrapper } from "@/components/UserContext";
-const inter = Inter({ subsets: ["latin"] });
+
 
 export const metadata: Metadata = {
   title: "website for dbu personal computter managment",
@@ -16,11 +15,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+
+      <body>
       <AppWrapper>
      {children}
      </AppWrapper>
         </body>
+      <body>{children}</body>
+
     </html>
   );
 }

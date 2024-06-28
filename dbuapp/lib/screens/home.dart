@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'package:dbuapp/screens/about.dart';
 import 'package:dbuapp/screens/login.dart';
 import 'package:dbuapp/screens/register.dart';
 import 'package:dbuapp/screens/scanner.dart';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -20,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     // Start the animation after a short delay
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         _opacity = 1.0;
       });
@@ -30,8 +32,8 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     HomePageContent(),
     RegisterPage(),
-    ScannerScreen(),
-    About(),
+    const ScannerScreen(),
+    const About(),
     LoginPage(),
   ];
 
@@ -47,7 +49,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         body: _pages[_currentIndex],
         bottomNavigationBar: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 Color.fromARGB(255, 165, 189, 214),
@@ -60,7 +62,7 @@ class _HomePageState extends State<HomePage> {
             onTap: _onTabTapped,
             selectedItemColor: Colors.white,
             unselectedItemColor: Colors.white70,
-            items: [
+            items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 backgroundColor: Colors.blue,
@@ -100,53 +102,144 @@ class HomePageContent extends StatefulWidget {
 }
 
 class _HomePageContentState extends State<HomePageContent> {
-  double _opacity = 0.0;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 1), () {
-      setState(() {
-        _opacity = 1.0;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'DBU PC Security Application!',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+    return FutureBuilder<Map<String, dynamic>>(
+      future: fetchUser(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Please check your network connection or start the server.'));
+        } else if (!snapshot.hasData) {
+          return const Center(child: Text('No data available'));
+        }
+
+        final data = snapshot.data!;
+        int dbu = data['maleStaffPersonal'] + data['femaleStaffPersonal'];
+        int personal = data['maleNumberOfStaffDbu'] + data['femaleStaffDbu'];
+
+        return Container(
+          color: Colors.lightBlueAccent, // Set your desired background color here
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Image.asset(
+                    'assets/images/images.png', // Replace with your logo asset path
+                    width: 100,
+                    height: 100,
                   ),
+                   SizedBox(width: 10),
+              Text(
+                'DBU PC Security Application',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.blue,
                 ),
-                Padding(
+              ),
+                ],
+              ),
+             
+              Expanded(
+                child: GridView.count(
+                  crossAxisCount: 2, // 2 columns
+                  shrinkWrap: true, // Center the grid
+                  mainAxisSpacing: 16.0,
+                  crossAxisSpacing: 16.0,
                   padding: const EdgeInsets.all(16.0),
-                  child: AnimatedOpacity(
-                    opacity: _opacity,
-                    duration: Duration(seconds: 2),
-                    child: Image.asset(
-                      'assets/images/mob-re.png',
-                      width: 300,
-                      height: 400,
-                    ),
-                  ),
+                  children: [
+                    buildBox('Total PC Users', data['totalNumberOfPcuser']),
+                    buildBox('Students', data['NumberOfstudent']),
+                    buildBox('Total Staff', data['totalNumberOfStaff']),
+                    buildBox('Total Guests', data['totalNumberOfGuest']),
+                    buildBox('DBU Pc', dbu),
+                    buildBox('Personal Pc', personal),
+                  ],
                 ),
-                
-              ],
-            ),
+              ),
+            ],
           ),
-        ),
-      ],
+        );
+      },
     );
   }
+
+  Widget buildBox(String title, int count) {
+    return Container(
+      width: 100,
+      height: 100,
+      margin: EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.white, Colors.blue],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: BorderRadius.circular(10.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 10),
+          Text(
+            count.toString(),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Colors.blue,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
+
+  
+  Future<Map<String, dynamic>> fetchUser() async {
+  String url = 'http://localhost:3333/pcuser/visualize';
+  
+  try {
+    final response = await http.get(Uri.parse(url));
+    
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load users');
+    }
+  } catch (e) {
+    throw Exception('Please check your network connection or start the server.');
+  }
+}
+
 }
