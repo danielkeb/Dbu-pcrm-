@@ -135,8 +135,8 @@ class _HomePageContentState extends State<HomePageContent> {
                 children: [
                   Image.asset(
                     'assets/images/images.png', // Replace with your logo asset path
-                    width: 100,
-                    height: 100,
+                    width: 60,
+                    height: 60,
                   ),
                    SizedBox(width: 10),
               Text(
@@ -227,7 +227,7 @@ class _HomePageContentState extends State<HomePageContent> {
 
   
   Future<Map<String, dynamic>> fetchUser() async {
-  String url = 'http://localhost:3333/pcuser/visualize';
+  String url = 'http://10.18.51.50:3333/pcuser/visualize';
   
   try {
     final response = await http.get(Uri.parse(url));

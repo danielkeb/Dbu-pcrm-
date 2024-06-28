@@ -302,7 +302,7 @@ bool isTorchOn = false;
           children: [
             _userInfo!['image'] != null
                 ? Image.network(
-                    'http://10.18.151.21:3333/pcuser/${_userInfo!['image']}',
+                    'http://10.18.51.50:3333/pcuser/${_userInfo!['image']}',
                     width: double.infinity,
                     height: 200,
                     fit: BoxFit.cover,
@@ -370,7 +370,7 @@ bool isTorchOn = false;
 
     try {
       final response =
-          await http.get(Uri.parse('http://10.18.151.21:3333/pcuser/get'));
+          await http.get(Uri.parse('http://10.18.51.50:3333/pcuser/get'));
 
       if (response.statusCode == 200) {
         final List<dynamic> news = json.decode(response.body);
@@ -407,7 +407,7 @@ bool isTorchOn = false;
 
     try {
       final response =
-          await http.get(Uri.parse('http://10.18.151.21:3333/pcuser/get'));
+          await http.get(Uri.parse('http://10.18.51.50:3333/pcuser/get'));
       if (response.statusCode == 200) {
         final List<dynamic> news = json.decode(response.body);
 

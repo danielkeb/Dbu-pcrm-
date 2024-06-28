@@ -38,7 +38,7 @@ class _ShortcodeState extends State<Shortcode> {
   }
 
   Uri _createUri(int userId) {
-    return Uri.parse('http://10.18.51.23:3333/verify/shortcode/${widget.userId}');
+    return Uri.parse('http://10.18.51.50:3333/verify/shortcode/${widget.userId}');
   }
 
   Map<String, String> _createHeaders() {

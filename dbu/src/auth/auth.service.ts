@@ -55,7 +55,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new ForbiddenException('email not found');
+      throw new ForbiddenException('Icorrect email or password');
     } else {
       const pwMatches = await argon.verify(user.password, dto.password);
       if (!pwMatches) {
