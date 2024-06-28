@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { NewPcController } from './pc.controller';
 import { NewPcService } from './pc.service';
 import { JwtModule } from '@nestjs/jwt';
-//import { AccessContorlService } from 'src/auth/shared/access-control.service';
+import { AccessContorlService } from 'src/auth/shared/access-control.service';
 
 @Module({
-  providers: [NewPcService],
+  providers: [NewPcService, AccessContorlService],
   controllers: [NewPcController],
   imports: [
     JwtModule.register({}), // Configure JwtModule

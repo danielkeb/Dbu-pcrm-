@@ -1,6 +1,7 @@
 import {
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
   NotAcceptableException,
   NotFoundException
   //NotFoundException,
@@ -108,10 +109,10 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
 
     return { msg: 'user deleted successfully' };
   }
-  async getUser(id: number) {
+  async getUser(id: string) {
     const user = await this.prisma.pcuser.findUnique({
       where: {
-        id: id,
+        userId: id,
       },
     });
 
@@ -122,24 +123,39 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
     return user;
   }
 
-  async getUserScanner(id: string) {
-    const user = await this.prisma.pcuser.findUnique({
-      where: {
-        userId: id,
-      },
-    });
+  async getUserScanner(userId: string) {
+    try {
+      const user = await this.prisma.pcuser.findUnique({
+        where: {
+          userId: userId,
+        },
+      });
 
-    if (!user) {
-      throw new NotFoundException('user not found');
+      if (!user) {
+        throw new NotFoundException('No PC users found');
+      }
+
+      try {
+        await this.prisma.recent.create({
+          data: {
+            userId: user.userId,
+          },
+        });
+      } catch (error) {
+        console.error(`Error creating recent user for userId ${user.userId}:`, error);
+        throw new InternalServerErrorException('Failed to create recent user entry');
+      }
+
+      return user;
+    } catch (error) {
+      console.error('Error fetching new PC users:', error);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Error fetching new PC users');
     }
-    const currentUser=await this.prisma.recent.create({
-      data:{
-        userId: user.userId,
-      },
-    });
-
-    return {user, currentUser};
   }
+  
   async visualize() {
     // Count total number of pcusers
     const pcuser = await this.prisma.pcuser.count();

@@ -1,4 +1,5 @@
 import { NextPage } from 'next';
+import Link from 'next/link';
 
 const UnauthorizedPage: NextPage = () => {
   return (
@@ -8,6 +9,7 @@ const UnauthorizedPage: NextPage = () => {
         <p className="text-lg text-gray-700">
           You do not have permission to access this page.
         </p>
+        <Link href="/dashboard">Dashboard</Link>
       </div>
     </div>
   );

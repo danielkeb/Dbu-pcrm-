@@ -366,76 +366,73 @@ bool isTorchOn = false;
 
 
   Future<void> _fetchUserInfo(String? scannedId) async {
-    if (scannedId == null) return;
+  if (scannedId == null) return;
 
-    try {
-      final response =
-          await http.get(Uri.parse('http://10.18.51.50:3333/pcuser/get'));
+  try {
+    final response = await http.get(
+      Uri.parse('http://10.18.51.50:3333/pcuser/scanner?userId=$scannedId'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
 
-      if (response.statusCode == 200) {
-        final List<dynamic> news = json.decode(response.body);
+    if (response.statusCode == 200) {
+      final user = json.decode(response.body);
 
-        final user = news.firstWhere(
-          (user) => user['userId'].toString() == scannedId,
-          orElse: () => null,
-        );
-
-        if (user != null) {
-          setState(() {
-            _userInfo = user;
-            _scanError = null;
-          });
-        } else {
-          setState(() {
-            _scanError = 'User not found';
-          });
-        }
+      if (user != null && user['userId'].toString() == scannedId) {
+        setState(() {
+          _userInfo = user;
+          _scanError = null;
+        });
       } else {
         setState(() {
-          _scanError = 'Failed to load user data';
+          _scanError = 'User not found';
         });
       }
-    } catch (e) {
+    } else {
       setState(() {
-        _scanError = 'Error: ${e.toString()}';
+        _scanError = 'Failed to load user data: ${response.statusCode}';
       });
     }
+  } catch (e) {
+    setState(() {
+      _scanError = 'Error: ${e.toString()}';
+    });
   }
-
+}
   Future<void> _searchUserInfo(String searchQuery) async {
     if (searchQuery.isEmpty) return;
 
     try {
-      final response =
-          await http.get(Uri.parse('http://10.18.51.50:3333/pcuser/get'));
-      if (response.statusCode == 200) {
-        final List<dynamic> news = json.decode(response.body);
+    final response = await http.get(
+      Uri.parse('http://10.18.51.50:3333/pcuser/scanner?userId=$searchQuery'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
 
-        final user = news.firstWhere(
-          (user) =>
-              user['userId'].toString().toLowerCase() == searchQuery.toLowerCase(),
-          orElse: () => null,
-        );
+    if (response.statusCode == 200) {
+      final user = json.decode(response.body);
 
-        if (user != null) {
-          setState(() {
-            _userInfo = user;
-            _scanError = null;
-          });
-        } else {
-          setState(() {
-            _scanError = 'User not found';
-          });
-        }
+      if (user != null && user['userId'].toString() == searchQuery) {
+        setState(() {
+          _userInfo = user;
+          _scanError = null;
+        });
       } else {
         setState(() {
-          _scanError = 'Failed to load user data';
+          _scanError = 'User not found';
         });
       }
-    } catch (e) {
+    } else {
       setState(() {
-        _scanError = 'Error: ${e.toString()}';
+        _scanError = 'Failed to load user data: ${response.statusCode}';
       });
     }
+  } catch (e) {
+    setState(() {
+      _scanError = 'Error: ${e.toString()}';
+    });
+  }
   }
 }
