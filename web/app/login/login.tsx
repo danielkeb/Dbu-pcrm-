@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState, FormEvent, useContext } from 'react';
 import { useAppContext } from '../appContext';
 import jwt, { JwtPayload } from "jsonwebtoken";
+import Config from '@/config';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -23,7 +24,7 @@ const Login = () => {
     e.preventDefault();
     setError('');
 
-    const response = await fetch('http://localhost:3333/auth/signin', {
+    const response = await fetch(`${Config.ROOT_URL}/auth/signin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +56,7 @@ const Login = () => {
     e.preventDefault();
     setForgotError('');
 
-    const response = await fetch('http://localhost:3333/auth/forget/shortcode', {
+    const response = await fetch(`${Config.ROOT_URL}/auth/forget/shortcode`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
