@@ -13,8 +13,8 @@ export interface User {
 
 const BASE_URL = "http://localhost:3333/pcuser";
 
-export const fetchUsers = async (search = "", perPage = 5): Promise<User[]> => {
-  const response = await fetch(`${BASE_URL}/get?perPage=${perPage}&search=${search}`);
+export const fetchUsers = async (): Promise<User[]> => {
+  const response = await fetch(`${BASE_URL}/get`);
   if (!response.ok) throw new Error("Failed to fetch users");
   return response.json();
 };

@@ -30,7 +30,7 @@ export class NewPcService {
         text: dto.userId, // Text to encode
         scale: 3, // 3x scaling factor
         height: 10, // Bar height, in millimeters
-        includetext: true, // Show human-readable text
+        //includetext: true, // Show human-readable text
         textxalign: 'center', // Always good to set this
       });
 
@@ -275,7 +275,7 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
           },
         });
       } catch (error) {
-        console.error("Error finding pcuser records:", error);
+
         throw new Error("Failed to find pcuser records.");
       }
   
@@ -300,7 +300,7 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
               },
             });
           } catch (error) {
-            console.error("Error creating inactive user:", error);
+  
             throw new Error("Failed to create inactive user.");
           }
   
@@ -312,7 +312,6 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
                 },
               });
             } catch (error) {
-              console.error("Error deleting pcuser:", error);
               throw new Error("Failed to delete pcuser.");
             }
           }
@@ -320,11 +319,37 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
       }
       return { msg: "deactivated successfully" };
     } catch (error) {
-      console.error("Error trashing users:", error);
+      
       throw new Error("Failed to trash users.");
     }
   }
-  
+  async dateEndUser(endYear: Date): Promise<any> {
+    try {
+      // Validate the provided endYear parameter
+      if (!(endYear instanceof Date && !isNaN(endYear.getTime()))) {
+        throw new Error('Invalid date');
+      }
+
+      // Calculate future year
+      const futureYear = new Date(endYear);
+      futureYear.setFullYear(endYear.getFullYear() + 1);
+      
+      // Query users based on date range
+      const users = await this.prisma.pcuser.findMany({
+        where: {
+          endYear: {
+            gte: endYear,
+            lt: futureYear,
+          },
+        },
+      });
+      
+      return users;
+    } catch (error) {
+      // Handle errors gracefully
+      throw new Error(`Failed to fetch users by date range: ${error.message}`);
+    }
+  }
   
   async restore(year: any) {
     try {

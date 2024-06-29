@@ -8,22 +8,41 @@ const UserListPage = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [perPage, setPerPage] = useState<number>(5);
+  const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
 
   useEffect(() => {
-    fetchUsers(searchQuery, perPage).then(setUsers);
-  }, [searchQuery, perPage]);
+    const fetchUsersWithSearch = async () => {
+      const response = await fetchUsers();
+      const filteredUsers = response.filter((user) =>
+        user.userId.includes(searchQuery)
+      );
+      setUsers(filteredUsers);
+    };
+    fetchUsersWithSearch();
+  }, [searchQuery, perPage, currentPage]);
 
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this user?")) {
       await deleteUser(id);
-      setUsers(await fetchUsers(searchQuery, perPage));
+      setUsers(await fetchUsers());
     }
   };
 
   const handleSearch = () => {
-    fetchUsers(searchQuery, perPage).then(setUsers);
+    setCurrentPage(1);
   };
+
+  const handlePerPageChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setPerPage(Number(e.target.value));
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const totalPages = Math.ceil(users.length / perPage);
 
   return (
     <div className="p-4">
@@ -57,7 +76,7 @@ const UserListPage = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
+          {users.slice((currentPage - 1) * perPage, currentPage * perPage).map((user) => (
             <tr key={user.userId} className="bg-gray-50">
               <td className="p-4 border">{user.firstname} {user.lastname}</td>
               <td className="p-4 border">{user.userId}</td>
@@ -73,7 +92,7 @@ const UserListPage = () => {
               <td className="p-4 border flex flex-row gap-4 items-center justify-center">
                 <Link href={`/dashboard/task/update?id=${user.userId}`} className="cursor-pointer text-blue-500">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
-                    <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+                    <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0.933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
                   </svg>
                 </Link>
                 <div className="cursor-pointer text-red-500" onClick={() => handleDelete(user.userId)}>
@@ -90,15 +109,31 @@ const UserListPage = () => {
       <div className="my-4">
         <select
           value={perPage}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) => setPerPage(Number(e.target.value))}
+          onChange={handlePerPageChange}
           className="border border-gray-300 px-4 py-2 rounded text-end"
         >
           {[5, 10, 25, 50, 100].map((value) => (
             <option key={value} value={value}>
-              {value} items per page
+              {value} row
             </option>
           ))}
         </select>
+      </div>
+
+      <div className="flex justify-center mt-4">
+        {Array(totalPages)
+         .fill(0)
+         .map((_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => handlePageChange(index + 1)}
+              className={`px-4 py-2 rounded ${
+                currentPage === index + 1? "bg-blue-500 text-white" : "bg-gray-200"
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
       </div>
     </div>
   );

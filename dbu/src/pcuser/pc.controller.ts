@@ -127,6 +127,11 @@ export class NewPcController {
     return this.newPcService.getUser(userId);
   }
 
+  @Get('year')
+  dateEndUser(@Query('year') year: Date){
+    return this.newPcService.dateEndUser(year);
+  }
+
   
 
   @Get('action')
@@ -147,7 +152,7 @@ export class NewPcController {
     return this.newPcService.trashedUser(year);
   }
  @Put('restore/year/:year')
- restoreAll(@Param('year') year: Date){
+ restoreAll(@Query('year') year: Date){
   return this.newPcService.restore(year);
  }
 

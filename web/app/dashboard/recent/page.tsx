@@ -21,7 +21,7 @@ const RecentActionsPage = () => {
   };
 
   const handleItemsPerPageChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setItemsPerPage(parseInt(e.target.value, 5));
+    setItemsPerPage(parseInt(e.target.value, 10));
   };
 
   const handlePageChange = (page: number) => {
@@ -81,14 +81,14 @@ const RecentActionsPage = () => {
           <tr>
             <th className="p-4 text-left">User ID</th>
             <th className="p-4 text-left">Action</th>
-            <th className="p-4 text-left">Created At</th>
+            <th className="p-4 text-left">Time Exit</th>
           </tr>
         </thead>
         <tbody>
           {paginatedActions.map((action) => (
             <tr key={action.id} className="bg-gray-50">
               <td className="p-4 border">{action.userId}</td>
-              <td className="p-4 border">{action.action}</td>
+              <td className="p-4 border">PC User has exited from the university.</td>
               <td className="p-4 border">{new Date(action.createdAT).toLocaleString()}</td>
             </tr>
           ))}
