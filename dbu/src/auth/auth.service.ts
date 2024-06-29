@@ -127,9 +127,16 @@ async resetPassword(Id: number, dto: ResetDto){
   }
   return {msg: 'password reset success'};
 }
+
+async getAllSecurity(){
+  const users = await this.prisma.users.findMany({where:{role:"security"}});
+  return users;
+}
+
 async getAllUsers() {
   const [users, totalUsers, maleUsers, femaleUsers, activeUsers, inactiveUsers] = await Promise.all([
     this.prisma.users.findMany({
+
       select: {
         id: true,
         name: true,

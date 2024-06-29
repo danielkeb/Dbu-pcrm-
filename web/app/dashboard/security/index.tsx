@@ -18,7 +18,7 @@ const validationSchema = yup.object({
   phonenumber: yup.string().required("Phone Number is required"),
 });
 
-const Security = () => {
+const Register = () => {
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -62,7 +62,7 @@ const Security = () => {
   });
 
   return (
-    <div className="flex-auto px-4 lg:px-10 py-10 pt-0 align-middle">
+    <div className="flex-auto  px-4 lg:px-10 py-10 pt-0 align-middle">
       <form onSubmit={formik.handleSubmit}>
         <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
           User Information
@@ -288,4 +288,4 @@ const Security = () => {
   );
 };
 
-export default Security;
+export default Register;
