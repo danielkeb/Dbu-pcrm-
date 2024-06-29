@@ -159,7 +159,7 @@ const MainListItems = ({ isOpen }: ListItemsProps) => {
         <Link key={index} href={item.href}>
           <div
             className={`${
-              activeIndex === index && "bg-green-500"
+              activeIndex === index && "bg-blue-500"
             } flex items-center text-white py-3 gap-4 pl-4 w-full cursor-pointer`}
           >
             {item.icon}

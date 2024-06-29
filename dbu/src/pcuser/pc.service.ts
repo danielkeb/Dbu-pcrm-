@@ -335,7 +335,6 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
       // Calculate future year
       const futureYear = new Date(endYear);
       futureYear.setFullYear(endYear.getFullYear() + 1);
-      console.log(futureYear);
       
       // Query users based on date range
       const users = await this.prisma.pcuser.findMany({
@@ -423,4 +422,56 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
     }
   }
   
+  async trashedSingleUser(userId: string): Promise<void> {
+    try {
+      // Find the user in the pcuser table
+      const user = await this.prisma.pcuser.findUnique({
+        where: {
+          userId: userId,
+        },
+      });
+
+      if (!user) {
+        throw new NotFoundException("User not found");
+      }
+
+      // Create a new record in the inactive table
+      const success = await this.prisma.inactive.create({
+        data: {
+          userId: user.userId,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          brand: user.brand,
+          description: user.description,
+          endYear: user.endYear,
+          gender: user.gender,
+          serialnumber: user.serialnumber,
+          phonenumber: user.phonenumber,
+          pcowner: user.pcowner,
+          image: user.image,
+          barcode: user.barcode,
+        },
+      });
+
+      if (success) {
+        // Delete the user from the pcuser table
+        await this.prisma.pcuser.delete({
+          where: {
+            userId: success.userId,
+          },
+        });
+      }
+
+    } catch (error) {
+      this.logger.error('Error trashing user:', { userId, error });
+
+      // Rethrow known errors and wrap unknown ones
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException("Unable to trash user");
+      }
+    }
+  }
+
 }

@@ -141,7 +141,6 @@ export class NewPcController {
       // Call the service function with the Date object
       return await this.newPcService.dateEndUser(endYearDate);
     } catch (error) {
-      console.log(endYear);
       throw new BadRequestException(error.message);
     }
   }
@@ -164,6 +163,11 @@ export class NewPcController {
   @Put('trash/year/:year')
   trashedUser(@Param('year') year: Date) {
     return this.newPcService.trashedUser(year);
+  }
+
+  @Put('trash/user')
+  trashedSingleUser(@Query('userId') userId: string) {
+    return this.newPcService.trashedSingleUser(userId);
   }
   @Post('restore')
   async restore(@Query('year') year: string) {
