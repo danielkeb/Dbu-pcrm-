@@ -3,9 +3,9 @@ import UserListPage from "./index"
 
 const Page=()=>{
     return(
-        
-            <UserListPage/>
-       
+        <main><UserListPage/></main>
+            
+    
     )
 }
 export default Page;

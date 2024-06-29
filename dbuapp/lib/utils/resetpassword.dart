@@ -25,7 +25,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
     try {
       final response = await http.patch(
-        Uri.parse('http://10.18.51.23:3333/verify/updatePassword/${widget.id}'),
+        Uri.parse('http://10.18.51.50:3333/verify/updatePassword/${widget.id}'),
         headers: <String, String>{
           'Content-Type': 'application/json',
         },

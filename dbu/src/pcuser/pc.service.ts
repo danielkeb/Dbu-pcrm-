@@ -1,6 +1,7 @@
 import {
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
   NotAcceptableException,
   NotFoundException
   //NotFoundException,
@@ -34,22 +35,21 @@ export class NewPcService {
       });
 
       // Define the path where the barcode will be saved
-      const barcodeDir = join(
-        __dirname,
-        '../../../barcodes',
-        dto.userId.replace(/\//g, '_'),
-      );
-      const barcodePath = `${barcodeDir}.png`;
+  const barcodeBaseDir = join(__dirname, '../../../barcodes');
 
-      // Ensure the directory exists
-      const barcodeBaseDir = join(__dirname, '../../../barcodes');
-      if (!existsSync(barcodeBaseDir)) {
-        mkdirSync(barcodeBaseDir, { recursive: true });
-      }
+// Ensure the base directory exists
+if (!existsSync(barcodeBaseDir)) {
+  mkdirSync(barcodeBaseDir, { recursive: true });
+}
 
-      // Save the barcode image to the specified path
-      writeFileSync(barcodePath, barcodeBuffer);
-      const relativeBarcodePath = `barcodes/${dto.userId}.png`;
+// Define the full path to save the barcode image
+const barcodePath = join(barcodeBaseDir, `${dto.userId.replace(/\//g, '_')}.png`);
+
+// Save the barcode image to the specified path
+writeFileSync(barcodePath, barcodeBuffer);
+
+// Generate the relative path for storing in the database
+const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
 
       const newPc = await this.prisma.pcuser.create({
         data: {
@@ -109,10 +109,10 @@ export class NewPcService {
 
     return { msg: 'user deleted successfully' };
   }
-  async getUser(id: number) {
+  async getUser(id: string) {
     const user = await this.prisma.pcuser.findUnique({
       where: {
-        id: id,
+        userId: id,
       },
     });
 
@@ -122,6 +122,55 @@ export class NewPcService {
 
     return user;
   }
+
+  async getUserScanner(userId: string) {
+    try {
+      const user = await this.prisma.pcuser.findUnique({
+        where: {
+          userId: userId,
+        },
+      });
+
+      if (!user) {
+        throw new NotFoundException('No PC users found');
+      }
+
+      const oneMinuteAgo = new Date(Date.now() - 60000);
+
+      const recentEntry = await this.prisma.recent.findFirst({
+        where: {
+          userId: userId,
+          createdAT: {
+            gte: oneMinuteAgo,
+          },
+        },
+        orderBy: {
+          createdAT: 'desc',
+        },
+      });
+
+      if (recentEntry) {
+      } else {
+        try {
+          await this.prisma.recent.create({
+            data: {
+              userId: user.userId,
+            },
+          });
+        } catch (error) {
+          throw new InternalServerErrorException('Failed to create recent user entry');
+        }
+      }
+
+      return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Error fetching new PC users');
+    }
+  }
+  
   async visualize() {
     // Count total number of pcusers
     const pcuser = await this.prisma.pcuser.count();

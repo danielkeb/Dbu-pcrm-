@@ -39,7 +39,7 @@ class _UserListScreenState extends State<UserListScreen> {
   }
 
   Future<List<User>> fetchUsers() async {
-  String url = 'http://10.18.151.21:3333/pcuser/get?perPage=$_perPage';
+  String url = 'http://10.18.51.50:3333/pcuser/get?perPage=$_perPage';
   if (_searchController.text.isNotEmpty) {
     url += '&search=${_searchController.text}';
   }
@@ -79,7 +79,7 @@ class _UserListScreenState extends State<UserListScreen> {
           ),
           TextButton(
             onPressed: () async {
-              final response = await http.delete(Uri.parse('http://10.18.151.21:3333/pcuser/delete/$id'));
+              final response = await http.delete(Uri.parse('http://10.18.51.50:3333/pcuser/delete/$id'));
 
               if (response.statusCode == 200) {
                 setState(() {
@@ -184,7 +184,7 @@ class _UserListScreenState extends State<UserListScreen> {
                           margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                           child: ListTile(
                             leading: user.image.isNotEmpty
-                                ? Image.network('http://10.18.151.21:3333/pcuser/${user.image}')
+                                ? Image.network('http://10.18.51.50:3333/pcuser/${user.image}')
                                 : null,
                             title: Text('${user.firstname} ${user.lastname}'),
                             subtitle: Column(
@@ -314,7 +314,7 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
   }
 
  Future<void> fetchUserData() async {
-  final response = await http.get(Uri.parse('http://10.18.151.21:3333/pcuser/get/${widget.userId}'));
+  final response = await http.get(Uri.parse('http://10.18.51.50:3333/pcuser/get/${widget.userId}'));
 
   if (response.statusCode == 200) {
     Map<String, dynamic> userData = json.decode(response.body);
@@ -342,7 +342,7 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
     };
 
     final response = await http.put(
-      Uri.parse('http://10.18.151.21:3333/pcuser/update/${widget.userId}'),
+      Uri.parse('http://10.18.51.50:3333/pcuser/update/${widget.userId}'),
       body: json.encode(updatedUserData),
       headers: {'Content-Type': 'application/json'},
     );
