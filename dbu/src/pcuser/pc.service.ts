@@ -135,20 +135,35 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
         throw new NotFoundException('No PC users found');
       }
 
-      try {
-        await this.prisma.recent.create({
-          data: {
-            userId: user.userId,
+      const oneMinuteAgo = new Date(Date.now() - 60000);
+
+      const recentEntry = await this.prisma.recent.findFirst({
+        where: {
+          userId: userId,
+          createdAT: {
+            gte: oneMinuteAgo,
           },
-        });
-      } catch (error) {
-        console.error(`Error creating recent user for userId ${user.userId}:`, error);
-        throw new InternalServerErrorException('Failed to create recent user entry');
+        },
+        orderBy: {
+          createdAT: 'desc',
+        },
+      });
+
+      if (recentEntry) {
+      } else {
+        try {
+          await this.prisma.recent.create({
+            data: {
+              userId: user.userId,
+            },
+          });
+        } catch (error) {
+          throw new InternalServerErrorException('Failed to create recent user entry');
+        }
       }
 
       return user;
     } catch (error) {
-      console.error('Error fetching new PC users:', error);
       if (error instanceof NotFoundException) {
         throw error;
       }
