@@ -16,6 +16,7 @@ import * as bwipjs from 'bwip-js';
 export class NewPcService {
   pcuser: any;
   userRepository: any;
+  logger: any;
   constructor(private prisma: PrismaService) {}
 
   async addNewPc(dto: NewPcDto, photo: string): Promise<Pcuser> {
@@ -327,12 +328,14 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
     try {
       // Validate the provided endYear parameter
       if (!(endYear instanceof Date && !isNaN(endYear.getTime()))) {
+        this.logger.error('Invalid date provided:', endYear);
         throw new Error('Invalid date');
       }
 
       // Calculate future year
       const futureYear = new Date(endYear);
       futureYear.setFullYear(endYear.getFullYear() + 1);
+      console.log(futureYear);
       
       // Query users based on date range
       const users = await this.prisma.pcuser.findMany({
@@ -347,38 +350,44 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
       return users;
     } catch (error) {
       // Handle errors gracefully
+      this.logger.error('Failed to fetch users by date range:', error);
       throw new Error(`Failed to fetch users by date range: ${error.message}`);
     }
   }
   
-  async restore(year: any) {
+  async restore(year: any): Promise<any> {
     try {
       const yearDate = new Date(year);
-  
+
+      // Validate the provided year parameter
       if (isNaN(yearDate.getTime())) {
+        this.logger.error('Invalid date provided:', year);
         throw new Error('Invalid date');
       }
-  
+
+      // Calculate future date
       const futureDate = new Date(yearDate);
       futureDate.setFullYear(yearDate.getFullYear() + 1);
-  
+
       let users;
       try {
         users = await this.prisma.inactive.findMany({
           where: {
-            endYear: yearDate,
+            endYear: {
+              gte: yearDate,
+              lt: futureDate,
+            },
           },
         });
       } catch (error) {
-        console.error("Error finding inactive users:", error);
-        throw new Error("Failed to find inactive users.");
+        this.logger.error('Failed to find inactive users:', error);
+        throw new Error('Failed to find inactive users.');
       }
-  
-      if (users) {
+
+      if (users && users.length > 0) {
         for (const user of users) {
-          let inuser;
           try {
-            inuser = await this.prisma.pcuser.create({
+            const inuser = await this.prisma.pcuser.create({
               data: {
                 userId: user.userId,
                 firstname: user.firstname,
@@ -394,30 +403,23 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
                 barcode: user.barcode,
               },
             });
+
+            await this.prisma.inactive.delete({
+              where: {
+                userId: user.userId,
+              },
+            });
           } catch (error) {
-            console.error("Error creating pcuser:", error);
-            throw new Error("Failed to create pcuser.");
-          }
-  
-          if (inuser) {
-            try {
-              await this.prisma.inactive.delete({
-                where: {
-                  userId: user.userId,
-                },
-              });
-            } catch (error) {
-              console.error("Error deleting inactive user:", error);
-              throw new Error("Failed to delete inactive user.");
-            }
+            this.logger.error('Error processing user:', user.userId, error);
+            throw new Error('Failed to process user.');
           }
         }
       }
-  
-      return { msg: "restore success" };
+
+      return { msg: 'Restore success' };
     } catch (error) {
-      console.error("Error restoring users:", error);
-      throw new Error("Failed to restore users.");
+      this.logger.error('Error restoring users:', error);
+      throw new Error('Failed to restore users.');
     }
   }
   

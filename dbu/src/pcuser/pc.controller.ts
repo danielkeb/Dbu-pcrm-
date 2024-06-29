@@ -128,8 +128,22 @@ export class NewPcController {
   }
 
   @Get('year')
-  dateEndUser(@Query('year') year: Date){
-    return this.newPcService.dateEndUser(year);
+  async getDateEndUser(@Query('endYear') endYear: string) {
+    try {
+      // Convert the query parameter to a Date object
+      const endYearDate = new Date(endYear);
+
+      // Check if the conversion resulted in a valid date
+      if (isNaN(endYearDate.getTime())) {
+        throw new Error('Invalid date format');
+      }
+
+      // Call the service function with the Date object
+      return await this.newPcService.dateEndUser(endYearDate);
+    } catch (error) {
+      console.log(endYear);
+      throw new BadRequestException(error.message);
+    }
   }
 
   
@@ -151,9 +165,19 @@ export class NewPcController {
   trashedUser(@Param('year') year: Date) {
     return this.newPcService.trashedUser(year);
   }
- @Put('restore/year/:year')
- restoreAll(@Query('year') year: Date){
-  return this.newPcService.restore(year);
- }
+  @Post('restore')
+  async restore(@Query('year') year: string) {
+    try {
+      // Validate the year parameter format
+      if (!year) {
+        throw new BadRequestException('Year parameter is required');
+      }
+
+      // Call the service function with the provided year
+      return await this.newPcService.restore(year);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
 
 }

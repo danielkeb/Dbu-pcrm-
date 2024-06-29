@@ -15,6 +15,7 @@ export interface User {
 }
 
 export async function fetchUsersByYear(endYear: string): Promise<User[]> {
+  console.log("end year", endYear);
   try {
     const response = await fetch(`http://localhost:3333/pcuser/year?endYear=${endYear}`);
     if (!response.ok) {
