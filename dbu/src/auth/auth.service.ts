@@ -103,7 +103,7 @@ export class AuthService {
         id: id,
       },
       data:{
-        ...dto,
+        name:dto.name
       }
     });
     if(!user){

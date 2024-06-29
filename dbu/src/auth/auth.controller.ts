@@ -47,7 +47,7 @@ export class AuthController {
   signIn(@Body() dto: AuthDto) {
     return this.authService.signIn(dto);
   }
-@Put('update')
+@Patch('update/:id')
 updateUser(@Param('id', ParseIntPipe) id: number , dto: UpdateDto){
   return this.authService.updateUser(id, dto);
 }
