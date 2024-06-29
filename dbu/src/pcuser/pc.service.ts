@@ -171,6 +171,11 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
     }
   }
   
+
+  async getRecentActions(){
+    const recentAction= await this.prisma.recent.findMany();
+    return recentAction;
+  }
   async visualize() {
     // Count total number of pcusers
     const pcuser = await this.prisma.pcuser.count();

@@ -116,7 +116,7 @@ class _HomePageContentState extends State<HomePageContent> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Please check your network connection or start the server.'));
+          return Center(child: Image.asset('assets/images/nonetwork.jpg'));
         } else if (!snapshot.hasData) {
           return const Center(child: Text('No data available'));
         }

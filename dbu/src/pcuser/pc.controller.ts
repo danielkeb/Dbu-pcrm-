@@ -126,6 +126,11 @@ export class NewPcController {
   getUser(@Query('userId') userId: string) {
     return this.newPcService.getUser(userId);
   }
+
+  @Get('action')
+  getRecentActions() {
+    return this.newPcService.getRecentActions();
+  }
   @Get('scanner')
   async getUserScanner(@Query('userId') userId: string) {
     return this.newPcService.getUserScanner(userId);
