@@ -109,9 +109,9 @@ export class NewPcController {
     }
   }
 
-  @Put('update/:userId')
+  @Put('update')
   pcUserUpdate(
-    @Param('userId', ParseIntPipe) userId: number,
+    @Query('userId') userId: string,
     @Body() dto: NewPcDto,
   ) {
     return this.newPcService.pcUserUpdate(userId, dto);
@@ -126,6 +126,8 @@ export class NewPcController {
   getUser(@Query('userId') userId: string) {
     return this.newPcService.getUser(userId);
   }
+
+  
 
   @Get('action')
   getRecentActions() {

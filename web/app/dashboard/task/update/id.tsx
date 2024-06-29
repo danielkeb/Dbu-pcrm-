@@ -4,8 +4,8 @@ import { fetchUser, updateUser, User } from "../service";
 
 const UserUpdatePage = () => {
   const router = useRouter();
-  const [id, setId] = useState<number | null>(null); // State for user id
   const searchParams = useSearchParams();
+  const [userUpt, setUserUpt] = useState<string>(""); // State for user id
   const [user, setUser] = useState<User>({
     id: 0,
     userId: "",
@@ -23,21 +23,16 @@ const UserUpdatePage = () => {
   useEffect(() => {
     const userIdFromQuery = searchParams.get('id');
     if (userIdFromQuery) {
-      const userIdParsed = parseInt(userIdFromQuery, 10); // Parse the userId to an integer
-      if (!isNaN(userIdParsed)) { // Check if the parsing was successful
-        setId(userIdParsed);
-      } else {
-        console.error('Invalid userId in query params');
-      }
+      setUserUpt(userIdFromQuery); // Set the user id
     }
   }, [searchParams]);
 
   // Effect to fetch user data when id changes
   useEffect(() => {
-    if (id !== null) {
-      fetchUser(id).then((userData) => setUser(userData));
+    if (userUpt) {
+      fetchUser(userUpt).then((userData) => setUser(userData));
     }
-  }, [id]);
+  }, [userUpt]);
 
   // Handle change function to update user state
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -51,9 +46,9 @@ const UserUpdatePage = () => {
   // Handle form submission
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (id !== null) {
-      await updateUser(id, user); // Assuming updateUser function exists and updates the user
-      router.push("/"); // Redirect to homepage after update
+    if (userUpt) {
+      await updateUser(userUpt, user); // Assuming updateUser function exists and updates the user
+      router.push("/dashboard"); // Redirect to homepage after update
     }
   };
 

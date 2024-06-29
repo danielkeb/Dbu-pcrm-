@@ -81,10 +81,10 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
     const newPc = await this.prisma.pcuser.findMany();
     return newPc;
   }
-  async pcUserUpdate(userId: number, dto: NewPcDto) {
+  async pcUserUpdate(userId: string, dto: NewPcDto) {
     const user = await this.prisma.pcuser.update({
       where: {
-        id: userId,
+        userId: userId,
       },
       data: {
         ...dto,

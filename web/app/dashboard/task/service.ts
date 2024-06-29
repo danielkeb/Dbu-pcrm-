@@ -19,9 +19,9 @@ export interface User {
     return response.json();
   };
   
-  export const fetchUser = async (id: number): Promise<User> => {
+  export const fetchUser = async (id: string): Promise<User> => {
     try {
-      const response = await fetch(`${BASE_URL}/get/${id}`);
+      const response = await fetch(`${BASE_URL}/search?userId=${id}`);
       if (!response.ok) {
         const errorMessage = await response.text();
         throw new Error(`Failed to fetch user: ${errorMessage}`);
@@ -33,8 +33,8 @@ export interface User {
     }
   };
   
-  export const updateUser = async (id: number, user: Partial<User>): Promise<void> => {
-    const response = await fetch(`${BASE_URL}/update/${id}`, {
+  export const updateUser = async (id: string, user: Partial<User>): Promise<void> => {
+    const response = await fetch(`${BASE_URL}/update?userId=${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user),

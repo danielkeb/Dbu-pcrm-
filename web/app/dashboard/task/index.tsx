@@ -79,7 +79,7 @@ const UserListPage = () => {
                 <img src={`http://localhost:3333/pcuser/${user.image}`} alt={user.firstname} className="w-24 h-24" />
               </td>
               <td className="p-4 border">
-                <Link href={`/dashboard/task/update?id=${user.id}`}>
+                <Link href={`/dashboard/task/update?id=${user.userId}`}>
                   <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Edit
                   </button>

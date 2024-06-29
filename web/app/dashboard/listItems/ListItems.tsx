@@ -18,7 +18,7 @@ type ListItemsProps = {
 const MainListItems = ({ isOpen }: ListItemsProps) => {
   const path = usePathname();
   const router = useRouter();
-  const { decodedToken } = useContext(AppContext);
+  const { decodedToken, token } = useContext(AppContext);
   const [userRole, setUserRole] = useState<string>("");
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
@@ -111,6 +111,7 @@ const MainListItems = ({ isOpen }: ListItemsProps) => {
     setUserRole(decodedToken?.role || "");
   }, [decodedToken]);
 
+
   useEffect(() => {
     LIST_ITEMS.forEach((item, index) => {
       if (path.localeCompare(item.href) === 0) {
@@ -125,11 +126,11 @@ const MainListItems = ({ isOpen }: ListItemsProps) => {
   }, [decodedToken]);
 
   // Redirect to login page if user is not authenticated
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/login"); // Replace with your actual login page route
-    }
-  }, [isAuthenticated, router]);
+  // useEffect(() => {
+  //   if (!token) {
+  //     router.push("/login"); // Replace with your actual login page route
+  //   }
+  // }, [isAuthenticated, router]);
 
   // Redirect to unauthorized page if user tries to access restricted routes
   useEffect(() => {
@@ -137,7 +138,7 @@ const MainListItems = ({ isOpen }: ListItemsProps) => {
       (isAuthenticated && userRole !== "admin" && path === "/dashboard/security") ||
       (isAuthenticated && userRole !== "security" && path === "/dashboard/pcuser")
     ) {
-      router.push("/unauthorized"); // Replace with your actual unauthorized page route
+      router.push("/dashboard"); // Replace with your actual unauthorized page route
     }
   }, [isAuthenticated, userRole, path, router]);
 

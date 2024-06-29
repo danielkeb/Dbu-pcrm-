@@ -48,6 +48,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
       }
     }
   }, []);
+
   const logout = () => {
     setToken(null);
     setDecodedToken(null);
