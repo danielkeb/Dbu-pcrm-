@@ -40,12 +40,20 @@ const Login = () => {
 
       // console.log("Here is your token", new_token, response);
      
-      setToken(new_token);
+      
       const dec=jwt.decode(new_token); 
       
      setDecodedToken(dec)
-      console.log('Login successful here is ...', token);
-      router.push("/dashboard");
+      // console.log('Login successful here is ...', token);
+
+      if (typeof dec !== "string" && dec?.status !== "active") {
+        router.push("/unauthorized");
+      }
+      else{
+        setToken(new_token);
+        router.push("/dashboard");
+      }
+      
     } else {
       const errorData = await response.json();
       setError(errorData.message || 'An error occurred');

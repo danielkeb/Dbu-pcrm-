@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { useRouter, useSearchParams } from "next/navigation"; // Correct import for useRouter
+import { useRouter, useSearchParams } from "next/navigation";
 import { fetchUser, updateUser, User } from "../service";
 
 const UserUpdatePage = () => {
@@ -7,7 +7,6 @@ const UserUpdatePage = () => {
   const searchParams = useSearchParams();
   const [userUpt, setUserUpt] = useState<string>(""); // State for user id
   const [user, setUser] = useState<User>({
-    id: 0,
     userId: "",
     firstname: "",
     lastname: "",
@@ -15,8 +14,9 @@ const UserUpdatePage = () => {
     image: "",
     brand: "",
     serialnumber: "",
-    createdAT: "",
-    updatedAT: ""
+    barcode: "", // Add the barcode property
+    createdAT: "", // Add the createdAT property
+    updatedAT: "" // Add the updatedAT property
   });
 
   // Effect to parse and set user id from query params
@@ -48,7 +48,7 @@ const UserUpdatePage = () => {
     e.preventDefault();
     if (userUpt) {
       await updateUser(userUpt, user); // Assuming updateUser function exists and updates the user
-      router.push("/dashboard"); // Redirect to homepage after update
+      router.push("/dashboard"); // Redirect to dashboard after update
     }
   };
 
@@ -162,7 +162,7 @@ const UserUpdatePage = () => {
 
         <button
           type="submit"
-          className="bg-green-700 border-0 text-white w-full p-3 rounded-md mt-4"
+          className="bg-blue-500 border-0 text-white w-full p-3 rounded-md mt-4"
         >
           Update
         </button>

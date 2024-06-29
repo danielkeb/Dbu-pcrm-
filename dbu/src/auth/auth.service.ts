@@ -2,6 +2,7 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto, ResetDto, UpdateDto } from './dto';
@@ -48,21 +49,31 @@ export class AuthService {
     }
   }
   async signIn(dto: AuthDto): Promise<{ access_token: string }> {
-    const user = await this.prisma.users.findFirst({
-      where: {
-        email: dto.email,
-      },
-    });
-
-    if (!user) {
-      throw new ForbiddenException('Icorrect email or password');
-    } else {
+    try {
+      const user = await this.prisma.users.findFirst({
+        where: {
+          email: dto.email,
+        },
+      });
+  
+      if (!user) {
+        throw new ForbiddenException('Incorrect email or password');
+      }
+  
+      if (user.status !== 'active') {
+        throw new UnauthorizedException('Unauthorized access contact your admin');
+      }
+  
       const pwMatches = await argon.verify(user.password, dto.password);
       if (!pwMatches) {
         throw new ForbiddenException('Incorrect password');
       }
-      // const token = await this.signToken(user.id, user.role);
-      return this.signToken(user.id, user.role, user.name, user.email);
+  
+      return this.signToken(user.id, user.role, user.name, user.email, user.status);
+    } catch (error) {
+  
+      // Rethrow the error to be handled by NestJS exception filters or other middleware
+      throw error;
     }
   }
 
@@ -71,12 +82,14 @@ export class AuthService {
     role: string,
     name: string,
     email: string,
+    status: string,
   ): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
       role,
       name,
       email,
+      status,
     };
     const secret = this.config.get('JWT_SECRET');
 
