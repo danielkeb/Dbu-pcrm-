@@ -6,7 +6,7 @@ const RecentActionsPage = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   useEffect(() => {
     fetchRecentActions().then(setActions);
@@ -89,7 +89,16 @@ const RecentActionsPage = () => {
             <tr key={action.id} className="bg-gray-50">
               <td className="p-4 border">{action.userId}</td>
               <td className="p-4 border">PC User has exited from the university.</td>
-              <td className="p-4 border">{new Date(action.createdAT).toLocaleString()}</td>
+              <td className="p-4 border">
+                {new Date(action.createdAT).toLocaleString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  second: "numeric",
+                })}
+              </td>
             </tr>
           ))}
         </tbody>

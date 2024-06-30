@@ -70,6 +70,8 @@ const UserListPage = () => {
             <th className="p-4 text-center">Description</th>
             <th className="p-4 text-center">Brand</th>
             <th className="p-4 text-center">Serial Number</th>
+            <th className="p-4 text-center">Phone Number</th>
+            <th className="p-4 text-center">Gender</th>
             <th className="p-4 text-center">Image</th>
             <th className="p-4 text-center">Barcode</th>
             <th className="p-4 text-center">Actions</th>
@@ -82,7 +84,9 @@ const UserListPage = () => {
               <td className="p-4 border">{user.userId}</td>
               <td className="p-4 border">{user.description}</td>
               <td className="p-4 border">{user.brand}</td>
-              <td className="p-4 border">Serial {user.serialnumber}</td>
+              <td className="p-4 border">{user.serialnumber}</td>
+              <td className="p-4 border"> {user.phonenumber}</td>
+              <td className="p-4 border"> {user.gender}</td>
               <td className="p-4 border">
                 <img src={`http://localhost:3333/pcuser/${user.image}`} alt={user.firstname} className="w-24 h-24" />
               </td>

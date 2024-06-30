@@ -3,8 +3,12 @@ export interface User {
   firstname: string;
   lastname: string;
   description: string;
+  pcowner: string;
+  gender: string;
+  endYear: string;
   image: string;
   barcode: string;
+  phonenumber: string;
   brand: string;
   serialnumber: string;
   createdAT: string;
