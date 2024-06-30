@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:dbuapp/screens/about.dart';
@@ -95,151 +96,152 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
 class HomePageContent extends StatefulWidget {
   @override
   _HomePageContentState createState() => _HomePageContentState();
 }
 
 class _HomePageContentState extends State<HomePageContent> {
+  List<dynamic> _userActions = [];
+  int _currentPage = 1;
+  int _pageSize = 10;
+  String _sortColumn = 'date';
+  bool _sortAscending = true;
+  String _filterKeyword = '';
 
   @override
   void initState() {
     super.initState();
+    _fetchUserActions();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>>(
-      future: fetchUser(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Image.asset('assets/images/nonetwork.jpg'));
-        } else if (!snapshot.hasData) {
-          return const Center(child: Text('No data available'));
-        }
-
-        final data = snapshot.data!;
-        int dbu = data['maleStaffPersonal'] + data['femaleStaffPersonal'];
-        int personal = data['maleNumberOfStaffDbu'] + data['femaleStaffDbu'];
-
-        return Container(
-          color: Colors.lightBlueAccent, // Set your desired background color here
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  Image.asset(
-                    'assets/images/images.png', // Replace with your logo asset path
-                    width: 60,
-                    height: 60,
-                  ),
-                   SizedBox(width: 10),
-              Text(
-                'DBU PC Security Application',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.blue,
-                ),
-              ),
-                ],
-              ),
-             
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2, // 2 columns
-                  shrinkWrap: true, // Center the grid
-                  mainAxisSpacing: 16.0,
-                  crossAxisSpacing: 16.0,
-                  padding: const EdgeInsets.all(16.0),
-                  children: [
-                    buildBox('Total PC Users', data['totalNumberOfPcuser']),
-                    buildBox('Students', data['NumberOfstudent']),
-                    buildBox('Total Staff', data['totalNumberOfStaff']),
-                    buildBox('Total Guests', data['totalNumberOfGuest']),
-                    buildBox('DBU Pc', dbu),
-                    buildBox('Personal Pc', personal),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget buildBox(String title, int count) {
-    return Container(
-      width: 100,
-      height: 100,
-      margin: EdgeInsets.all(8.0),
-      padding: EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.white, Colors.blue],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
-        borderRadius: BorderRadius.circular(10.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 10),
-          Text(
-            count.toString(),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Colors.blue,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-
-
-
-  
-  Future<Map<String, dynamic>> fetchUser() async {
-  String url = 'http://10.18.51.50:3333/pcuser/visualize';
-  
+  Future<void> _fetchUserActions() async {
   try {
+    String url = 'http://10.18.51.50:3333/pcuser/action?page=$_currentPage&pageSize=$_pageSize&sort=$_sortColumn&ascending=$_sortAscending&filter=$_filterKeyword';
     final response = await http.get(Uri.parse(url));
-    
+
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final List<dynamic> responseData = jsonDecode(response.body);
+      setState(() {
+        _userActions = responseData.map((item) {
+          return {
+            'userId': item['userId']?.toString() ?? '',
+            'action': item['action'] ?? '',
+            'Exit date': item['endYear'] ?? '',
+          };
+        }).toList();
+      });
     } else {
-      throw Exception('Failed to load users');
+      throw Exception('Failed to load user actions');
     }
   } catch (e) {
+    print(e);
     throw Exception('Please check your network connection or start the server.');
   }
 }
 
+
+  void _onSort(String columnName) {
+    setState(() {
+      if (_sortColumn == columnName) {
+        _sortAscending = !_sortAscending;
+      } else {
+        _sortColumn = columnName;
+        _sortAscending = true;
+      }
+      _fetchUserActions();
+    });
+  }
+
+  void _onFilter(String keyword) {
+    setState(() {
+      _filterKeyword = keyword;
+      _fetchUserActions();
+    });
+  }
+
+  void _onPageChange(int page) {
+    setState(() {
+      _currentPage = page;
+      _fetchUserActions();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _buildFilterInput(),
+        _buildDataTable(),
+        _buildPaginationControls(),
+      ],
+    );
+  }
+
+  Widget _buildFilterInput() {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: TextField(
+      decoration: InputDecoration(
+        labelText: 'Filter by keyword',
+        border: OutlineInputBorder(),
+      ),
+      onChanged: (value) {
+        _onFilter(value);
+      },
+    ),
+  );
+}
+
+  Widget _buildDataTable() {
+  return Expanded(
+    child: SingleChildScrollView(
+      child: DataTable(
+        sortColumnIndex: _sortColumn == 'userId' ? 0 : _sortColumn == 'action' ? 1 : 2,
+        sortAscending: _sortAscending,
+        columns: [
+          DataColumn(
+            label: Text('User ID'),
+            onSort: (columnIndex, _) => _onSort('userId'),
+          ),
+          DataColumn(
+            label: Text('Action'),
+            onSort: (columnIndex, _) => _onSort('action'),
+          ),
+          DataColumn(
+            label: Text('Date'),
+            onSort: (columnIndex, _) => _onSort('date'),
+          ),
+        ],
+        rows: _userActions.map((action) {
+          return DataRow(
+            cells: [
+              DataCell(Text(action['userId'])),
+              DataCell(Text(action['action'])),
+              DataCell(Text(action['endYear'])),
+            ],
+          );
+        }).toList(),
+      ),
+    ),
+  );
+}
+
+
+  Widget _buildPaginationControls() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: _currentPage > 1 ? () => _onPageChange(_currentPage - 1) : null,
+        ),
+        Text('Page $_currentPage'),
+        IconButton(
+          icon: Icon(Icons.arrow_forward),
+          onPressed: () => _onPageChange(_currentPage + 1),
+        ),
+      ],
+    );
+  }
 }

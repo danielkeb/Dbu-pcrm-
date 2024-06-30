@@ -76,13 +76,6 @@ const UserManagePage = () => {
     }
   };
 
-  // const handleDelete = async (id: string) => {
-  //   if (confirm("Are you sure you want to delete this user?")) {
-  //     await deleteUser(id);
-  //     setUsers(await fetchUsers());
-  //   }
-  // };
-
   const handleSearch = () => {
     setCurrentPage(1);
   };
