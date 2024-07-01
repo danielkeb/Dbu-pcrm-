@@ -82,7 +82,7 @@ function Manage() {
               </div>
             </div>
 
-            <div className="block  overflow-x-auto">
+            <div className="block w-full overflow-x-auto">
   <table className="items-center bg-transparent w-full border-collapse">
     <thead>
       <tr>
@@ -225,6 +225,23 @@ function Manage() {
                               />
                               <ErrorMessage
                                 name="last_name"
+                                component="div"
+                                className="text-red-500 text-xs italic"
+                              />
+                            </div>
+                            <div className="mb-4">
+                              <label
+                                className="block text-gray-700 text-sm font-bold mb-2"
+                                htmlFor="last_name">
+                                Phone Number
+                              </label>
+                              <Field
+                                name="phonenumer"
+                                type="text"
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                              />
+                              <ErrorMessage
+                                name="phonenumer"
                                 component="div"
                                 className="text-red-500 text-xs italic"
                               />
