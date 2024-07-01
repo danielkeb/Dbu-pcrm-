@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Users{
-  id Int @unique
+  id String @unique
   email String @unique
   role String
   name String
@@ -96,7 +96,7 @@ model Inactive{
 
 model Reset {
   id Int @id @default(autoincrement())
-  userId Int
+  userId String
   shortcode String
   createdAT    DateTime   @default(now())
   expiresAt    DateTime 

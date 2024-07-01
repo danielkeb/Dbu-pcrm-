@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -78,7 +79,7 @@ export class AuthService {
   }
 
   async signToken(
-    userId: number,
+    userId: string,
     role: string,
     name: string,
     email: string,
@@ -110,21 +111,28 @@ export class AuthService {
     };
   }
 
-  async updateUser(id: number, dto: UpdateDto){
-    const user= await this.prisma.users.update({
+  async updateUser(id: string, dto: UpdateDto) {
+    console.log('Received DTO:', dto); // Log the received DTO
+    if(!dto){
+      throw new BadRequestException("undefined dto");
+    }
+  
+    const user = await this.prisma.users.update({
       where: {
         id: id,
       },
-      data:{
+      data: {
         ...dto,
-      }
+      },
     });
-    if(!user){
+    if (!user) {
       throw new ForbiddenException('update failed');
     }
- return {msq: 'updated success'};
+    console.log(dto.email);
+    return { msg: 'updated success' };
   }
-async resetPassword(Id: number, dto: ResetDto){
+  
+async resetPassword(Id: string, dto: ResetDto){
   const hash = await argon.hash(dto.password);
   const user= await this.prisma.users.update({
     where:{
@@ -180,7 +188,7 @@ async getAllUsers() {
   };
 }
 
-  async searchUser(userid: number): Promise<Users> {
+  async searchUser(userid: string): Promise<Users> {
     const existid = await this.prisma.users.findUnique({
       where: { id: userid },
     });
@@ -210,7 +218,7 @@ async getAllUsers() {
     }
   }
 
-  async deleteUser(userid: number) {
+  async deleteUser(userid: string) {
     const userId = await this.prisma.users.findFirst({
       where: {
         id: userid,

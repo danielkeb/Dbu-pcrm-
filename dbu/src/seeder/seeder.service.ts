@@ -11,7 +11,7 @@ export class SeederService {
   async seed() {
     try {
       const adminUser = {
-        id: 8743,
+        id: "dbu4321",
         name: 'John',
         last_name: 'mike',
         email: 'johnmike@gmail.com',
@@ -23,7 +23,7 @@ export class SeederService {
         password: await argon.hash('admin1234'),
       };
       const securityUser = {
-        id: 1234,
+        id: "dbur1234",
         name: 'Jane',
         last_name: 'Doe',
         email: 'jane_doe@gmail.com',

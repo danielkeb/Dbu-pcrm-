@@ -18,7 +18,7 @@ export class ShortcodeEmailService {
     private prismaService: PrismaService,
   ) {}
 
-  async sendSecurityAlert(email: string, userId: number) {
+  async sendSecurityAlert(email: string, userId: string) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       host: this.config.get('HOST'),
@@ -49,7 +49,7 @@ export class ShortcodeEmailService {
     }
   }
 
-  async addVerifyCode(shortcode: string, userId: number) {
+  async addVerifyCode(shortcode: string, userId: string) {
     const expirationTime = new Date();
     expirationTime.setMinutes(expirationTime.getMinutes() + 3); // Set expiration time to 5 minutes from now
 
@@ -106,7 +106,7 @@ export class ShortcodeEmailService {
     }, 60000); // Run the job every minute (60000 milliseconds)
   }
 
-  async verifyCode(userId: number, dto: VerifyCodeDto) {
+  async verifyCode(userId: string, dto: VerifyCodeDto) {
     const code = await this.prismaService.reset.findFirst({
       where: {
         userId: userId,
@@ -114,14 +114,15 @@ export class ShortcodeEmailService {
       },
     });
 
-    if (!code || code == null) {
+    if (!code) {
       throw new NotFoundException('Invalid or expired short code');
     }
 
     return code;
   }
 
-  async resetPassword(userId: number, dto: PasswordDto) {
+
+  async resetPassword(userId: string, dto: PasswordDto) {
     const user = await this.prismaService.users.findUnique({
       where: {
         id: userId,

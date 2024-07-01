@@ -3,7 +3,6 @@
 import { AppContext } from '@/components/UserContext';
 import { useRouter } from 'next/navigation';
 import React, { useState, FormEvent, useContext } from 'react';
-import { useAppContext } from '../appContext';
 import jwt, { JwtPayload } from "jsonwebtoken";
 import Config from '@/config';
 

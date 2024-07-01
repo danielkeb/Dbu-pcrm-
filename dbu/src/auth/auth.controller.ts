@@ -11,6 +11,7 @@ import {
   HttpCode,
   Patch,
   Put,
+  Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto, ResetDto, UpdateDto } from './dto';
@@ -47,13 +48,13 @@ export class AuthController {
   signIn(@Body() dto: AuthDto) {
     return this.authService.signIn(dto);
   }
-@Put('update/:id')
-updateUser(@Param('id', ParseIntPipe) id: number , dto: UpdateDto){
+@Put('update')
+updateUser(@Query('id') id: string , @Body() dto: UpdateDto){
   return this.authService.updateUser(id, dto);
 }
 
 @Put('resetpassword')
-resetPassword(@Param('id', ParseIntPipe) id: number, dto: ResetDto){
+resetPassword(@Param('id', ParseIntPipe) id: string, dto: ResetDto){
   return this.authService.resetPassword(id, dto);
 }
   @Get('get')
@@ -69,16 +70,16 @@ resetPassword(@Param('id', ParseIntPipe) id: number, dto: ResetDto){
   }
   //@UseGuards()
 
-  @Get('get/:id')
+  @Get('user')
   //@UseGuards(AuthGuard, RoleGuard)
   //@Roles(Role.MODERATOR)
-  searchUser(@Param('id', ParseIntPipe) id: number) {
+  searchUser(@Query('id') id: string) {
     return this.authService.searchUser(id);
   }
   
 
-  @Delete('user/:id')
-  deleteUser(@Param('id', ParseIntPipe) id: number) {
+  @Delete('user')
+  deleteUser(@Query('id') id: string) {
     return this.authService.deleteUser(id);
   }
   @Get('all')

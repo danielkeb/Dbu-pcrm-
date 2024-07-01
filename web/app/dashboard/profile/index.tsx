@@ -6,10 +6,10 @@ import Image from "next/image";
 const UserProfilePage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [id, setId] = useState<number | null>(null);
-  const [successMessage, setSuccessMessage]= useState("");
+  const [id, setId] = useState("");
+  const [successMessage, setSuccessMessage]= useState(false);
   const [user, setUser] = useState<User>({
-    id: 0,
+    id: "",
     name: "",
     last_name: "",
     email: "",
@@ -25,21 +25,13 @@ const UserProfilePage = () => {
   useEffect(() => {
     const userIdFromQuery = searchParams.get("id");
     if (userIdFromQuery) {
-      const userIdParsed = parseInt(userIdFromQuery, 10); // Parse the userId to an integer
-      if (!isNaN(userIdParsed)) { // Check if the parsing was successful
-        setId(userIdParsed);
-      } else {
-        console.error("Invalid userId in query params");
-      }
+      setId(userIdFromQuery);
     }
   }, [searchParams]);
 
-  // Effect to fetch user data when id changes
   useEffect(() => {
-    if (id !== null) {
-      fetchUser(id)
-        .then((userData) => setUser(userData))
-        .catch((error) => setError(error.message));
+    if (id) {
+      fetchUser(id).then((userData) => setUser(userData));
     }
   }, [id]);
 
@@ -55,12 +47,14 @@ const UserProfilePage = () => {
   // Handle form submission
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (id !== null) {
+    if (id !== "") {
       try {
-        await updateUser(id, user); // Assuming updateUser function exists and updates the user
-        // router.push("/dashboard/profile"); // Redirect to homepage after update
-        setSuccessMessage("profile updated successfully");
+        console.log('User data before sending:', user); // Check the user object
+        await updateUser(id, user);
+        setSuccessMessage(true);
+        setTimeout(() => setSuccessMessage(false), 1000);
       } catch (error) {
+        console.error("Error updating user:", error);
         setError("Failed to update user");
       }
     }
@@ -72,22 +66,22 @@ const UserProfilePage = () => {
 
   return (
     <div className="flex-auto px-4 lg:px-10 py-10 pt-0 align-middle">
-      <div className="p-4 flex items-center justify-center"> {/* Center align flex items */}
-  <div className="flex items-center"> {/* Align items inside flex container */}
-    <Image
-      src="/avator.png"
-      alt="User Avatar"
-      className="w-24 h-24 rounded-full"
-      width={100}
-      height={100}
-    />
-    <div className="ml-3">
-      <h2 className="text-lg font-bold">{user.name}</h2>
-      <p className="text-sm text-gray-500">{user.role}</p>
-      <p className="text-sm text-gray-500">Status: {user.status}</p>
-    </div>
-  </div>
-</div>
+      <div className="p-4 flex items-center justify-center">
+        <div className="flex items-center">
+          <Image
+            src="/avator.png"
+            alt="User Avatar"
+            className="w-24 h-24 rounded-full"
+            width={100}
+            height={100}
+          />
+          <div className="ml-3">
+            <h2 className="text-lg font-bold">{user.name}</h2>
+            <p className="text-sm text-gray-500">{user.role}</p>
+            <p className="text-sm text-gray-500">Status: {user.status}</p>
+          </div>
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit}>
         <div className="flex flex-wrap">
@@ -103,9 +97,8 @@ const UserProfilePage = () => {
                 type="text"
                 className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
                 placeholder="User ID"
-                name="userId"
+                name="id"
                 value={user.id}
-                // onChange={handleChange}
                 disabled
                 readOnly
               />
@@ -228,7 +221,10 @@ const UserProfilePage = () => {
             </div>
           </div>
         </div>
-
+        {successMessage && (
+          <small className="text-red-500">Profile updated successfully</small>
+        )}
+        
         <button
           type="submit"
           className="bg-blue-500 border-0 text-white w-1/2 mx-auto p-3 rounded-md mt-4 block"
@@ -236,7 +232,7 @@ const UserProfilePage = () => {
           Update
         </button>
       </form>
-      <small className="text-red-500">{successMessage}</small>
+      
     </div>
   );
 };
