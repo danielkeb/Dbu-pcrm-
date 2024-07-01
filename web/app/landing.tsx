@@ -43,32 +43,30 @@ React.useEffect(()=>{
 
   const featuresList = [
     {
-      icon: (
-        <AnnotationIcon
-          color="blue"
-          style={{ width: 60, height: 60 }}
-        />
-      ),
+      // icon: (
+      //   <AnnotationIcon
+      //     color="blue"
+      //     style={{ width: 60, height: 60 }}
+      //   />
+      // ),
       
-      title: `${data.NumberOfstudent} Students pcowner`,
+      // title: `${data.NumberOfstudent} Students pcowner`,
+      label:`${data.NumberOfstudent}`,
+      title: "Students",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
     },
     {
-      icon: (
-        <ArchiveIcon
-          color="blue"
-          style={{ width: 60, height: 60 }}
-        />
-      ),
-      title: `${data.totalNumberOfStaff} Staff`,
+      label:`${data.totalNumberOfStaff}`,
+      title: "Staff",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
     },
     // data.NumberOfstudent, data.totalNumberOfStaff, data.totalNumberOfGuest
     {
-      icon: <AcademicCapIcon color="blue" style={{ width: 60, height: 60 }} />,
-      title: `${data.totalNumberOfGuest} Guest PcOwner`,
+      // icon: <AcademicCapIcon color="blue" style={{ width: 60, height: 60 }} />,
+      label:`${data.totalNumberOfGuest}`,
+      title: "Guests",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
     },
@@ -117,12 +115,6 @@ React.useEffect(()=>{
                 SignIn
               </button>
             </Link>
-
-            {/* <Link href="/dashboard">
-              <button className="bg-blue-500 text-white py-2 px-4">
-                SignUp
-              </button>
-            </Link> */}
           </div>
         </nav>
       </header>
@@ -182,8 +174,9 @@ React.useEffect(()=>{
                 className="bg-white p-6 flex flex-col items-center rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105"
                 key={feature.title}
               >
-                
-                {feature.icon}
+                <h1 className="text-gray-700 text-3xl font-bold">
+                {feature.label}
+                </h1>
                 <h4 className="text-gray-700 text-lg font-semibold">
                   {feature.title}
                 </h4>
@@ -236,7 +229,7 @@ React.useEffect(()=>{
         <section className="w-full py-10">
           <div className="map-responsive">
             <iframe
-              src="https://www.google.com/maps/https://www.google.com/maps/dir/9.6569922,39.5212034//@9.6566785,39.4794844,13z?hl=en&entry=ttu?pb=!1m18!https://www.google.com/maps/dir/9.6569922,39.5212034/Debre+Berhan+University,+09+School+of+Computing,+Debre+Birhan/@9.6596299,39.5156511,16.26z/data=!4m8!4m7!1m0!1m5!1m1!1s0x1649bd7dac123767:0x44635ad4b8545f85!2m2!1d39.5213618!2d9.6568423?hl=en&entry=ttu!1m3!1d3933.0512916444013!2d39.53042267585995!3d9.67665879041285!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1649bd79fe92a5f5%3A0xcedc88541b6c788d!2sDebre%20Birhan%20University%20Scoll!5e0!3m2!1sen!2set!4v1707652781042!5m2!1sen!2set"
+              src="https://www.google.com/maps/place/%E1%8A%A0%E1%88%B5%E1%89%B0%E1%8B%B3%E1%8B%B0%E1%88%AD+%E1%88%95%E1%8A%95%E1%8D%83/@9.6588503,39.5200011,21z/data=!4m6!3m5!1s0x1649bd6b32b70b8d:0x62d1240b932a85a5!8m2!3d9.6589481!4d39.5200565!16s%2Fg%2F11q26f6bq_?entry=ttu"
               width="600"
               height="450"
               allowFullScreen
