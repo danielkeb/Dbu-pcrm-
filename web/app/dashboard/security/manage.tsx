@@ -42,7 +42,10 @@ function Manage() {
 
   const handleSubmit = async (values: SecurityData) => {
     try{
-   await axios.patch(`http://localhost:3333/auth/update/${values.id}`, values)
+   const res=await axios.patch(`http://localhost:3333/auth/update/${values.id}`, values)
+   const reFetch= await axios.get("http://localhost:3333/auth/getAllSecurity")
+   setData(reFetch.data);
+   console.log("the response is", res)
     }catch(error){
     console.log("the error is",error)
     }
@@ -79,74 +82,76 @@ function Manage() {
               </div>
             </div>
 
-            <div className="block w-full overflow-x-auto">
-              <table className="items-center bg-transparent w-full border-collapse">
-                <thead>
-                  <tr>
-                    <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                      ID
-                    </th>
-                    <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                      Name
-                    </th>
-                    <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                      Last Name
-                    </th>
-                    <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                      Pnone No
-                    </th>
-                    <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                      Email
-                    </th>
-                    <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                      Gender
-                    </th>
-                    <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                      Status
-                    </th>
-                    <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
+            <div className="block  overflow-x-auto">
+  <table className="items-center bg-transparent w-full border-collapse">
+    <thead>
+      <tr>
+        <th className="px-2 md:px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs md:text-sm uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+          ID
+        </th>
+        <th className="px-2 md:px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs md:text-sm uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+          Name
+        </th>
+        <th className="px-2 md:px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs md:text-sm uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+          Last Name
+        </th>
+        <th className="px-2 md:px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs md:text-sm uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+          Phone No
+        </th>
+        <th className="px-2 md:px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs md:text-sm uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+          Email
+        </th>
+        <th className="px-2 md:px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs md:text-sm uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+          Gender
+        </th>
+        <th className="px-2 md:px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs md:text-sm uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+          Status
+        </th>
+        <th className="px-2 md:px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs md:text-sm uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+          Action
+        </th>
+      </tr>
+    </thead>
 
-                <tbody>
-                  {data?.map((item) => (
-                    <tr key={item?.id}>
-                      <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-                        {item.id}
-                      </th>
-                      <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-                        {item.name}
-                      </th>
-                      <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-                        {item.last_name}
-                      </th>
-                      <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-                        {item.phonenumer}
-                      </th>
-                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs text-left whitespace-nowrap p-4">
-                        {item.email}
-                      </td>
-                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs text-left whitespace-nowrap p-4">
-                        {item.gender}
-                      </td>
-                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs text-left whitespace-nowrap p-4">
-                        {item.status}
-                      </td>
-                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs text-left whitespace-nowrap p-4">
-                        <button
-                          className="bg-green-500 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                          type="button"
-                          onClick={() => updateItem(item)}>
-                          Update
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+    <tbody>
+      {data?.map((item) => (
+        <tr key={item?.id}>
+          <td className="border-t-0 px-2 py-2 md:px-6 align-middle border-l-0 border-r-0 text-xs md:text-sm whitespace-nowrap text-left text-blueGray-700">
+            {item.id}
+          </td>
+          <td className="border-t-0 px-2 py-2 md:px-6 align-middle border-l-0 border-r-0 text-xs md:text-sm whitespace-nowrap text-left text-blueGray-700">
+            {item.name}
+          </td>
+          <td className="border-t-0 px-2 py-2 md:px-6 align-middle border-l-0 border-r-0 text-xs md:text-sm whitespace-nowrap text-left text-blueGray-700">
+            {item.last_name}
+          </td>
+          <td className="border-t-0 px-2 py-2 md:px-6 align-middle border-l-0 border-r-0 text-xs md:text-sm text-left whitespace-nowrap text-blueGray-700">
+            {item.phonenumer}
+          </td>
+          <td className="border-t-0 px-2 py-2 md:px-6 align-middle border-l-0 border-r-0 text-xs md:text-sm text-left whitespace-nowrap text-blueGray-700">
+            {item.email}
+          </td>
+          <td className="border-t-0 px-2 py-2 md:px-6 align-middle border-l-0 border-r-0 text-xs md:text-sm text-left whitespace-nowrap text-blueGray-700">
+            {item.gender}
+          </td>
+          <td className="border-t-0 px-2 py-2 md:px-6 align-middle border-l-0 border-r-0 text-xs md:text-sm text-left whitespace-nowrap text-blueGray-700">
+            {item.status}
+          </td>
+          <td className="border-t-0 px-2 py-2 md:px-6 align-middle border-l-0 border-r-0 text-xs md:text-sm text-left whitespace-nowrap text-blueGray-700">
+            <button
+              className="bg-green-500 text-white active:bg-indigo-600 text-xs md:text-sm font-bold uppercase px-2 md:px-3 py-1 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+              type="button"
+              onClick={() => updateItem(item)}>
+              Update
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+
           </div>
         </div>
       </section>

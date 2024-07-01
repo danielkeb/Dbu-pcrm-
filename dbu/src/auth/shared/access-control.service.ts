@@ -13,7 +13,6 @@ export class AccessContorlService {
 
   constructor() {
     this.buildRoles([Role.GUEST, Role.USER, Role.ADMIN]);
-    this.buildRoles([Role.MODERATOR, Role.ADMIN]);
   }
 
   /**

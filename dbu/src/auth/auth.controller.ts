@@ -47,8 +47,9 @@ export class AuthController {
   signIn(@Body() dto: AuthDto) {
     return this.authService.signIn(dto);
   }
+
 @Patch('update/:id')
-updateUser(@Param('id', ParseIntPipe) id: number , dto: UpdateDto){
+updateUser(@Param('id', ParseIntPipe) id: number , @Body() dto: UpdateDto){
   return this.authService.updateUser(id, dto);
 }
 
@@ -70,11 +71,12 @@ resetPassword(@Param('id', ParseIntPipe) id: number, dto: ResetDto){
   //@UseGuards()
 
   @Get('get/:id')
-  @UseGuards(AuthGuard, RoleGuard)
-  @Roles(Role.MODERATOR)
+  //@UseGuards(AuthGuard, RoleGuard)
+  //@Roles(Role.MODERATOR)
   searchUser(@Param('id', ParseIntPipe) id: number) {
     return this.authService.searchUser(id);
   }
+  
 
   @Delete('user/:id')
   deleteUser(@Param('id', ParseIntPipe) id: number) {

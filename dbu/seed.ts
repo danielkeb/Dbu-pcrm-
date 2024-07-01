@@ -1,5 +1,5 @@
-import 'tsconfig-paths/register';
 import { NestFactory } from '@nestjs/core';
+import 'tsconfig-paths/register';
 import { SeederModule } from './src/seeder/seeder.module';
 import { SeederService } from './src/seeder/seeder.service';
 

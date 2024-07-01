@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import * as Yup from "yup";
+import Config from "@/config";
+import { AppContext } from "@/components/UserContext";
 
 type FormValues = {
   userId: string;
@@ -23,6 +25,7 @@ type FormValues = {
 const RegisterPage = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  const {token}= useContext(AppContext);
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -70,11 +73,13 @@ const RegisterPage = () => {
     
       try {
         const response = await axios.post(
-          "http://10.18.51.50:3333/pcuser/add",
+          `${Config.ROOT_URL}/pcuser/add`,
           formData,
           {
             headers: {
               "Content-Type": "multipart/form-data",
+              "Authorization": `Bearer ${token}`,
+
             },
           }
         );
@@ -369,7 +374,7 @@ const RegisterPage = () => {
       id="endYear"
     />
     {formik.errors.endYear && formik.touched.endYear && (
-      <small className="text-red-500">{formik.errors.endYear}</small>
+      <small className="text-red-500">{formik.errors.endYear && ''}</small>
     )}
   </div>
 </div>

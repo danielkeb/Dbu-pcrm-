@@ -26,7 +26,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 
   Future<http.Response> _makeForgotPasswordRequest(String email) async {
-    final url = 'http://10.18.51.23:3333/auth/forget/shortcode';
+    final url = 'http://10.18.51.50:3333/auth/forget/shortcode';
     final headers = <String, String>{
       'Content-Type': 'application/json',
     };

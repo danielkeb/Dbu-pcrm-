@@ -54,6 +54,14 @@ model Pcuser{
   @@map("pcuser")
 }
 
+model Recent{
+  id Int @id @default(autoincrement())
+
+  userId    String
+  createdAT DateTime @default(now())
+  @@map("recent")
+}
+
 model Inactive{
   id Int @id @default(autoincrement())
 

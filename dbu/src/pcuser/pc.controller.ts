@@ -12,15 +12,15 @@ import {
   Query,
   Res,
   UploadedFile,
-  UseInterceptors,
+  UseInterceptors,UseGuards
   //UseGuards,
 } from '@nestjs/common';
 import { NewPcService } from './pc.service';
 import { NewPcDto } from './dto';
-// import { AuthGuard } from 'src/auth/guard/auth.guard';
-// import { RoleGuard } from 'src/auth/decorator/roles.guard';
-// import { Roles } from 'src/auth/decorator/roles.decorator';
-// import { Role } from 'src/auth/decorator/enums/role.enum';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { RoleGuard } from 'src/auth/decorator/roles.guard';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { Role } from 'src/auth/decorator/enums/role.enum';
 // import { ApiBearerAuth } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -48,9 +48,8 @@ export class NewPcController {
     }),
   )
   @Post('add')
-  //@ApiBearerAuth()
-  //@UseGuards(AuthGuard, RoleGuard)
-  //@Roles(Role.ADMIN)
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.USER)
   addNewPc(@Body() dto: NewPcDto, @UploadedFile() file: Express.Multer.File) {
     if (!file) {
       throw new BadRequestException('No file uploaded');
@@ -123,9 +122,13 @@ export class NewPcController {
     return this.newPcService.deleteUser(userId);
   }
 
-  @Get('get/:userId')
-  getUser(@Param('userId', ParseIntPipe) userId: number) {
+  @Get('search')
+  getUser(@Query('userId') userId: string) {
     return this.newPcService.getUser(userId);
+  }
+  @Get('scanner')
+  async getUserScanner(@Query('userId') userId: string) {
+    return this.newPcService.getUserScanner(userId);
   }
   @Get('visualize')
   visualize() {
