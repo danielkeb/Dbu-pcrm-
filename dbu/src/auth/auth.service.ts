@@ -121,9 +121,9 @@ export class AuthService {
       where: {
         id: id,
       },
-      data: {
-        ...dto,
-      },
+      data:{
+       ...dto
+      }
     });
     if (!user) {
       throw new ForbiddenException('update failed');
