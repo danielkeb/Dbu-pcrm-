@@ -100,10 +100,10 @@ class _UserListScreenState extends State<UserListScreen> {
 
 
 
-  Future<void> updateUser(int id) async {
+  Future<void> updateUser(String userId) async {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => UserUpdateScreen(userId: id)),
+      MaterialPageRoute(builder: (context) => UserUpdateScreen(userId: userId)),
     ).then((_) {
       setState(() {
         _futureUsers = fetchUsers();
@@ -201,7 +201,7 @@ class _UserListScreenState extends State<UserListScreen> {
                               children: [
                                 IconButton(
                                   icon: Icon(Icons.edit),
-                                  onPressed: () => updateUser(user.id),
+                                  onPressed: () => updateUser(user.userId),
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.delete),
@@ -274,7 +274,7 @@ class User {
 // Update User Screen adjustment
    
 class UserUpdateScreen extends StatefulWidget {
-  final int userId;
+  final String userId;
 
   UserUpdateScreen({required this.userId});
 
@@ -314,7 +314,7 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
   }
 
  Future<void> fetchUserData() async {
-  final response = await http.get(Uri.parse('http://10.18.51.50:3333/pcuser/get/${widget.userId}'));
+  final response = await http.get(Uri.parse('http://10.18.51.50:3333/pcuser/search?userId=${widget.userId}'));
 
   if (response.statusCode == 200) {
     Map<String, dynamic> userData = json.decode(response.body);
@@ -342,7 +342,7 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
     };
 
     final response = await http.put(
-      Uri.parse('http://10.18.51.50:3333/pcuser/update/${widget.userId}'),
+      Uri.parse('http://10.18.51.50:3333/pcuser/update?userId=${widget.userId}'),
       body: json.encode(updatedUserData),
       headers: {'Content-Type': 'application/json'},
     );
@@ -426,4 +426,5 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
       ),
     );
   }
+  
 }

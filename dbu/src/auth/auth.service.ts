@@ -1,7 +1,9 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto, ResetDto, UpdateDto } from './dto';
@@ -48,35 +50,47 @@ export class AuthService {
     }
   }
   async signIn(dto: AuthDto): Promise<{ access_token: string }> {
-    const user = await this.prisma.users.findFirst({
-      where: {
-        email: dto.email,
-      },
-    });
-
-    if (!user) {
-      throw new ForbiddenException('Icorrect email or password');
-    } else {
+    try {
+      const user = await this.prisma.users.findFirst({
+        where: {
+          email: dto.email,
+        },
+      });
+  
+      if (!user) {
+        throw new ForbiddenException('Incorrect email or password');
+      }
+  
+      if (user.status !== 'active') {
+        throw new UnauthorizedException('Unauthorized access contact your admin');
+      }
+  
       const pwMatches = await argon.verify(user.password, dto.password);
       if (!pwMatches) {
         throw new ForbiddenException('Incorrect password');
       }
-      // const token = await this.signToken(user.id, user.role);
-      return this.signToken(user.id, user.role, user.name, user.email);
+  
+      return this.signToken(user.id, user.role, user.name, user.email, user.status);
+    } catch (error) {
+  
+      // Rethrow the error to be handled by NestJS exception filters or other middleware
+      throw error;
     }
   }
 
   async signToken(
-    userId: number,
+    userId: string,
     role: string,
     name: string,
     email: string,
+    status: string,
   ): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
       role,
       name,
       email,
+      status,
     };
     const secret = this.config.get('JWT_SECRET');
 
@@ -97,8 +111,13 @@ export class AuthService {
     };
   }
 
-  async updateUser(id: number, dto: UpdateDto){
-    const user= await this.prisma.users.update({
+  async updateUser(id: string, dto: UpdateDto) {
+    console.log('Received DTO:', dto); // Log the received DTO
+    if(!dto){
+      throw new BadRequestException("undefined dto");
+    }
+  
+    const user = await this.prisma.users.update({
       where: {
         id: id,
       },
@@ -106,12 +125,14 @@ export class AuthService {
        ...dto
       }
     });
-    if(!user){
+    if (!user) {
       throw new ForbiddenException('update failed');
     }
- return {msq: 'updated success'};
+    console.log(dto.email);
+    return { msg: 'updated success' };
   }
-async resetPassword(Id: number, dto: ResetDto){
+  
+async resetPassword(Id: string, dto: ResetDto){
   const hash = await argon.hash(dto.password);
   const user= await this.prisma.users.update({
     where:{
@@ -167,7 +188,7 @@ async getAllUsers() {
   };
 }
 
-  async searchUser(userid: number): Promise<Users> {
+  async searchUser(userid: string): Promise<Users> {
     const existid = await this.prisma.users.findUnique({
       where: { id: userid },
     });
@@ -197,7 +218,7 @@ async getAllUsers() {
     }
   }
 
-  async deleteUser(userid: number) {
+  async deleteUser(userid: string) {
     const userId = await this.prisma.users.findFirst({
       where: {
         id: userid,

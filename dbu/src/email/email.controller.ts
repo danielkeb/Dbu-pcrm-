@@ -6,6 +6,11 @@ import {
   Param,
   Patch,
   NotAcceptableException,
+  Query,
+  HttpStatus,
+  NotFoundException,
+  HttpCode,
+  Get,
 } from '@nestjs/common';
 import { ShortcodeEmailService } from './email.service';
 import { PasswordDto } from './dto/pass.dto';
@@ -14,37 +19,30 @@ import { PasswordDto } from './dto/pass.dto';
 export class PasswordResetController {
   constructor(private readonly shortcodeEmailService: ShortcodeEmailService) {}
 
-  @Post('/shortcode/:id')
-  async verifyCode(@Param('id', ParseIntPipe) id: number, @Body() dto: any) {
-    // Verify the entered shortcode
-    // Inside your controller method
+  @Post('/shortcode')
+  async verifyCode(@Query('id') id: string, @Body() dto: any) {
     try {
       const result = await this.shortcodeEmailService.verifyCode(id, dto);
-      // Verification successful, return userId and any other relevant information
       return {
         userId: result.userId,
-        message: 'Verification successful',
         statusCode: 200,
       };
     } catch (error) {
-      if (error instanceof NotAcceptableException) {
-        // Handle invalid or expired short code error
+      if (error instanceof NotFoundException) {
         return { message: 'Invalid or expired short code', statusCode: 406 };
       } else {
-        // Handle other errors
         return {
           message: 'An error occurred while verifying the short code',
           statusCode: 500,
         };
       }
     }
-
-    // Return response indicating whether the entered shortcode is correct
   }
 
-  @Patch('/updatePassword/:id')
+
+  @Patch('/updatePassword')
   async resetPassword(
-    @Param('id', ParseIntPipe) id: number,
+    @Query('id') id: string,
     @Body() dto: PasswordDto,
   ) {
     await this.shortcodeEmailService.resetPassword(id, dto);

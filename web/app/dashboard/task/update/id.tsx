@@ -1,43 +1,44 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { useRouter, useSearchParams } from "next/navigation"; // Correct import for useRouter
+import { useRouter, useSearchParams } from "next/navigation";
 import { fetchUser, updateUser, User } from "../service";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const UserUpdatePage = () => {
   const router = useRouter();
-  const [id, setId] = useState<number | null>(null); // State for user id
   const searchParams = useSearchParams();
+  const [userUpt, setUserUpt] = useState<string>(""); // State for user id
   const [user, setUser] = useState<User>({
-    id: 0,
     userId: "",
     firstname: "",
     lastname: "",
     description: "",
+    pcowner: "",
+    gender: "",
+    endYear: "",
     image: "",
     brand: "",
+    phonenumber: "",
     serialnumber: "",
-    createdAT: "",
-    updatedAT: ""
+    barcode: "", // Add the barcode property
+    createdAT: "", // Add the createdAT property
+    updatedAT: "" // Add the updatedAT property
   });
 
   // Effect to parse and set user id from query params
   useEffect(() => {
-    const userIdFromQuery = searchParams.get('id');
+    const userIdFromQuery = searchParams.get("id");
     if (userIdFromQuery) {
-      const userIdParsed = parseInt(userIdFromQuery, 10); // Parse the userId to an integer
-      if (!isNaN(userIdParsed)) { // Check if the parsing was successful
-        setId(userIdParsed);
-      } else {
-        console.error('Invalid userId in query params');
-      }
+      setUserUpt(userIdFromQuery); // Set the user id
     }
   }, [searchParams]);
 
   // Effect to fetch user data when id changes
   useEffect(() => {
-    if (id !== null) {
-      fetchUser(id).then((userData) => setUser(userData));
+    if (userUpt) {
+      fetchUser(userUpt).then((userData) => setUser(userData));
     }
-  }, [id]);
+  }, [userUpt]);
 
   // Handle change function to update user state
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -48,12 +49,19 @@ const UserUpdatePage = () => {
     }));
   };
 
+  const handleDateChange = (date: Date | null) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      endYear: date?.toISOString() || ""
+    }));
+  };
+
   // Handle form submission
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (id !== null) {
-      await updateUser(id, user); // Assuming updateUser function exists and updates the user
-      router.push("/"); // Redirect to homepage after update
+    if (userUpt) {
+      await updateUser(userUpt, user); // Assuming updateUser function exists and updates the user
+      router.push("/dashboard"); // Redirect to dashboard after update
     }
   };
 
@@ -77,6 +85,7 @@ const UserUpdatePage = () => {
                 name="userId"
                 value={user.userId}
                 onChange={handleChange}
+                disabled
               />
             </div>
           </div>
@@ -132,6 +141,26 @@ const UserUpdatePage = () => {
             </div>
           </div>
 
+          {user.description === "Staff" && (
+            <div className="w-full lg:w-6/12 px-4">
+              <div className="relative w-full mb-3">
+                <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="pcowner">
+                  PC Owner
+                </label>
+                <select
+                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
+                  name="pcowner"
+                  value={user.pcowner}
+                  onChange={handleChange}
+                >
+                  <option value="">Select PC Owner</option>
+                  <option value="DBU">DBU</option>
+                  <option value="Personal">Personal</option>
+                </select>
+              </div>
+            </div>
+          )}
+
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative w-full mb-3">
               <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="brand">
@@ -163,11 +192,64 @@ const UserUpdatePage = () => {
               />
             </div>
           </div>
+          <div className="w-full lg:w-6/12 px-4">
+            <div className="relative w-full mb-3">
+              <label
+                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                htmlFor="phonenumber"
+              >
+                Phone Number
+              </label>
+              <input
+                type="text"
+                className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
+                placeholder="Phone Number"
+                name="phonenumber"
+                value={user.phonenumber}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="w-full lg:w-6/12 px-4">
+            <div className="relative w-full mb-3">
+              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="gender">
+                Gender
+              </label>
+              <select
+                name="gender"
+                value={user.gender}
+                onChange={handleChange}
+                className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
+              >
+                <option value="" disabled>
+                  Select an option
+                </option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="w-full lg:w-6/12 px-4">
+            <div className="relative w-full mb-3">
+              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="endYear">
+                Select End Year
+              </label>
+              <DatePicker
+                className="border border-gray-300 rounded px-3 py-2 w-full"
+                selected={user.endYear ? new Date(user.endYear) : null}
+                onChange={handleDateChange}
+                dateFormat="yyyy-MM-dd"
+                id="endYear"
+              />
+            </div>
+          </div>
         </div>
 
         <button
           type="submit"
-          className="bg-green-700 border-0 text-white w-full p-3 rounded-md mt-4"
+          className="bg-blue-500 border-0 text-white w-1/2 p-3 rounded-md mt-4 text-center"
         >
           Update
         </button>

@@ -9,7 +9,7 @@ const Page = () => {
   const [password, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [changePasswordError, setChangePasswordError] = useState('');
-  const [createNewPassword, setCreateNewPassword] = useState(false); // Initialize as false initially
+  const [createNewPassword, setCreateNewPassword] = useState(false);
   const { setToken } = useContext(AppContext);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -20,8 +20,8 @@ const Page = () => {
   useEffect(() => {
     const userIdFromQuery = searchParams.get('userId');
     if (userIdFromQuery) {
-      const userIdParsed = parseInt(userIdFromQuery, 10); // Parse the userId to an integer
-      if (!isNaN(userIdParsed)) { // Check if the parsing was successful
+      const userIdParsed = parseInt(userIdFromQuery, 10);
+      if (!isNaN(userIdParsed)) {
         setUserId(userIdParsed);
       } else {
         console.error('Invalid userId in query params');
@@ -32,41 +32,26 @@ const Page = () => {
   const handleChangePassword = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setChangePasswordError('');
-  
-    // Validate passwords on the frontend
+
     if (password !== confirmPassword) {
       setChangePasswordError('Passwords do not match');
       return;
     }
-  
+
     try {
-      const response = await fetch(`http://localhost:3333/verify/updatePassword/${userId}`, {
+      const response = await fetch(`http://localhost:3333/verify/updatePassword?id=${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ password }),
       });
-  
-      console.log('Response status:', response.status); // Log the status code
-  
+
       if (response.ok) {
         router.push('/login');
-        // try {
-        //   const responseData = await response.text(); // Get the response text
-        //   if (responseData) { // Check if the response is not empty
-        //     const data = JSON.parse(responseData); // Parse the response text as JSON
-        //     console.log('Password change successful', data);
-        //     router.push('/login'); // Redirect to login after successful password change
-        //   } else {
-        //     setChangePasswordError('Empty response from API');
-        //   }
-        // } catch (parseError) {
-        //   setChangePasswordError('Invalid JSON response');
-        // }
       } else {
         try {
-          const errorData = await response.json(); // Attempt to parse error response as JSON
+          const errorData = await response.json();
           setChangePasswordError(errorData.message || 'An error occurred');
         } catch (jsonError) {
           setChangePasswordError(`An error occurred with status: ${response.status}`);
@@ -81,35 +66,36 @@ const Page = () => {
   const handleResetPassword = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setResetError('');
-
+  
     try {
-      const response = await fetch(`http://localhost:3333/verify/shortcode/${userId}`, {
+      const response = await fetch(`http://localhost:3333/verify/shortcode?id=${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email: forgotEmail, shortcode }),
       });
-
-      if (response.status === 201) {
-        const data = await response.json();
-        console.log('Shortcode verification successful', data);
-        setCreateNewPassword(true); // Set createNewPassword to true upon successful verification
+  
+      const responseData = await response.json(); // Read response body once
+  console.log(responseData);
+      if (responseData.statusCode === 200) {
+        console.log('Shortcode verification successful', responseData);
+        setCreateNewPassword(true);
+      } else if (response.status === 406) {
+        setResetError(responseData.message || 'Invalid shortcode');
       } else {
-        const errorData = await response.json();
-        setResetError(errorData.message || 'Invalid shortcode');
+        setResetError(responseData.message || 'An error occurred');
       }
     } catch (error) {
       setResetError('An error occurred. Please try again.');
       console.error('Error during shortcode verification:', error);
     }
   };
-
+  
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
-       
-          {!createNewPassword && (
+        {!createNewPassword && (
           <>
             <h2 className="text-2xl font-bold text-center text-blue-600">Verify Shortcode</h2>
             <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
@@ -140,10 +126,10 @@ const Page = () => {
                 </button>
               </div>
             </form>
-            </>
+          </>
         )}
 
-          {createNewPassword && (
+        {createNewPassword && (
           <>
             <h2 className="text-2xl font-bold text-center text-blue-600">Create New Password</h2>
             <form className="mt-8 space-y-6" onSubmit={handleChangePassword}>

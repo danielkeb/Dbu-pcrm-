@@ -109,9 +109,9 @@ export class NewPcController {
     }
   }
 
-  @Put('update/:userId')
+  @Put('update')
   pcUserUpdate(
-    @Param('userId', ParseIntPipe) userId: number,
+    @Query('userId') userId: string,
     @Body() dto: NewPcDto,
   ) {
     return this.newPcService.pcUserUpdate(userId, dto);
@@ -126,6 +126,31 @@ export class NewPcController {
   getUser(@Query('userId') userId: string) {
     return this.newPcService.getUser(userId);
   }
+
+  @Get('year')
+  async getDateEndUser(@Query('endYear') endYear: string) {
+    try {
+      // Convert the query parameter to a Date object
+      const endYearDate = new Date(endYear);
+
+      // Check if the conversion resulted in a valid date
+      if (isNaN(endYearDate.getTime())) {
+        throw new Error('Invalid date format');
+      }
+
+      // Call the service function with the Date object
+      return await this.newPcService.dateEndUser(endYearDate);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  
+
+  @Get('action')
+  getRecentActions() {
+    return this.newPcService.getRecentActions();
+  }
   @Get('scanner')
   async getUserScanner(@Query('userId') userId: string) {
     return this.newPcService.getUserScanner(userId);
@@ -139,9 +164,24 @@ export class NewPcController {
   trashedUser(@Param('year') year: Date) {
     return this.newPcService.trashedUser(year);
   }
- @Put('restore/year/:year')
- restoreAll(@Param('year') year: Date){
-  return this.newPcService.restore(year);
- }
+
+  @Put('trash/user')
+  trashedSingleUser(@Query('userId') userId: string) {
+    return this.newPcService.trashedSingleUser(userId);
+  }
+  @Post('restore')
+  async restore(@Query('year') year: string) {
+    try {
+      // Validate the year parameter format
+      if (!year) {
+        throw new BadRequestException('Year parameter is required');
+      }
+
+      // Call the service function with the provided year
+      return await this.newPcService.restore(year);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
 
 }

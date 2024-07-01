@@ -16,6 +16,7 @@ import * as bwipjs from 'bwip-js';
 export class NewPcService {
   pcuser: any;
   userRepository: any;
+  logger: any;
   constructor(private prisma: PrismaService) {}
 
   async addNewPc(dto: NewPcDto, photo: string): Promise<Pcuser> {
@@ -30,7 +31,7 @@ export class NewPcService {
         text: dto.userId, // Text to encode
         scale: 3, // 3x scaling factor
         height: 10, // Bar height, in millimeters
-        includetext: true, // Show human-readable text
+        //includetext: true, // Show human-readable text
         textxalign: 'center', // Always good to set this
       });
 
@@ -81,10 +82,10 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
     const newPc = await this.prisma.pcuser.findMany();
     return newPc;
   }
-  async pcUserUpdate(userId: number, dto: NewPcDto) {
+  async pcUserUpdate(userId: string, dto: NewPcDto) {
     const user = await this.prisma.pcuser.update({
       where: {
-        id: userId,
+        userId: userId,
       },
       data: {
         ...dto,
@@ -171,6 +172,11 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
     }
   }
   
+
+  async getRecentActions(){
+    const recentAction= await this.prisma.recent.findMany();
+    return recentAction;
+  }
   async visualize() {
     // Count total number of pcusers
     const pcuser = await this.prisma.pcuser.count();
@@ -270,7 +276,7 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
           },
         });
       } catch (error) {
-        console.error("Error finding pcuser records:", error);
+
         throw new Error("Failed to find pcuser records.");
       }
   
@@ -295,7 +301,7 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
               },
             });
           } catch (error) {
-            console.error("Error creating inactive user:", error);
+  
             throw new Error("Failed to create inactive user.");
           }
   
@@ -307,7 +313,6 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
                 },
               });
             } catch (error) {
-              console.error("Error deleting pcuser:", error);
               throw new Error("Failed to delete pcuser.");
             }
           }
@@ -315,40 +320,73 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
       }
       return { msg: "deactivated successfully" };
     } catch (error) {
-      console.error("Error trashing users:", error);
+      
       throw new Error("Failed to trash users.");
     }
   }
-  
-  
-  async restore(year: any) {
+  async dateEndUser(endYear: Date): Promise<any> {
     try {
-      const yearDate = new Date(year);
-  
-      if (isNaN(yearDate.getTime())) {
+      // Validate the provided endYear parameter
+      if (!(endYear instanceof Date && !isNaN(endYear.getTime()))) {
+        this.logger.error('Invalid date provided:', endYear);
         throw new Error('Invalid date');
       }
+
+      // Calculate future year
+      const futureYear = new Date(endYear);
+      futureYear.setFullYear(endYear.getFullYear() + 1);
+      
+      // Query users based on date range
+      const users = await this.prisma.pcuser.findMany({
+        where: {
+          endYear: {
+            gte: endYear,
+            lt: futureYear,
+          },
+        },
+      });
+      
+      return users;
+    } catch (error) {
+      // Handle errors gracefully
+      this.logger.error('Failed to fetch users by date range:', error);
+      throw new Error(`Failed to fetch users by date range: ${error.message}`);
+    }
+  }
   
+  async restore(year: any): Promise<any> {
+    try {
+      const yearDate = new Date(year);
+
+      // Validate the provided year parameter
+      if (isNaN(yearDate.getTime())) {
+        this.logger.error('Invalid date provided:', year);
+        throw new Error('Invalid date');
+      }
+
+      // Calculate future date
       const futureDate = new Date(yearDate);
       futureDate.setFullYear(yearDate.getFullYear() + 1);
-  
+
       let users;
       try {
         users = await this.prisma.inactive.findMany({
           where: {
-            endYear: yearDate,
+            endYear: {
+              gte: yearDate,
+              lt: futureDate,
+            },
           },
         });
       } catch (error) {
-        console.error("Error finding inactive users:", error);
-        throw new Error("Failed to find inactive users.");
+        this.logger.error('Failed to find inactive users:', error);
+        throw new Error('Failed to find inactive users.');
       }
-  
-      if (users) {
+
+      if (users && users.length > 0) {
         for (const user of users) {
-          let inuser;
           try {
-            inuser = await this.prisma.pcuser.create({
+            const inuser = await this.prisma.pcuser.create({
               data: {
                 userId: user.userId,
                 firstname: user.firstname,
@@ -364,31 +402,76 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
                 barcode: user.barcode,
               },
             });
+
+            await this.prisma.inactive.delete({
+              where: {
+                userId: user.userId,
+              },
+            });
           } catch (error) {
-            console.error("Error creating pcuser:", error);
-            throw new Error("Failed to create pcuser.");
-          }
-  
-          if (inuser) {
-            try {
-              await this.prisma.inactive.delete({
-                where: {
-                  userId: user.userId,
-                },
-              });
-            } catch (error) {
-              console.error("Error deleting inactive user:", error);
-              throw new Error("Failed to delete inactive user.");
-            }
+            this.logger.error('Error processing user:', user.userId, error);
+            throw new Error('Failed to process user.');
           }
         }
       }
-  
-      return { msg: "restore success" };
+
+      return { msg: 'Restore success' };
     } catch (error) {
-      console.error("Error restoring users:", error);
-      throw new Error("Failed to restore users.");
+      this.logger.error('Error restoring users:', error);
+      throw new Error('Failed to restore users.');
     }
   }
   
+  async trashedSingleUser(userId: string): Promise<void> {
+    try {
+      // Find the user in the pcuser table
+      const user = await this.prisma.pcuser.findUnique({
+        where: {
+          userId: userId,
+        },
+      });
+
+      if (!user) {
+        throw new NotFoundException("User not found");
+      }
+
+      // Create a new record in the inactive table
+      const success = await this.prisma.inactive.create({
+        data: {
+          userId: user.userId,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          brand: user.brand,
+          description: user.description,
+          endYear: user.endYear,
+          gender: user.gender,
+          serialnumber: user.serialnumber,
+          phonenumber: user.phonenumber,
+          pcowner: user.pcowner,
+          image: user.image,
+          barcode: user.barcode,
+        },
+      });
+
+      if (success) {
+        // Delete the user from the pcuser table
+        await this.prisma.pcuser.delete({
+          where: {
+            userId: success.userId,
+          },
+        });
+      }
+
+    } catch (error) {
+      this.logger.error('Error trashing user:', { userId, error });
+
+      // Rethrow known errors and wrap unknown ones
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException("Unable to trash user");
+      }
+    }
+  }
+
 }

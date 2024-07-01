@@ -7,7 +7,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import * as Yup from "yup";
 import Config from "@/config";
 import { AppContext } from "@/components/UserContext";
-
+import SuccessMessage from "../validationmessage/success";
+import ErrorMessage from "../validationmessage/useralready";
+import FailedOperation from "../validationmessage/error";
 type FormValues = {
   userId: string;
   firstname: string;
@@ -26,6 +28,9 @@ const RegisterPage = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const {token}= useContext(AppContext);
+  const [successMessage, setSuccessMessage]=useState(false);
+  const [errMessage, setErrorMessage]= useState(false);
+  const [err, setError]= useState(false);
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -84,12 +89,16 @@ const RegisterPage = () => {
           }
         );
         if (response.status === 201) {
-          alert("Registration successful!");
+          setSuccessMessage(true);
+          setTimeout(() => setSuccessMessage(false), 1000);
         } else {
-          alert("Registration failed!");
+          setError(true);
+          setTimeout(() => setError(false), 1000);
         }
       } catch (error: any) {
-        alert(`Unable to connect to the internet: ${error.message}`);
+        setErrorMessage(true);
+        
+        setTimeout(() => setErrorMessage(false), 1000);
       }
     },
     
@@ -358,25 +367,25 @@ const RegisterPage = () => {
         </div>
       )}
         </div>
-        <div className="w-full lg:w-6/12 px-4">
-  <div className="relative w-full mb-3">
-    <label
-      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-      htmlFor="brand"
-    >
-      Select End Year
-    </label>
-    <DatePicker
-      className="border border-gray-300 rounded px-3 py-2 w-full"
-      selected={formik.values.endYear}
-      onChange={handleDateChange}
-      dateFormat="yyyy-MM-dd"
-      id="endYear"
-    />
-    {formik.errors.endYear && formik.touched.endYear && (
-      <small className="text-red-500">{formik.errors.endYear && ''}</small>
-    )}
-  </div>
+  <div className="w-full lg:w-6/12 px-4">
+      <div className="relative w-full mb-3">
+        <label
+          className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+          htmlFor="brand"
+        >
+          Select End Year
+        </label>
+        <DatePicker
+          className="border border-gray-300 rounded px-3 py-2 w-full"
+          selected={formik.values.endYear}
+          onChange={handleDateChange}
+          dateFormat="yyyy-MM-dd"
+          id="endYear"
+        />
+        {formik.errors.endYear && formik.touched.endYear && (
+          <small className="text-red-500">{formik.errors.endYear && ''}</small>
+        )}
+      </div>
 </div>
 
         <hr className="mt-6 border-b-1 border-blueGray-300" />
@@ -426,7 +435,15 @@ const RegisterPage = () => {
         >
           Submit
         </button>
+
       </form>
+      {/* status code 201 */}
+     <SuccessMessage success={successMessage} />
+     {/*status code 403*/}
+     <ErrorMessage error={errMessage} />
+
+     {/*other failed operation or other status code */}
+     <FailedOperation failed={err} />
     </div>
   );
 };
