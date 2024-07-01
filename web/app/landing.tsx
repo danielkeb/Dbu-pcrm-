@@ -2,8 +2,14 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-
+interface UserData{
+  NumberOfstudent: number;
+   totalNumberOfStaff: number;
+  totalNumberOfGuest:number;
+}
 import { AcademicCapIcon, AnnotationIcon, ArchiveIcon } from '@heroicons/react/solid';
+import axios from "axios";
+import { number } from "yup";
 interface Props {
   window?: () => Window;
 }
@@ -14,37 +20,53 @@ const navItems = ["Home", "About", "News", "Contact Us"];
 export default function DrawerAppBar(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [data, setData]=React.useState<UserData>({
+    NumberOfstudent: 0,
+    totalNumberOfStaff:0,
+   totalNumberOfGuest:0,
+  });
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+React.useEffect(()=>{
+  fetchUsers();
+});
+  const fetchUsers = async ()=>{
+    try{
+   const response= await axios.get("http://localhost:3333/pcuser/visualize");
+    setData(response.data);
+    }catch{
+      throw new Error("unable to fetch pc owners")
+    }
+  }
 
   const featuresList = [
     {
-      icon: (
-        <AnnotationIcon
-          color="blue"
-          style={{ width: 60, height: 60 }}
-        />
-      ),
-      title: "Students pcowner",
+      // icon: (
+      //   <AnnotationIcon
+      //     color="blue"
+      //     style={{ width: 60, height: 60 }}
+      //   />
+      // ),
+      
+      // title: `${data.NumberOfstudent} Students pcowner`,
+      label:`${data.NumberOfstudent}`,
+      title: "Students",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
     },
     {
-      icon: (
-        <ArchiveIcon
-          color="blue"
-          style={{ width: 60, height: 60 }}
-        />
-      ),
+      label:`${data.totalNumberOfStaff}`,
       title: "Staff",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
     },
+    // data.NumberOfstudent, data.totalNumberOfStaff, data.totalNumberOfGuest
     {
-      icon: <AcademicCapIcon color="blue" style={{ width: 60, height: 60 }} />,
-      title: "Guest PcOwner",
+      // icon: <AcademicCapIcon color="blue" style={{ width: 60, height: 60 }} />,
+      label:`${data.totalNumberOfGuest}`,
+      title: "Guests",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
     },
@@ -93,12 +115,6 @@ export default function DrawerAppBar(props: Props) {
                 SignIn
               </button>
             </Link>
-
-            {/* <Link href="/dashboard">
-              <button className="bg-blue-500 text-white py-2 px-4">
-                SignUp
-              </button>
-            </Link> */}
           </div>
         </nav>
       </header>
@@ -158,7 +174,9 @@ export default function DrawerAppBar(props: Props) {
                 className="bg-white p-6 flex flex-col items-center rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105"
                 key={feature.title}
               >
-                {feature.icon}
+                <h1 className="text-gray-700 text-3xl font-bold">
+                {feature.label}
+                </h1>
                 <h4 className="text-gray-700 text-lg font-semibold">
                   {feature.title}
                 </h4>
@@ -211,7 +229,7 @@ export default function DrawerAppBar(props: Props) {
         <section className="w-full py-10">
           <div className="map-responsive">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3933.0512916444013!2d39.53042267585995!3d9.67665879041285!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1649bd79fe92a5f5%3A0xcedc88541b6c788d!2sAbune%20Gorgoriwos%20Scoll!5e0!3m2!1sen!2set!4v1707652781042!5m2!1sen!2set"
+              src="https://www.google.com/maps/place/%E1%8A%A0%E1%88%B5%E1%89%B0%E1%8B%B3%E1%8B%B0%E1%88%AD+%E1%88%95%E1%8A%95%E1%8D%83/@9.6588503,39.5200011,21z/data=!4m6!3m5!1s0x1649bd6b32b70b8d:0x62d1240b932a85a5!8m2!3d9.6589481!4d39.5200565!16s%2Fg%2F11q26f6bq_?entry=ttu"
               width="600"
               height="450"
               allowFullScreen
@@ -223,7 +241,7 @@ export default function DrawerAppBar(props: Props) {
         </section>
         <footer className="w-full py-8 border-t border-gray-300 flex flex-col md:flex-row items-center justify-between px-10">
           <span className="text-gray-700">
-            Copyright © 2024 AbuneGorgorious Schools . All rights reserved.
+            Copyright © 2024 Debre Birhan University . All rights reserved.
           </span>
           <div className="flex space-x-8">
             <a

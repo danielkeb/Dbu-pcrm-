@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Reset" ALTER COLUMN "userId" SET DATA TYPE TEXT;

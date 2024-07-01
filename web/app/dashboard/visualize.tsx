@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
 import { useAppContext } from '@/components/UserContext';
+import RecentActionsPage from './recent/page';
 
 Chart.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -119,12 +120,13 @@ const Visualization: React.FC = () => {
             </div>
           </div>
         ):(
-            <div className="bg-white p-4 rounded-lg shadow">
-              <h3 className="text-blue-500 font-bold">DBU Security Users</h3>
-              <div className="w-64 h-64 mx-auto">
-                <Bar data={pieSecurity} options={{ responsive: true }} />
-              </div>
-            </div>
+            // <div className="bg-white p-4 rounded-lg shadow">
+            //   <h3 className="text-blue-500 font-bold">DBU Security Users</h3>
+            //   <div className="w-64 h-64 mx-auto">
+            //     <Bar data={pieSecurity} options={{ responsive: true }} />
+            //   </div>
+            // </div>
+            <RecentActionsPage/>
         )}
       </div>
     </div>

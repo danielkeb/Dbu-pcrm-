@@ -1,9 +1,10 @@
 import { IsString, IsEmail, IsInt, IsOptional } from 'class-validator';
 
 export class AuthDto {
-  @IsInt()
-  id: number;
   @IsString()
+  id: string;
+  @IsString()
+  
   name: string;
   last_name: string;
   @IsEmail()
@@ -30,12 +31,10 @@ export class AuthDto {
 }
 
 export class UpdateDto {
-  @IsInt()
-  id: number;
-  
-  @IsOptional()
   @IsString()
-  name: string;
+  id?: string;
+  @IsString()
+  name?: string;
 
   @IsEmail()
   @IsString()
