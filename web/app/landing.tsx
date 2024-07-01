@@ -2,8 +2,14 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-
+interface UserData{
+  NumberOfstudent: number;
+   totalNumberOfStaff: number;
+  totalNumberOfGuest:number;
+}
 import { AcademicCapIcon, AnnotationIcon, ArchiveIcon } from '@heroicons/react/solid';
+import axios from "axios";
+import { number } from "yup";
 interface Props {
   window?: () => Window;
 }
@@ -14,10 +20,26 @@ const navItems = ["Home", "About", "News", "Contact Us"];
 export default function DrawerAppBar(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [data, setData]=React.useState<UserData>({
+    NumberOfstudent: 0,
+    totalNumberOfStaff:0,
+   totalNumberOfGuest:0,
+  });
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+React.useEffect(()=>{
+  fetchUsers();
+});
+  const fetchUsers = async ()=>{
+    try{
+   const response= await axios.get("http://localhost:3333/pcuser/visualize");
+    setData(response.data);
+    }catch{
+      throw new Error("unable to fetch pc owners")
+    }
+  }
 
   const featuresList = [
     {
@@ -27,7 +49,8 @@ export default function DrawerAppBar(props: Props) {
           style={{ width: 60, height: 60 }}
         />
       ),
-      title: "Students pcowner",
+      
+      title: `${data.NumberOfstudent} Students pcowner`,
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
     },
@@ -38,13 +61,14 @@ export default function DrawerAppBar(props: Props) {
           style={{ width: 60, height: 60 }}
         />
       ),
-      title: "Staff",
+      title: `${data.totalNumberOfStaff} Staff`,
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
     },
+    // data.NumberOfstudent, data.totalNumberOfStaff, data.totalNumberOfGuest
     {
       icon: <AcademicCapIcon color="blue" style={{ width: 60, height: 60 }} />,
-      title: "Guest PcOwner",
+      title: `${data.totalNumberOfGuest} Guest PcOwner`,
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
     },
@@ -158,6 +182,7 @@ export default function DrawerAppBar(props: Props) {
                 className="bg-white p-6 flex flex-col items-center rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105"
                 key={feature.title}
               >
+                
                 {feature.icon}
                 <h4 className="text-gray-700 text-lg font-semibold">
                   {feature.title}
@@ -211,7 +236,7 @@ export default function DrawerAppBar(props: Props) {
         <section className="w-full py-10">
           <div className="map-responsive">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3933.0512916444013!2d39.53042267585995!3d9.67665879041285!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1649bd79fe92a5f5%3A0xcedc88541b6c788d!2sAbune%20Gorgoriwos%20Scoll!5e0!3m2!1sen!2set!4v1707652781042!5m2!1sen!2set"
+              src="https://www.google.com/maps/https://www.google.com/maps/dir/9.6569922,39.5212034//@9.6566785,39.4794844,13z?hl=en&entry=ttu?pb=!1m18!https://www.google.com/maps/dir/9.6569922,39.5212034/Debre+Berhan+University,+09+School+of+Computing,+Debre+Birhan/@9.6596299,39.5156511,16.26z/data=!4m8!4m7!1m0!1m5!1m1!1s0x1649bd7dac123767:0x44635ad4b8545f85!2m2!1d39.5213618!2d9.6568423?hl=en&entry=ttu!1m3!1d3933.0512916444013!2d39.53042267585995!3d9.67665879041285!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1649bd79fe92a5f5%3A0xcedc88541b6c788d!2sDebre%20Birhan%20University%20Scoll!5e0!3m2!1sen!2set!4v1707652781042!5m2!1sen!2set"
               width="600"
               height="450"
               allowFullScreen
@@ -223,7 +248,7 @@ export default function DrawerAppBar(props: Props) {
         </section>
         <footer className="w-full py-8 border-t border-gray-300 flex flex-col md:flex-row items-center justify-between px-10">
           <span className="text-gray-700">
-            Copyright © 2024 AbuneGorgorious Schools . All rights reserved.
+            Copyright © 2024 Debre Birhan University . All rights reserved.
           </span>
           <div className="flex space-x-8">
             <a

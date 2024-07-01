@@ -6,7 +6,7 @@ const RecentActionsPage = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(3);
 
   useEffect(() => {
     fetchRecentActions().then(setActions);
@@ -69,10 +69,10 @@ const RecentActionsPage = () => {
           onChange={handleItemsPerPageChange}
           className="border border-gray-300 px-4 py-2 rounded"
         >
+          <option value="3">3 rows</option>
           <option value="5">5 rows</option>
-          <option value="10">10 rows</option>
-          <option value="25">25 rows</option>
-          <option value="100">100 rows</option>
+          {/* <option value="25">25 rows</option>
+          <option value="100">100 rows</option> */}
         </select>
       </div>
 
