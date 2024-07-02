@@ -1,0 +1,13 @@
+authToke= 2hSdfQYYBHNExlEiGd2Pf8MOb0q_7YRQ21QuCP1QwdT7jmf64
+
+ngrok config add-authtoken 2hSdfQYYBHNExlEiGd2Pf8MOb0q_7YRQ21QuCP1QwdT7jmf64
+
+authtoken: 2hSdfQYYBHNExlEiGd2Pf8MOb0q_7YRQ21QuCP1QwdT7jmf64
+
+flutter run
+
+npm run start:dev
+npm run dev
+cd dbu
+cd dbuapp
+cd web

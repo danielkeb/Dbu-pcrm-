@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsInt, IsOptional } from 'class-validator';
+import { IsString, IsEmail, IsInt } from 'class-validator';
 
 export class AuthDto {
   @IsString()
@@ -38,36 +38,28 @@ export class UpdateDto {
 
   @IsEmail()
   @IsString()
-  @IsOptional()
-  email: string;
+  email?: string;
+  
+  @IsString()
+  last_name?: string;
 
   @IsString()
-  @IsOptional()
-  last_name: string;
+  role?: string;
 
   @IsString()
-  @IsOptional()
-  role: string;
+  password?: string;
 
   @IsString()
-  @IsOptional()
-  password: string;
+  gender?: string;
 
   @IsString()
-  @IsOptional()
-  gender: string;
+  address?: string;
 
   @IsString()
-  @IsOptional()
-  address: string;
+  phonenumer?: string;
 
   @IsString()
-  @IsOptional()
-  phonenumber: string;
-
-  @IsString()
-  @IsOptional()
-  status: string;
+  status?: string;
 }
 export class ResetEmailDto {
   @IsEmail()

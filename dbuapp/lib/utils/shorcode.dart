@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'resetpassword.dart';
 
 class Shortcode extends StatefulWidget {
-  final int userId;
+  final String userId;
 
   Shortcode({required this.userId});
 
@@ -14,7 +14,7 @@ class Shortcode extends StatefulWidget {
 }
 
 class _ShortcodeState extends State<Shortcode> {
-  http.Response? _shortcodeVerificationResponse;
+  dynamic _shortcodeVerificationResponse;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _codeController = TextEditingController();
 
@@ -25,11 +25,11 @@ class _ShortcodeState extends State<Shortcode> {
       final response = await _makeVerifyShortcodeRequest(code, widget.userId);
       _handleSuccessResponse(response);
     } catch (e) {
-      _handleError(e);
+      _handleError(e.toString());
     }
   }
 
-  Future<http.Response> _makeVerifyShortcodeRequest(String code, int userId) async {
+  Future<http.Response> _makeVerifyShortcodeRequest(String code, String userId) async {
     final uri = _createUri(userId);
     final headers = _createHeaders();
     final body = _createRequestBody(code);
@@ -37,8 +37,8 @@ class _ShortcodeState extends State<Shortcode> {
     return await http.post(uri, headers: headers, body: body);
   }
 
-  Uri _createUri(int userId) {
-    return Uri.parse('http://10.18.51.50:3333/verify/shortcode/${widget.userId}');
+  Uri _createUri(String userId) {
+    return Uri.parse('https://ba9b-196-188-51-240.ngrok-free.app/verify/shortcode?id=$userId');
   }
 
   Map<String, String> _createHeaders() {
@@ -55,12 +55,12 @@ class _ShortcodeState extends State<Shortcode> {
 
   void _handleSuccessResponse(http.Response response) {
     setState(() {
-      _shortcodeVerificationResponse = response;
+      _shortcodeVerificationResponse = jsonDecode(response.body);
     });
   }
 
-  void _handleError(Object error) {
-    _showErrorSnackBar('Error: ${error.toString()}');
+  void _handleError(String error) {
+    _showErrorSnackBar('Error: $error');
     setState(() {
       _shortcodeVerificationResponse = null;
     });
@@ -96,7 +96,7 @@ class _ShortcodeState extends State<Shortcode> {
               },
             ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           ElevatedButton(
             onPressed: _verifyShortcode,
             child: Text('Verify'),
@@ -106,29 +106,29 @@ class _ShortcodeState extends State<Shortcode> {
     );
   }
 
- Widget _buildVerificationResult() {
-  if (_shortcodeVerificationResponse != null) {
-    if (_shortcodeVerificationResponse!.statusCode == 201) {
-      return TextButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ResetPassword(id: widget.userId.toString()),
-            ),
-          );
-        },
-        child: Text('Reset Password'),
-      );
+  Widget _buildVerificationResult() {
+    if (_shortcodeVerificationResponse != null) {
+      final statusCode = _shortcodeVerificationResponse['statusCode'];
+      if (statusCode == 200) {
+        return TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ResetPassword(id: widget.userId),
+              ),
+            );
+          },
+          child: Text('Reset Password'),
+        );
+      } else {
+        // Provide more context about the error
+        return Text('Verification failed: ${_shortcodeVerificationResponse['message']}');
+      }
     } else {
-      // Provide more context about the error
-      return Text('Verification failed: ${_shortcodeVerificationResponse!.reasonPhrase}');
+      return Container(); // Return empty container if response is null
     }
-  } else {
-    return Container(); // Return empty container if response is null
   }
-}
-
 
   @override
   Widget build(BuildContext context) {

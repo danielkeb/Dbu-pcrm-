@@ -45,7 +45,7 @@ export const updateUser = async (id: string, user: User): Promise<User> => {
     const payload = JSON.stringify(user);
     console.log('Payload being sent:', payload); // Debugging the payload
     const response = await fetch(`${BASE_URL}/update?id=${id}`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`,

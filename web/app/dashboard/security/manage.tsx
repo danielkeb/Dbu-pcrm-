@@ -6,7 +6,7 @@ import * as Yup from "yup";
 
 // Define the interface for the security data
 interface SecurityData {
-  id: number;
+  id: string;
   email: string;
   role: string;
   name: string;
@@ -42,7 +42,7 @@ function Manage() {
 
   const handleSubmit = async (values: SecurityData) => {
     try{
-   const res=await axios.patch(`http://localhost:3333/auth/update/${values.id}`, values)
+   const res=await axios.patch(`http://localhost:3333/auth/update?id=${values.id}`, values)
    const reFetch= await axios.get("http://localhost:3333/auth/getAllSecurity")
    setData(reFetch.data);
    console.log("the response is", res)
@@ -57,6 +57,7 @@ function Manage() {
   };
 
   const validationSchema = Yup.object({
+    id: Yup.string().required("Required"),
     name: Yup.string().required("Required"),
     last_name: Yup.string().required("Required"),
     email: Yup.string().email("Invalid email address").required("Required"),
@@ -196,6 +197,25 @@ function Manage() {
                         {({ isSubmitting }) => (
                           <Form>
                             <div className="mb-4">
+  <label
+    className="block text-gray-700 text-sm font-bold mb-2"
+    htmlFor="id">
+    User Id
+  </label>
+  <Field
+    name="id"
+    type="text"
+    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+    readOnly
+  />
+  <ErrorMessage
+    name="id"
+    component="div"
+    className="text-red-500 text-xs italic"
+  />
+</div>
+
+                            <div className="mb-4">
                               <label
                                 className="block text-gray-700 text-sm font-bold mb-2"
                                 htmlFor="name">
@@ -249,6 +269,23 @@ function Manage() {
                             <div className="mb-4">
                               <label
                                 className="block text-gray-700 text-sm font-bold mb-2"
+                                htmlFor="phonenumer">
+                                Phone Number
+                              </label>
+                              <Field
+                                name="phonenumer"
+                                type="text"
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                              />
+                              <ErrorMessage
+                                name="phonenumer"
+                                component="div"
+                                className="text-red-500 text-xs italic"
+                              />
+                            </div>
+                            <div className="mb-4">
+                              <label
+                                className="block text-gray-700 text-sm font-bold mb-2"
                                 htmlFor="gender">
                                 Gender
                               </label>
@@ -276,6 +313,7 @@ function Manage() {
                                 name="role"
                                 as="select"
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                readOnly
                               >
                                 <option value="security">Security</option>
                                 <option value="admin">Admin</option>
@@ -296,8 +334,8 @@ function Manage() {
                                 name="status"
                                 as="select"
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
                               </Field>
                               <ErrorMessage
                                 name="status"
@@ -305,20 +343,21 @@ function Manage() {
                                 className="text-red-500 text-xs italic"
                               />
                             </div>
-                            <div className="flex items-center justify-between">
-                              <button
-                                type="submit"
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                disabled={isSubmitting}>
-                                Update
-                              </button>
-                              <button
-                                type="button"
-                                className="inline-flex justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
-                                onClick={() => setIsOpen(false)}>
-                                Cancel
-                              </button>
-                            </div>
+                            <div className="flex items-center justify-center space-x-2">
+  <button
+    type="submit"
+    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    disabled={isSubmitting}>
+    Update
+  </button>
+  <button
+    type="button"
+    className="inline-flex justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
+    onClick={() => setIsOpen(false)}>
+    Cancel
+  </button>
+</div>
+
                           </Form>
                         )}
                       </Formik>

@@ -302,7 +302,7 @@ bool isTorchOn = false;
           children: [
             _userInfo!['image'] != null
                 ? Image.network(
-                    'http://10.18.51.50:3333/pcuser/${_userInfo!['image']}',
+                    'https://9579-196-188-51-240.ngrok-free.app/pcuser/${_userInfo!['image']}',
                     width: double.infinity,
                     height: 200,
                     fit: BoxFit.cover,
@@ -370,7 +370,7 @@ bool isTorchOn = false;
 
   try {
     final response = await http.get(
-      Uri.parse('http://10.18.51.50:3333/pcuser/scanner?userId=$scannedId'),
+      Uri.parse('https://9579-196-188-51-240.ngrok-free.app/pcuser/scanner?userId=$scannedId'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -405,7 +405,7 @@ bool isTorchOn = false;
 
     try {
     final response = await http.get(
-      Uri.parse('http://10.18.51.50:3333/pcuser/scanner?userId=$searchQuery'),
+      Uri.parse('https://9579-196-188-51-240.ngrok-free.app/pcuser/scanner?userId=$searchQuery'),
       headers: {
         'Content-Type': 'application/json',
       },

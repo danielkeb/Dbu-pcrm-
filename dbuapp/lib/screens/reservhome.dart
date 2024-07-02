@@ -116,7 +116,7 @@ class _HomePageContentState extends State<HomePageContent> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Image.asset('assets/images/nonetwork.jpg'));
+          return Center(child: Text('Please check your network connection or start the server.'));
         } else if (!snapshot.hasData) {
           return const Center(child: Text('No data available'));
         }
@@ -227,7 +227,7 @@ class _HomePageContentState extends State<HomePageContent> {
 
   
   Future<Map<String, dynamic>> fetchUser() async {
-  String url = 'http://10.18.51.50:3333/pcuser/visualize';
+  String url = 'https://ba9b-196-188-51-240.ngrok-free.app/pcuser/visualize';
   
   try {
     final response = await http.get(Uri.parse(url));

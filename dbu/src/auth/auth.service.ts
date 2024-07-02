@@ -112,14 +112,18 @@ export class AuthService {
   }
 
   async updateUser(id: string, dto: UpdateDto) {
-    console.log('Received DTO:', dto); // Log the received DTO
     if(!dto){
       throw new BadRequestException("undefined dto");
     }
-  
+  const userExist=await this.prisma.users.findFirst({
+    where:{
+      id: id,
+    },
+  });
+  if(userExist){
     const user = await this.prisma.users.update({
       where: {
-        id: id,
+        id: dto.id,
       },
       data:{
        ...dto
@@ -128,7 +132,18 @@ export class AuthService {
     if (!user) {
       throw new ForbiddenException('update failed');
     }
-    console.log(dto.email);
+  }
+    const user = await this.prisma.users.update({
+      where: {
+        id: dto.id,
+      },
+      data:{
+       ...dto
+      }
+    });
+    if (!user) {
+      throw new ForbiddenException('update failed');
+    }
     return { msg: 'updated success' };
   }
   

@@ -67,6 +67,11 @@ export class NewPcController {
   getNewPc() {
     return this.newPcService.getNewPc();
   }
+
+  @Get('get/tired')
+  getTiredPcUser() {
+    return this.newPcService.getTiredPcUser();
+  }
   @Get('images/:filename')
   async openImg(
     @Param('filename') filename: string,
@@ -145,6 +150,24 @@ export class NewPcController {
     }
   }
 
+
+  @Get('year/tired')
+  async getDateEndUserTired(@Query('endYear') endYear: string) {
+    try {
+      // Convert the query parameter to a Date object
+      const endYearDate = new Date(endYear);
+
+      // Check if the conversion resulted in a valid date
+      if (isNaN(endYearDate.getTime())) {
+        throw new Error('Invalid date format');
+      }
+
+      // Call the service function with the Date object
+      return await this.newPcService.dateEndUserTired(endYearDate);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
   
 
   @Get('action')
@@ -169,6 +192,12 @@ export class NewPcController {
   trashedSingleUser(@Query('userId') userId: string) {
     return this.newPcService.trashedSingleUser(userId);
   }
+
+  @Put('trash/user/tired')
+  trashedSingleUserTired(@Query('userId') userId: string) {
+    return this.newPcService.trashedSingleUserTired(userId);
+  }
+
   @Post('restore')
   async restore(@Query('year') year: string) {
     try {

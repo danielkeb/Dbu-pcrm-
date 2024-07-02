@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
 
   try {
     final response = await http.post(
-      Uri.parse('http://10.18.51.50:3333/auth/signin'),
+      Uri.parse('https://ba9b-196-188-51-240.ngrok-free.app/auth/signin'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },

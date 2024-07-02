@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as yup from "yup"; // Import Yup for validation
 
 const validationSchema = yup.object({
-  id: yup.number().required("Id required"),
+  id: yup.string().required("Id required"),
   email: yup
     .string()
     .email("Invalid email address")
@@ -75,7 +75,7 @@ const Register = () => {
                 User Id
               </label>
               <input
-                type="number"
+                type="text"
                 className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
                 placeholder="User ID"
                 name="id"

@@ -26,7 +26,7 @@ class _HomePageContentState extends State<HomePageContent> {
 
  Future<void> _fetchUserActions() async {
   try {
-    String url = 'http://10.18.51.50:3333/pcuser/action';
+    String url = 'https://ba9b-196-188-51-240.ngrok-free.app/pcuser/action';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {

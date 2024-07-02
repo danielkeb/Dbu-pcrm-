@@ -39,7 +39,7 @@ class _UserListScreenState extends State<UserListScreen> {
   }
 
   Future<List<User>> fetchUsers() async {
-  String url = 'http://10.18.51.50:3333/pcuser/get?perPage=$_perPage';
+  String url = 'https://ba9b-196-188-51-240.ngrok-free.app/pcuser/get?perPage=$_perPage';
   if (_searchController.text.isNotEmpty) {
     url += '&search=${_searchController.text}';
   }
@@ -79,7 +79,7 @@ class _UserListScreenState extends State<UserListScreen> {
           ),
           TextButton(
             onPressed: () async {
-              final response = await http.delete(Uri.parse('http://10.18.51.50:3333/pcuser/delete/$id'));
+              final response = await http.delete(Uri.parse('https://ba9b-196-188-51-240.ngrok-free.app/pcuser/delete/$id'));
 
               if (response.statusCode == 200) {
                 setState(() {
@@ -184,7 +184,7 @@ class _UserListScreenState extends State<UserListScreen> {
                           margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                           child: ListTile(
                             leading: user.image.isNotEmpty
-                                ? Image.network('http://10.18.51.50:3333/pcuser/${user.image}')
+                                ? Image.network('https://ba9b-196-188-51-240.ngrok-free.app/pcuser/${user.image}')
                                 : null,
                             title: Text('${user.firstname} ${user.lastname}'),
                             subtitle: Column(
@@ -314,7 +314,7 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
   }
 
  Future<void> fetchUserData() async {
-  final response = await http.get(Uri.parse('http://10.18.51.50:3333/pcuser/search?userId=${widget.userId}'));
+  final response = await http.get(Uri.parse('https://ba9b-196-188-51-240.ngrok-free.app/pcuser/search?userId=${widget.userId}'));
 
   if (response.statusCode == 200) {
     Map<String, dynamic> userData = json.decode(response.body);
@@ -342,7 +342,7 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
     };
 
     final response = await http.put(
-      Uri.parse('http://10.18.51.50:3333/pcuser/update?userId=${widget.userId}'),
+      Uri.parse('https://ba9b-196-188-51-240.ngrok-free.app/pcuser/update?userId=${widget.userId}'),
       body: json.encode(updatedUserData),
       headers: {'Content-Type': 'application/json'},
     );

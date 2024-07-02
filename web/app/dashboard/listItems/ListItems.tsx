@@ -104,18 +104,9 @@ const MainListItems = ({ isOpen }: ListItemsProps) => {
         name: "Task",
         href: "/dashboard/task",
         icon: (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="size-6"
-          >
-            <path
-              fillRule="evenodd"
-              d="M2.625 6.75a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm4.875 0A.75.75 0 0 1 8.25 6h12a.75.75 0 0 1 0 1.5h-12a.75.75 0 0 1-.75-.75ZM2.625 12a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0ZM7.5 12a.75.75 0 0 1 .75-.75h12a.75.75 0 0 1 0 1.5h-12A.75.75 0 0 1 7.5 12Zm-4.875 5.25a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm4.875 0a.75.75 0 0 1 .75-.75h12a.75.75 0 0 1 0 1.5h-12a.75.75 0 0 1-.75-.75Z"
-              clipRule="evenodd"
-            />
-          </svg>
+          <svg className="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+            </svg>
         ),
       },
       {
@@ -134,6 +125,16 @@ const MainListItems = ({ isOpen }: ListItemsProps) => {
               clipRule="evenodd"
             />
           </svg>
+        ),
+      },
+      {
+        name: "Tired user",
+        href: "/dashboard/tired",
+        icon: (
+          <svg className="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fillRule="evenodd" clipRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" />
+            </svg>
+
         ),
       },
     ];
@@ -171,8 +172,9 @@ const MainListItems = ({ isOpen }: ListItemsProps) => {
     if (
       (isAuthenticated && userRole !== "admin" && path === "/dashboard/security") ||
       (isAuthenticated && userRole !== "security" && (path === "/dashboard/pcuser" || path === "/dashboard/pcuser/manage"))
-    ) {
-      router.push("/dashboard"); // Replace with your actual unauthorized page route
+    ) 
+    {
+      router.push("/dashboard");
     }
   }, [isAuthenticated, userRole, path, router]);
 

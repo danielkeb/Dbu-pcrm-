@@ -26,7 +26,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 
   Future<http.Response> _makeForgotPasswordRequest(String email) async {
-    final url = 'http://10.18.51.50:3333/auth/forget/shortcode';
+    const url = 'https://ba9b-196-188-51-240.ngrok-free.app/auth/forget/shortcode';
     final headers = <String, String>{
       'Content-Type': 'application/json',
     };
@@ -45,7 +45,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     }
   }
 
-  void _navigateToShortcodePage(int userId) {
+  void _navigateToShortcodePage(String userId) {
     Navigator.push(
       context,
       MaterialPageRoute(

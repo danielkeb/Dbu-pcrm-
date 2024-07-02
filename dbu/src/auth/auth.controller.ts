@@ -48,12 +48,12 @@ export class AuthController {
   signIn(@Body() dto: AuthDto) {
     return this.authService.signIn(dto);
   }
-@Put('update')
+@Patch('update')
 updateUser(@Query('id') id: string , @Body() dto: UpdateDto){
   return this.authService.updateUser(id, dto);
 }
 
-@Put('resetpassword')
+@Patch('resetpassword')
 resetPassword(@Param('id', ParseIntPipe) id: string, dto: ResetDto){
   return this.authService.resetPassword(id, dto);
 }

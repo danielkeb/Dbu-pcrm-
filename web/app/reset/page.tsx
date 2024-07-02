@@ -10,7 +10,6 @@ const Page = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [changePasswordError, setChangePasswordError] = useState('');
   const [createNewPassword, setCreateNewPassword] = useState(false);
-  const { setToken } = useContext(AppContext);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [shortcode, setShortcode] = useState('');
@@ -77,9 +76,7 @@ const Page = () => {
       });
   
       const responseData = await response.json(); // Read response body once
-  console.log(responseData);
       if (responseData.statusCode === 200) {
-        console.log('Shortcode verification successful', responseData);
         setCreateNewPassword(true);
       } else if (response.status === 406) {
         setResetError(responseData.message || 'Invalid shortcode');
