@@ -144,7 +144,23 @@ export class AuthService {
     if (!user) {
       throw new ForbiddenException('update failed');
     }
-    return { msg: 'updated success' };
+if(dto.password!=''){
+  const hash = await argon.hash(dto.password);
+  const userPass= await this.prisma.users.update({
+    where:{
+      id: id,
+    },
+    data:{
+      password: hash,
+    }
+  });
+
+  if(!userPass){
+    throw new ForbiddenException('failed reset password');
+  }
+}
+ 
+    return { msg: 'operation successed' };
   }
   
 async resetPassword(Id: string, dto: ResetDto){

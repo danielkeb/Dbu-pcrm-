@@ -102,10 +102,10 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
     return { msg: 'user updated successfully' };
   }
 
-  async deleteUser(id: number) {
+  async deleteUser(id: string) {
     const user = await this.prisma.pcuser.delete({
       where: {
-        id: id,
+        userId: id,
       },
     });
 

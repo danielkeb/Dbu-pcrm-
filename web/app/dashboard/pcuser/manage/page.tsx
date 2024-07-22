@@ -4,8 +4,6 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { User, fetchUsersByYear, trashUsersByYear, restoreUsersByYear, trashUsersByUserId } from './service';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import Link from 'next/link';
-import Barcode from '../../task/Barcode';
 
 const UserManagePage = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -13,6 +11,7 @@ const UserManagePage = () => {
   const [loading, setLoading] = useState(false); // State to manage loading state of API calls
   const [perPage, setPerPage] = useState<number>(5);
   const [currentPage, setCurrentPage] = useState(1);
+  const [message, setMessage] = useState(false);
   const [userId, setUserId]= useState('');
   useEffect(() => {
     if (endYear) {
@@ -34,10 +33,10 @@ const UserManagePage = () => {
         setLoading(true);
         await trashUsersByYear(endYear.getFullYear().toString());
         setUsers([]);
-        alert('Users trashed successfully');
+        setMessage(true);
       } catch (error) {
         console.error('Error trashing users:', error);
-        alert('Failed to trash users');
+        setMessage(true);
       } finally {
         setLoading(false);
       }
@@ -50,10 +49,14 @@ const UserManagePage = () => {
         setLoading(true);
         await trashUsersByUserId(userId);
         setUserId('');
-        alert('Users trashed successfully');
+        setMessage(true);
+        setTimeout(() => {
+          setMessage(true);
+          window.location.reload(); // Refresh page after operation
+        }, 10);
       } catch (error) {
         console.error('Error trashing users:', error);
-        alert('Failed to trash users');
+        setMessage(true);
       } finally {
         setLoading(false);
       }
@@ -66,10 +69,10 @@ const UserManagePage = () => {
         setLoading(true);
         await restoreUsersByYear(endYear.getFullYear().toString());
         setUsers([]);
-        alert('Users restored successfully');
+        setMessage(true);
       } catch (error) {
         console.error('Error restoring users:', error);
-        alert('Failed to restore users');
+        setMessage(true);
       } finally {
         setLoading(false);
       }
@@ -97,7 +100,7 @@ const UserManagePage = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-xl mb-4">Manage PC Users</h1>
+      {/* <h1 className="text-xl mb-4">Manage PC Users</h1> */}
       <div className="mb-4">
         <label className="mr-2">Select End Year:</label>
         <DatePicker
@@ -196,6 +199,14 @@ const UserManagePage = () => {
             </button>
           ))}
       </div>
+      { message &&(
+         <div>
+          operation success
+         </div>
+      )
+      
+       
+      }
     </div>
   );
 };

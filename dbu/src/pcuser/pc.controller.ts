@@ -122,8 +122,8 @@ export class NewPcController {
     return this.newPcService.pcUserUpdate(userId, dto);
   }
 
-  @Delete('delete/:userId')
-  deleteUser(@Param('userId', ParseIntPipe) userId: number) {
+  @Delete('delete/')
+  deleteUser(@Query('userId') userId: string) {
     return this.newPcService.deleteUser(userId);
   }
 

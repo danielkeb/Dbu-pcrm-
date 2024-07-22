@@ -247,12 +247,15 @@ const UserUpdatePage = () => {
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="bg-blue-500 border-0 text-white w-1/2 p-3 rounded-md mt-4 text-center"
-        >
-          Update
-        </button>
+          <div className="flex justify-center">
+          <button
+            type="submit"
+            className="bg-blue-500 border-0 text-white w-1/2 p-3 rounded-md mt-4 text-center"
+          >
+            Update
+          </button>
+        </div>
+
       </form>
     </div>
   );

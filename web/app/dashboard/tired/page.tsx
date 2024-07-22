@@ -4,6 +4,9 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { User, fetchUsersByYear, restoreUsersByYear, trashUsersByUserId } from './service';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import SuccessMessage from '../validationmessage/success';
+import ErrorMessage from '../validationmessage/useralready';
+import FailedOperation from '../validationmessage/error';
 
 const UserManagePage = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -12,6 +15,8 @@ const UserManagePage = () => {
   const [perPage, setPerPage] = useState<number>(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [userId, setUserId]= useState('');
+  const [message, setMessage] = useState(false);
+
   useEffect(() => {
     if (endYear) {
       fetchUsers(); // Fetch users initially when endYear changes
@@ -33,7 +38,11 @@ const UserManagePage = () => {
         setLoading(true);
         await trashUsersByUserId(userId);
         setUserId('');
-        alert('Users trashed successfully');
+        setMessage(true);
+        setTimeout(() => {
+          setMessage(true);
+          window.location.reload(); // Refresh page after operation
+        }, 10);
       } catch (error) {
         console.error('Error trashing users:', error);
         alert('Failed to trash users');
@@ -49,7 +58,10 @@ const UserManagePage = () => {
         setLoading(true);
         await restoreUsersByYear(endYear.getFullYear().toString());
         setUsers([]);
-        alert('Users restored successfully');
+        setTimeout(() => {
+          setMessage(true);
+          window.location.reload(); // Refresh page after operation
+        }, 10);
       } catch (error) {
         console.error('Error restoring users:', error);
         alert('Failed to restore users');
@@ -80,7 +92,7 @@ const UserManagePage = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-xl mb-4">Manage PC Users</h1>
+      {/* <h1 className="text-xl mb-4">Manage PC Users</h1> */}
       <div className="mb-4">
         <label className="mr-2">Select End Year:</label>
         <DatePicker
@@ -172,6 +184,13 @@ const UserManagePage = () => {
             </button>
           ))}
       </div>
+       {/* status code 201 */}
+     <SuccessMessage success={message} />
+     {/*status code 403*/}
+     {/* <ErrorMessage error={errMessage} />
+
+     {/*other failed operation or other status code */}
+     {/* <FailedOperation failed={err} />  */}
     </div>
   );
 };

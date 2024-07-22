@@ -1,5 +1,5 @@
 "use client"
-import RegisterPage from "./index";
+import RegisterPage from "./rev";
 
 const Page = () => {
   return <RegisterPage />;

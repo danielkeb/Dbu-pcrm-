@@ -343,6 +343,24 @@ function Manage() {
                                 className="text-red-500 text-xs italic"
                               />
                             </div>
+                            <div className="mb-4">
+                              <label
+                                className="block text-gray-700 text-sm font-bold mb-2"
+                                htmlFor="password">
+                                Password
+                              </label>
+                              <Field
+                                name="password"
+                                type="password"
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                              />
+                              <ErrorMessage
+                                name="password"
+                                component="div"
+                                className="text-red-500 text-xs italic"
+                              />
+                            </div>
+                            
                             <div className="flex items-center justify-center space-x-2">
   <button
     type="submit"

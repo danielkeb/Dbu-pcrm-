@@ -47,7 +47,7 @@ export const updateUser = async (id: string, user: Partial<User>): Promise<void>
 };
 
 export const deleteUser = async (id: string): Promise<void> => {
-  const response = await fetch(`${BASE_URL}/delete/${id}`, { method: "DELETE" });
+  const response = await fetch(`${BASE_URL}/delete?userId=${id}`, { method: "DELETE" });
   if (!response.ok) throw new Error("Failed to delete user");
 };
 
