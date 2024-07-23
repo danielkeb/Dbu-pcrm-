@@ -26,7 +26,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 
   Future<http.Response> _makeForgotPasswordRequest(String email) async {
-    const url = 'https://ba9b-196-188-51-240.ngrok-free.app/auth/forget/shortcode';
+    const url = 'https://3736-196-190-91-32.ngrok-free.app/auth/forget/shortcode';
     final headers = <String, String>{
       'Content-Type': 'application/json',
     };

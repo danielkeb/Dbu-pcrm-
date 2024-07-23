@@ -59,13 +59,13 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        'scanner': (context) => ScannerScreen(),
+        'scanner': (context) => const ScannerScreen(),
         'register': (context) => RegisterPage(),
         'login': (context) => LoginPage(),
-        '/forgot': (context) => ForgotPassword(),
-        'home': (context) => HomePage(),
+        '/forgot': (context) => const ForgotPassword(),
+        'home': (context) => const HomePage(),
       },
-      home: _isConnected ? HomePage() : NoNetworkPage(),
+      home: _isConnected ? const HomePage() : const NoNetworkPage(),
     );
   }
 }
@@ -85,17 +85,17 @@ class NoNetworkPage extends StatelessWidget {
               width: 200,
               height: 200,
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'No Network Connection',
               style: TextStyle(fontSize: 18),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 // Handle retry or navigate to settings
               },
-              child: Text('Retry'),
+              child: const Text('Retry'),
             ),
           ],
         ),

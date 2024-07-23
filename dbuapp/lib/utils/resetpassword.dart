@@ -25,7 +25,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
     try {
       final response = await http.patch(
-        Uri.parse('https://ba9b-196-188-51-240.ngrok-free.app/verify/updatePassword?id=${widget.id}'),
+        Uri.parse('https://3736-196-190-91-32.ngrok-free.app/verify/updatePassword?id=${widget.id}'),
         headers: <String, String>{
           'Content-Type': 'application/json',
         },

@@ -38,7 +38,7 @@ class _ShortcodeState extends State<Shortcode> {
   }
 
   Uri _createUri(String userId) {
-    return Uri.parse('https://ba9b-196-188-51-240.ngrok-free.app/verify/shortcode?id=$userId');
+    return Uri.parse('https://3736-196-190-91-32.ngrok-free.app/verify/shortcode?id=$userId');
   }
 
   Map<String, String> _createHeaders() {
