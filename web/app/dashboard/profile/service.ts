@@ -44,7 +44,7 @@ export const updateUser = async (id: string, user: User): Promise<User> => {
     const token = localStorage.getItem("token");
     const payload = JSON.stringify(user);
     console.log('Payload being sent:', payload); // Debugging the payload
-    const response = await fetch(`${BASE_URL}/update?id=${id}`, {
+    const response = await fetch(`${BASE_URL}/profile?id=${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

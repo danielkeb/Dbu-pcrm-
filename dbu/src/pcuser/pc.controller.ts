@@ -197,7 +197,7 @@ export class NewPcController {
   trashedSingleUserTired(@Query('userId') userId: string) {
     return this.newPcService.trashedSingleUserTired(userId);
   }
-
+  
   @Post('restore')
   async restore(@Query('year') year: string) {
     try {

@@ -67,9 +67,14 @@ const Visualization: React.FC = () => {
     labels: ['Students', 'Staff', 'Guests'],
     datasets: [
       {
-        label: `Total: ${data.totalNumberOfPcuser}`,
-        data: [data.NumberOfstudent, data.totalNumberOfStaff, data.totalNumberOfGuest],
-        backgroundColor: ['rgba(54, 62, 135, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(75, 192, 192, 0.6)'],
+        label: `Active : ${data.totalNumberOfPcuser}` ,
+        data: [data.NumberOfstudent,data.totalNumberOfStaff,data.totalNumberOfGuest],
+        backgroundColor: ['rgba(54, 62, 135, 0.6)', 'rgba(54, 12, 25, 0.6)', 'rgba(75, 192, 192, 0.6)'],
+      },
+      {
+        label: `Tired : ${data.tired}` ,
+        data: [data.tiredStd, data.tiredStaff, data.tiredGuest],
+        backgroundColor: ['rgba(5, 62, 35, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(175, 1, 192, 0.6)'],
       },
     ],
   };
@@ -99,7 +104,7 @@ const Visualization: React.FC = () => {
       <h2 className="text-blue-600 text-2xl font-bold mb-4">User Visualization</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="text-blue-500 font-bold">Total Users: {data.totalNumberOfPcuser}</h3>
+          <h3 className="text-blue-500 font-bold">Active Total Users: {data.totalNumberOfPcuser} &  Total Tired user: {data.tired}</h3>
           <Bar data={totalData} options={{ responsive: true }} />
         </div>
         <div className="bg-white p-4 rounded-lg shadow">

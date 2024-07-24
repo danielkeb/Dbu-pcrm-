@@ -207,6 +207,14 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
         description: 'Staff',
       },
     });
+
+    const tired= await this.prisma.inactive.findMany();
+    const tiredStudent=tired.filter((tired)=>tired.description==='Student').length;
+    const tiredStaff=tired.filter((tired)=>tired.description==='Staff').length;
+    const tiredGuest=tired.filter((tired)=>tired.description==='Guest').length;
+
+
+    const totalTired= tired.length;
     const numberofstaff = staff.length;
     const femalestaff = staff.filter(
       (staff) => staff.gender === 'Female',
@@ -257,6 +265,10 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
       femaleStaffPersonal: femalestaffPersonal,
       femaleStaffDbu: femalestaffDBU,
       maleStaffPersonal: malestaffPersonal,
+      tired: totalTired,
+      tiredStd: tiredStudent,
+      tiredStaff: tiredStaff,
+      tiredGuest: tiredGuest,
     };
   }
   async trashedUser(year: any) {

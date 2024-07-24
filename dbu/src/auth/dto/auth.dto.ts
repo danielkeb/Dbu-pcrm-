@@ -70,3 +70,35 @@ export class ResetDto{
   @IsString()
   password: string;
 }
+
+export class UpdateDtoProfile {
+  @IsString()
+  id?: string;
+  @IsString()
+  name?: string;
+
+  @IsEmail()
+  @IsString()
+  email?: string;
+  
+  @IsString()
+  last_name?: string;
+
+  @IsString()
+  role?: string;
+
+  @IsString()
+  password?: string;
+
+  @IsString()
+  gender?: string;
+
+  @IsString()
+  address?: string;
+
+  @IsString()
+  phonenumer?: string;
+
+  @IsString()
+  status?: string;
+}

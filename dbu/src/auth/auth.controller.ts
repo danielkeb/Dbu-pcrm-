@@ -14,7 +14,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthDto, ResetDto, UpdateDto } from './dto';
+import { AuthDto, ResetDto, UpdateDto, UpdateDtoProfile } from './dto';
 import { AuthGuard } from './guard/auth.guard';
 import { Roles } from './decorator/roles.decorator';
 import { Role } from './decorator/enums/role.enum';
@@ -51,6 +51,11 @@ export class AuthController {
 @Patch('update')
 updateUser(@Query('id') id: string , @Body() dto: UpdateDto){
   return this.authService.updateUser(id, dto);
+}
+
+@Patch('profile')
+profileUpdate(@Query('id') id: string , @Body() dto: UpdateDtoProfile){
+  return this.authService.profileUpdate(id, dto);
 }
 
 @Patch('resetpassword')

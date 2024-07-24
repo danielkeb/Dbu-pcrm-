@@ -53,22 +53,35 @@ React.useEffect(()=>{
       // title: `${data.NumberOfstudent} Students pcowner`,
       label:`${data.NumberOfstudent}`,
       title: "Students",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
+       icon: (
+        <AnnotationIcon
+          color="blue"
+          style={{ width: 60, height: 60 }}
+        />
+      ),
+      
     },
     {
       label:`${data.totalNumberOfStaff}`,
       title: "Staff",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
+      icon: (
+        <AnnotationIcon
+          color="blue"
+          style={{ width: 60, height: 60 }}
+        />
+      ),
     },
-    // data.NumberOfstudent, data.totalNumberOfStaff, data.totalNumberOfGuest
+      
     {
-      // icon: <AcademicCapIcon color="blue" style={{ width: 60, height: 60 }} />,
       label:`${data.totalNumberOfGuest}`,
       title: "Guests",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
+       icon: (
+        <AnnotationIcon
+          color="blue"
+          style={{ width: 60, height: 60 }}
+        />
+      ),
+      
     },
   ];
 
@@ -181,7 +194,7 @@ React.useEffect(()=>{
                   {feature.title}
                 </h4>
                 <p className="text-center">
-                  {feature.description}
+                  {feature.icon}
                 </p>
               </div>
             ))}

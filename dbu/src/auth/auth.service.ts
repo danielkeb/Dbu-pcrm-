@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthDto, ResetDto, UpdateDto } from './dto';
+import { AuthDto, ResetDto, UpdateDto, UpdateDtoProfile } from './dto';
 import * as argon from 'argon2';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -163,6 +163,43 @@ if(dto.password!=''){
     return { msg: 'operation successed' };
   }
   
+  
+  async profileUpdate(id: string, dto: UpdateDtoProfile) {
+    if(!dto){
+      throw new BadRequestException("undefined dto");
+    }
+  const userExist=await this.prisma.users.findFirst({
+    where:{
+      id: id,
+    },
+  });
+  if(userExist){
+    const user = await this.prisma.users.update({
+      where: {
+        id: dto.id,
+      },
+      data:{
+       ...dto
+      }
+    });
+    if (!user) {
+      throw new ForbiddenException('update failed');
+    }
+  }
+    const user = await this.prisma.users.update({
+      where: {
+        id: dto.id,
+      },
+      data:{
+       ...dto
+      }
+    });
+    if (!user) {
+      throw new ForbiddenException('update failed');
+    }
+    return { msg: 'operation successed' };
+  }
+
 async resetPassword(Id: string, dto: ResetDto){
   const hash = await argon.hash(dto.password);
   const user= await this.prisma.users.update({
