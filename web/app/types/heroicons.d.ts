@@ -1,5 +1,5 @@
 declare module '@heroicons/react/solid' {
-    import { ComponentType, SVGProps } from 'react';
+   import { ComponentType, SVGProps } from 'react';
   
     export const AcademicCapIcon: ComponentType<SVGProps<SVGSVGElement>>;
     export const AdjustmentsIcon: ComponentType<SVGProps<SVGSVGElement>>;

@@ -1,7 +1,7 @@
 // UserManagePage.tsx
 "use client"
 import { ChangeEvent, useEffect, useState } from 'react';
-import { User, fetchUsersByYear, restoreUsersByYear, trashUsersByUserId } from './service';
+import { User, fetchUsers, fetchUsersByYear, restoreUsersByYear, trashUsersByUserId } from './service';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import SuccessMessage from '../validationmessage/success';
@@ -16,14 +16,15 @@ const UserManagePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [userId, setUserId]= useState('');
   const [message, setMessage] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     if (endYear) {
-      fetchUsers(); // Fetch users initially when endYear changes
+      fetchUserss(); // Fetch users initially when endYear changes
     }
   }, [endYear]);
 
-  const fetchUsers = () => {
+  const fetchUserss = () => {
     setLoading(true);
     fetchUsersByYear(endYear!.getFullYear().toString())
       .then((data) => setUsers(data))
@@ -31,7 +32,16 @@ const UserManagePage = () => {
       .finally(() => setLoading(false));
   };
 
-
+  useEffect(() => {
+    const fetchUsersWithSearch = async () => {
+      const response = await fetchUsers();
+      const filteredUsers = response.filter((user) =>
+        user.userId.includes(searchQuery)
+      );
+      setUsers(filteredUsers);
+    };
+    fetchUsersWithSearch();
+  }, [searchQuery, perPage, currentPage]);
   const handleUserTrash=async(userId: string)=>{
     if(userId){
       try{
@@ -103,6 +113,21 @@ const UserManagePage = () => {
         />
       </div>
       <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search by User Id"
+          value={searchQuery}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+          className="border border-gray-300 px-4 py-2 rounded mr-2"
+        />
+        <button
+          onClick={handleSearch}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Search
+        </button>
+      </div>
+      {/* <div className="mb-4">
         <button
           onClick={handleRestore}
           disabled={!endYear || loading} // Disable button when no endYear selected or operation in progress
@@ -110,7 +135,7 @@ const UserManagePage = () => {
         >
           {loading ? 'Restoring...' : 'Restore Users'}
         </button>
-      </div>
+      </div> */}
       <table className="min-w-full bg-white border border-gray-300">
         <thead className="bg-gray-100">
           <tr>
@@ -119,8 +144,8 @@ const UserManagePage = () => {
             <th className="p-4 text-center">Description</th>
             <th className="p-4 text-center">Brand</th>
             <th className="p-4 text-center">Serial Number</th>
+            <th className="p-4 text-center">Gender</th>
             <th className="p-4 text-center">Image</th>
-            {/* <th className="p-4 text-center">Barcode</th> */}
             <th className="p-4 text-center">Restore</th>
           </tr>
         </thead>
@@ -132,6 +157,7 @@ const UserManagePage = () => {
               <td className="p-4 border">{user.description}</td>
               <td className="p-4 border">{user.brand}</td>
               <td className="p-4 border">Serial {user.serialnumber}</td>
+              <td className="p-4 border">{user.gender}</td>
               <td className="p-4 border">
                 <img src={`http://localhost:3333/pcuser/${user.image}`} alt={user.firstname} className="w-24 h-24" />
               </td>

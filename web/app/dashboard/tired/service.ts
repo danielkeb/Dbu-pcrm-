@@ -8,6 +8,7 @@ export interface User {
   brand: string;
   endYear: string,
   serialnumber: string;
+  gender: string;
   barcode: string;
   createdAt: string; // Corrected typo: 'createdAt' instead of 'createdAT'
   updatedAt: string; // Corrected typo: 'updatedAt' instead of 'updatedAT'
@@ -42,7 +43,11 @@ export async function trashUsersByUserId(userId: string): Promise<void> {
     throw new Error('Failed to trash users');
   }
 }
-
+export const fetchUsers = async (): Promise<User[]> => {
+  const response = await fetch('http://localhost:3333/pcuser/get/tired');
+  if (!response.ok) throw new Error("Failed to fetch users");
+  return response.json();
+};
 export async function restoreUsersByYear(endYear: string): Promise<void> {
   try {
     const response = await fetch(`http://localhost:3333/pcuser/restore?year=${endYear}`, {

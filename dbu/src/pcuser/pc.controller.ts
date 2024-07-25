@@ -56,13 +56,8 @@ export class NewPcController {
     }
     return this.newPcService.addNewPc(dto, file.path);
   }
-  // @Get('get')
-  // getNewPc(
-  //   @Query('limit') limit: number = 5,
-  //   @Query('search') search: string | null = null,
-  // ) {
-  //   return this.newPcService.getNewPc(limit, search);
-  // }
+  // @UseGuards(AuthGuard, RoleGuard)
+  // @Roles(Role.USER)
   @Get('get')
   getNewPc() {
     return this.newPcService.getNewPc();
@@ -114,6 +109,8 @@ export class NewPcController {
     }
   }
 
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.USER)
   @Put('update')
   pcUserUpdate(
     @Query('userId') userId: string,
@@ -150,7 +147,6 @@ export class NewPcController {
     }
   }
 
-
   @Get('year/tired')
   async getDateEndUserTired(@Query('endYear') endYear: string) {
     try {
@@ -182,7 +178,8 @@ export class NewPcController {
   visualize() {
     return this.newPcService.visualize();
   }
-
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.USER)
   @Put('trash/year/:year')
   trashedUser(@Param('year') year: Date) {
     return this.newPcService.trashedUser(year);
@@ -193,11 +190,15 @@ export class NewPcController {
     return this.newPcService.trashedSingleUser(userId);
   }
 
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.USER)
   @Put('trash/user/tired')
   trashedSingleUserTired(@Query('userId') userId: string) {
     return this.newPcService.trashedSingleUserTired(userId);
   }
   
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.USER)
   @Post('restore')
   async restore(@Query('year') year: string) {
     try {
