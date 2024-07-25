@@ -21,34 +21,64 @@ export class AuthService {
     private prisma: PrismaService,
     private emailService: ShortcodeEmailService,
   ) {}
-  async signUp(dto: AuthDto) {
-    const hash = await argon.hash(dto.password);
-    const findEmail = await this.prisma.users.findUnique({
+  
+async signUp(dto: AuthDto) {
+  // Validate DTO
+  if (!dto.email || !dto.password) {
+    throw new BadRequestException('Email and password are required');
+  }
+
+  // Hash the password
+  let hash: string;
+  try {
+    hash = await argon.hash(dto.password);
+  } catch (error) {
+    throw new BadRequestException('Failed to hash the password');
+  }
+
+  // Check if the email already exists
+  let existingUser;
+  try {
+    existingUser = await this.prisma.users.findUnique({
       where: {
         email: dto.email,
+        id: dto.id,
       },
     });
-    if (findEmail) {
-      throw new ForbiddenException('USER already exists');
-    } else {
-      const user = await this.prisma.users.create({
-        data: {
-          id: dto.id,
-          email: dto.email,
-          role: dto.role,
-          name: dto.name,
-          last_name: dto.last_name,
-          address: dto.address,
-          gender: dto.gender,
-          status: dto.status,
-          phonenumer: dto.phonenumber,
-          password: hash,
-        },
-      });
-      delete user.password;
-      return user;
-    }
+  } catch (error) {
+    throw new BadRequestException('Error checking email existence');
   }
+
+  if (existingUser) {
+    throw new ForbiddenException('User already exists');
+  }
+
+  // Create new user
+  let user;
+  try {
+    user = await this.prisma.users.create({
+      data: {
+        id: dto.id,
+        email: dto.email,
+        role: dto.role,
+        name: dto.name,
+        last_name: dto.last_name,
+        address: dto.address,
+        gender: dto.gender,
+        status: dto.status,
+        phonenumer: dto.phonenumber,
+        password: hash,
+      },
+    });
+  } catch (error) {
+    throw new BadRequestException('Error creating user');
+  }
+
+  // Remove password from the response
+  delete user.password;
+
+  return user;
+}
   async signIn(dto: AuthDto): Promise<{ access_token: string }> {
     try {
       const user = await this.prisma.users.findFirst({

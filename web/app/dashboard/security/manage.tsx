@@ -75,13 +75,7 @@ function Manage() {
   return (
     <div>
       <section className="py-1 bg-blueGray-50">
-      <div>
-            {successMessage && (
-          <small className="text-red-500">security updated successfully</small>
-        )}
-        {errorMessage && (
-          <small className="text-red-500">security update failed</small>
-        )}</div>
+   
         <div className="w-full xl:w-8/12 mb-12 xl:mb-0 px-4 mx-auto mt-24">
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
             <div className="rounded-t mb-0 px-4 py-3 border-0">
@@ -166,6 +160,13 @@ function Manage() {
 
           </div>
         </div>
+        <div>
+            {successMessage && (
+          <small className="text-red-500">security updated successfully</small>
+        )}
+        {errorMessage && (
+          <small className="text-red-500">security update failed</small>
+        )}</div>
       </section>
       <Transition show={isOpen} as={React.Fragment}>
         <Dialog

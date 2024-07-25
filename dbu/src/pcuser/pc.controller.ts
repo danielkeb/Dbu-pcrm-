@@ -12,7 +12,8 @@ import {
   Query,
   Res,
   UploadedFile,
-  UseInterceptors,UseGuards
+  UseInterceptors,UseGuards,
+  Patch
   //UseGuards,
 } from '@nestjs/common';
 import { NewPcService } from './pc.service';
@@ -190,8 +191,8 @@ export class NewPcController {
     return this.newPcService.trashedSingleUser(userId);
   }
 
-  @UseGuards(AuthGuard, RoleGuard)
-  @Roles(Role.USER)
+  // @UseGuards(AuthGuard, RoleGuard)
+  // @Roles(Role.USER)
   @Put('trash/user/tired')
   trashedSingleUserTired(@Query('userId') userId: string) {
     return this.newPcService.trashedSingleUserTired(userId);
