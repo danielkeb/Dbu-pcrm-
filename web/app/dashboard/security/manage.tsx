@@ -23,6 +23,8 @@ function Manage() {
   const [data, setData] = useState<SecurityData[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<SecurityData | null>(null);
+  const [successMessage, setSuccessMessage]= useState(false);
+  const [errorMessage, setErrorMessage]= useState(false);
 
   useEffect(() => {
     axios
@@ -45,9 +47,11 @@ function Manage() {
    const res=await axios.patch(`http://localhost:3333/auth/update?id=${values.id}`, values)
    const reFetch= await axios.get("http://localhost:3333/auth/getAllSecurity")
    setData(reFetch.data);
-   console.log("the response is", res)
+   setSuccessMessage(true);
+        setTimeout(() => setSuccessMessage(false), 1000);
     }catch(error){
-    console.log("the error is",error)
+      setErrorMessage(true);
+      setTimeout(() => setErrorMessage(false), 1000);
     }
     //update
     // Handle the update logic here, for example, send the data to the server
@@ -71,6 +75,13 @@ function Manage() {
   return (
     <div>
       <section className="py-1 bg-blueGray-50">
+      <div>
+            {successMessage && (
+          <small className="text-red-500">security updated successfully</small>
+        )}
+        {errorMessage && (
+          <small className="text-red-500">security update failed</small>
+        )}</div>
         <div className="w-full xl:w-8/12 mb-12 xl:mb-0 px-4 mx-auto mt-24">
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
             <div className="rounded-t mb-0 px-4 py-3 border-0">
@@ -163,10 +174,10 @@ function Manage() {
           onClose={() => setIsOpen(false)}>
           <Transition.Child
             as={React.Fragment}
-            enter="ease-out duration-300"
+            enter="ease-out duration-3000"
             enterFrom="opacity-0"
             enterTo="opacity-100"
-            leave="ease-in duration-200"
+            leave="ease-in duration-3000"
             leaveFrom="opacity-100"
             leaveTo="opacity-0">
             <div className="fixed inset-0 bg-black bg-opacity-25" />

@@ -8,6 +8,7 @@ const UserProfilePage = () => {
   const searchParams = useSearchParams();
   const [id, setId] = useState("");
   const [successMessage, setSuccessMessage]= useState(false);
+  const [errorMessage, setErrorMessage]= useState(false);
   const [user, setUser] = useState<User>({
     id: "",
     name: "",
@@ -54,8 +55,8 @@ const UserProfilePage = () => {
         setSuccessMessage(true);
         setTimeout(() => setSuccessMessage(false), 1000);
       } catch (error) {
-        console.error("Error updating user:", error);
-        setError("Failed to update user");
+        setErrorMessage(true);
+        setTimeout(() => setErrorMessage(false), 1000);
       }
     }
   };
@@ -223,6 +224,9 @@ const UserProfilePage = () => {
         </div>
         {successMessage && (
           <small className="text-red-500">Profile updated successfully</small>
+        )}
+        {errorMessage && (
+          <small className="text-red-500">Profile update failed</small>
         )}
         
         <button

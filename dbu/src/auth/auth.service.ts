@@ -112,92 +112,102 @@ export class AuthService {
   }
 
   async updateUser(id: string, dto: UpdateDto) {
-    if(!dto){
-      throw new BadRequestException("undefined dto");
+    if (!dto) {
+      throw new BadRequestException("DTO cannot be undefined");
     }
-  const userExist=await this.prisma.users.findFirst({
-    where:{
-      id: id,
-    },
-  });
-  if(userExist){
-    const user = await this.prisma.users.update({
-      where: {
-        id: dto.id,
-      },
-      data:{
-       ...dto
-      }
+  
+    const userExist = await this.prisma.users.findUnique({
+      where: { id },
     });
-    if (!user) {
-      throw new ForbiddenException('update failed');
+  
+    if (!userExist) {
+      throw new ForbiddenException("User does not exist");
     }
-  }
-    const user = await this.prisma.users.update({
-      where: {
-        id: dto.id,
-      },
-      data:{
-       ...dto
+  
+    // Check if email needs to be updated and if it already exists
+    if (dto.email && dto.email !== userExist.email) {
+      const emailExists = await this.prisma.users.findUnique({
+        where: { email: dto.email },
+      });
+  
+      if (emailExists) {
+        throw new ForbiddenException("Email already exists");
       }
+    }
+  
+    // Update user details except password
+    const updatedUser = await this.prisma.users.update({
+      where: { id },
+      data: {
+        ...dto,
+        // Only include properties that are not undefined
+        email: dto.email ?? userExist.email,
+        // Additional properties can be handled here
+      },
     });
-    if (!user) {
-      throw new ForbiddenException('update failed');
+  
+    if (!updatedUser) {
+      throw new ForbiddenException('Update failed');
     }
-if(dto.password!=''){
-  const hash = await argon.hash(dto.password);
-  const userPass= await this.prisma.users.update({
-    where:{
-      id: id,
-    },
-    data:{
-      password: hash,
+  
+    // Handle password update separately if provided
+    if (dto.password && dto.password !== '') {
+      const hash = await argon.hash(dto.password);
+  
+      const updatedPasswordUser = await this.prisma.users.update({
+        where: { id },
+        data: { password: hash },
+      });
+  
+      if (!updatedPasswordUser) {
+        throw new ForbiddenException('Failed to update password');
+      }
     }
-  });
-
-  if(!userPass){
-    throw new ForbiddenException('failed reset password');
-  }
-}
- 
-    return { msg: 'operation successed' };
+  
+    return { msg: 'Operation succeeded' };
   }
   
   
   async profileUpdate(id: string, dto: UpdateDtoProfile) {
-    if(!dto){
-      throw new BadRequestException("undefined dto");
+    if (!dto) {
+      throw new BadRequestException("DTO cannot be undefined");
     }
-  const userExist=await this.prisma.users.findFirst({
-    where:{
-      id: id,
-    },
-  });
-  if(userExist){
-    const user = await this.prisma.users.update({
-      where: {
-        id: dto.id,
-      },
-      data:{
-       ...dto
-      }
+  
+    const userExist = await this.prisma.users.findUnique({
+      where: { id },
     });
-    if (!user) {
-      throw new ForbiddenException('update failed');
+  
+    if (!userExist) {
+      throw new ForbiddenException("User does not exist");
     }
-  }
-    const user = await this.prisma.users.update({
-      where: {
-        id: dto.id,
-      },
-      data:{
-       ...dto
+  
+    // Check if email needs to be updated and if it already exists
+    if (dto.email && dto.email !== userExist.email) {
+      const emailExists = await this.prisma.users.findUnique({
+        where: { email: dto.email },
+      });
+  
+      if (emailExists) {
+        throw new ForbiddenException("Email already exists");
       }
-    });
-    if (!user) {
-      throw new ForbiddenException('update failed');
     }
-    return { msg: 'operation successed' };
+  
+    // Update user details except password
+    const updatedUser = await this.prisma.users.update({
+      where: { id },
+      data: {
+        ...dto,
+        // Only include properties that are not undefined
+        email: dto.email ?? userExist.email,
+        // Additional properties can be handled here
+      },
+    });
+  
+    if (!updatedUser) {
+      throw new ForbiddenException('Update failed');
+    }
+  
+    return { msg: 'Operation succeeded' };
   }
 
 async resetPassword(Id: string, dto: ResetDto){
