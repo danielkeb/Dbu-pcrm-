@@ -468,7 +468,7 @@ headers: {
                 <button
                   type="button"
                   onClick={handleCapture}
-                  className="bg-blue-500 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mt-3 mb-1"
+                  className="bg-green-500 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mt-3 mb-1"
                 >
                   Start Camera
                 </button>
@@ -503,4 +503,3 @@ headers: {
   };
   
   export default RegisterPage;
-  

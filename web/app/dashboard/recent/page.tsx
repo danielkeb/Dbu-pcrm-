@@ -43,7 +43,23 @@ const RecentActionsPage = () => {
     currentPage * itemsPerPage
   );
 
-  const totalPages = Math.ceil(sortedActions.length / itemsPerPage);
+  //const totalPages = Math.ceil(sortedActions.length / itemsPerPage);
+
+  const totalPages = Math.ceil(sortedActions.length /itemsPerPage);
+
+  const handlePrevious = () => {
+    // Navigate to the previous page if not on the first page
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const handleNext = () => {
+    // Navigate to the next page if not on the last page
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
 
   return (
     <div className="p-4">
@@ -104,21 +120,33 @@ const RecentActionsPage = () => {
         </tbody>
       </table>
 
-      <div className="flex justify-center mt-4">
-        {Array(totalPages)
-          .fill(0)
-          .map((_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => handlePageChange(index + 1)}
-              className={`px-4 py-2 rounded ${
-                currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-gray-200"
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-      </div>
+      <div className="flex items-end">
+  <button
+    onClick={handlePrevious}
+    className={`px-4 py-2 mr-2 rounded ${
+      currentPage === 1
+        ? "bg-gray-300 cursor-not-allowed"
+        : "bg-gray-200 hover:bg-gray-300"
+    }`}
+    disabled={currentPage === 1}
+  >
+    Previous
+  </button>
+  <span className="px-4 py-2 bg-gray-100 border rounded">
+    Page {currentPage} of {totalPages}
+  </span>
+  <button
+    onClick={handleNext}
+    className={`px-4 py-2 ml-2 rounded ${
+      currentPage === totalPages
+        ? "bg-gray-300 cursor-not-allowed"
+        : "bg-gray-200 hover:bg-gray-300"
+    }`}
+    disabled={currentPage === totalPages}
+  >
+    Next
+  </button>
+</div>
     </div>
   );
 };

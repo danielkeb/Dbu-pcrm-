@@ -84,17 +84,25 @@ const UserManagePage = () => {
   const handleSearch = () => {
     setCurrentPage(1);
   };
-
   const handlePerPageChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setPerPage(Number(e.target.value));
     setCurrentPage(1);
   };
+  const totalPages = Math.ceil(users.length / perPage);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+  const handlePrevious = () => {
+    // Navigate to the previous page if not on the first page
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
   };
 
-  const totalPages = Math.ceil(users.length / perPage);
+  const handleNext = () => {
+    // Navigate to the next page if not on the last page
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
 
   function handleDelete(userId: string): void {
     throw new Error('Function not implemented.');
@@ -181,37 +189,56 @@ const UserManagePage = () => {
         </tbody>
       </table>
 
-      <div className="my-4">
-        <select
-          value={perPage}
-          onChange={handlePerPageChange}
-          className="border border-gray-300 px-4 py-2 rounded text-end"
-        >
-          {[5, 10, 25, 50, 100].map((value) => (
-            <option key={value} value={value}>
-              {value} row
-            </option>
-          ))}
-        </select>
-      </div>
+      <div className="flex justify-between items-center mt-4 flex-wrap">
 
-      <div className="flex justify-center mt-4">
-        {Array(totalPages)
-         .fill(0)
-         .map((_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => handlePageChange(index + 1)}
-              className={`px-4 py-2 rounded ${
-                currentPage === index + 1? "bg-blue-500 text-white" : "bg-gray-200"
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-      </div>
+{/* Rows per page selection */}
+<div className="flex items-center">
+  <select
+    value={perPage}
+    onChange={handlePerPageChange}
+    className="border border-gray-300 px-4 py-2 rounded text-end"
+  >
+    {[5, 10, 25, 50, 100].map((value) => (
+      <option key={value} value={value}>
+        {value} row
+      </option>
+    ))}
+  </select>
+</div>
+
+{/* Pagination Controls */}
+<div className="flex items-center">
+  <button
+    onClick={handlePrevious}
+    className={`px-4 py-2 mr-2 rounded ${
+      currentPage === 1
+        ? "bg-gray-300 cursor-not-allowed"
+        : "bg-gray-200 hover:bg-gray-300"
+    }`}
+    disabled={currentPage === 1}
+  >
+    Previous
+  </button>
+  <span className="px-4 py-2 bg-gray-100 border rounded">
+    Page {currentPage} of {totalPages}
+  </span>
+  <button
+    onClick={handleNext}
+    className={`px-4 py-2 ml-2 rounded ${
+      currentPage === totalPages
+        ? "bg-gray-300 cursor-not-allowed"
+        : "bg-gray-200 hover:bg-gray-300"
+    }`}
+    disabled={currentPage === totalPages}
+  >
+    Next
+  </button>
+</div>
+<SuccessMessage success={message} />
+
+</div>
        {/* status code 201 */}
-     <SuccessMessage success={message} />
+     
      {/*status code 403*/}
      {/* <ErrorMessage error={errMessage} />
 

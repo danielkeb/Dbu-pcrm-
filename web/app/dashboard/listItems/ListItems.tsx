@@ -170,7 +170,7 @@ const MainListItems = ({ isOpen }: ListItemsProps) => {
   useEffect(() => {
     if (
       (isAuthenticated && userRole !== "admin" && path === "/dashboard/security") ||
-      (isAuthenticated && userRole !== "security" && (path === "/dashboard/pcuser" || path === "/dashboard/pcuser/manage"))
+      (isAuthenticated && userRole !== "security" && (path === "/dashboard/pcuser" || path === "/dashboard/pcuser/manage" || path === "/dashboard/task" || path === "/dashboard/tired"))
     ) 
     {
       router.push("/dashboard");
