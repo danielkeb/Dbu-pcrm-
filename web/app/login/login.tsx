@@ -3,7 +3,7 @@
 import { AppContext } from '@/components/UserContext';
 import { useRouter } from 'next/navigation';
 import React, { useState, FormEvent, useContext } from 'react';
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import Config from '@/config';
 
 const Login = () => {
@@ -15,10 +15,9 @@ const Login = () => {
   const [forgotError, setForgotError] = useState('');
   const [shortcodeSent, setShortcodeSent] = useState(false);
   const [userId, setUserId] = useState('');
-  // const { setToken } = useContext(AppContext);
-  const router = useRouter();
-  
   const { token, setToken, decodedToken, setDecodedToken } = useContext(AppContext);
+  const router = useRouter();
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -36,23 +35,15 @@ const Login = () => {
       const new_token = data.access_token;
       localStorage.setItem('authToken', new_token);
 
-
-      // console.log("Here is your token", new_token, response);
-     
-      
-      const dec=jwt.decode(new_token); 
-      
-     setDecodedToken(dec)
-      // console.log('Login successful here is ...', token);
+      const dec = jwt.decode(new_token);
+      setDecodedToken(dec);
 
       if (typeof dec !== "string" && dec?.status !== "active") {
         router.push("/unauthorized");
-      }
-      else{
+      } else {
         setToken(new_token);
         router.push("/dashboard");
       }
-      
     } else {
       const errorData = await response.json();
       setError(errorData.message || 'An error occurred');
@@ -82,15 +73,49 @@ const Login = () => {
     }
   };
 
+  const containerStyle = {
+    position: 'relative',
+    minHeight: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  };
+
+  const backgroundStyle = {
+    backgroundImage: 'url("/office-computer-laptop-light-modified.png")',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: -1,
+  };
+
+  const innerContainerStyle = {
+    background: 'rgba(255, 255, 255, 0.2)',
+    backdropFilter: 'blur(10px)',
+    padding: '2rem',
+    borderRadius: '0.5rem',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    zIndex: 1,
+    width: '50%',
+    maxWidth: '550px',
+    height: 'auto',
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+    <div style={containerStyle}>
+      <div style={backgroundStyle}></div>
+      <div style={innerContainerStyle}>
         {!forgotPassword ? (
           <>
-            <h2 className="text-2xl font-bold text-center text-blue-600">Login</h2>
+            <h4 className="text-2xl font-bold text-center text-blue-600">well come to</h4>
+            <h2 className="text-2xl font-bold text-center text-blue-500">DBU PC Management System</h2>
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
               <div className="rounded-md shadow-sm -space-y-px">
-                <div>
+                <div className="mb-4">
                   <label htmlFor="email-address" className="sr-only">Email address</label>
                   <input
                     id="email-address"
@@ -98,7 +123,7 @@ const Login = () => {
                     type="email"
                     autoComplete="email"
                     required
-                    className="relative block w-full px-3 py-2 border border-gray-300 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     placeholder="Email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -112,7 +137,7 @@ const Login = () => {
                     type="password"
                     autoComplete="current-password"
                     required
-                    className="relative block w-full px-3 py-2 border border-gray-300 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -122,11 +147,11 @@ const Login = () => {
 
               {error && <div className="text-red-500 text-sm">{error}</div>}
 
-              <div className="flex items-center justify-between">
-                <div className="text-sm">
+              <div className="flex justify-end">
+                <div className="text-sm text-right">
                   <button
                     type="button"
-                    className="font-medium text-blue-600 hover:text-blue-500"
+                    className="font-medium text-blue-500 hover:text-blue-600"
                     onClick={() => setForgotPassword(true)}
                   >
                     Forgot your password?
@@ -146,7 +171,7 @@ const Login = () => {
           </>
         ) : !shortcodeSent ? (
           <>
-            <h2 className="text-2xl font-bold text-center text-blue-600">Forgot Password</h2>
+            <h2 className="text-2xl font-bold text-center text-blue-500">Forgot Password</h2>
             <form className="mt-8 space-y-6" onSubmit={handleForgotPassword}>
               <div className="rounded-md shadow-sm -space-y-px">
                 <div>
@@ -172,14 +197,14 @@ const Login = () => {
                   type="submit"
                   className="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md group hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
-                  Send Shortcode
+                  Send Short code
                 </button>
               </div>
 
-              <div className="text-sm text-center">
+              <div className="text-sm text-right">
                 <button
                   type="button"
-                  className="font-medium text-blue-600 hover:text-blue-500"
+                  className="font-medium text-blue-400 hover:text-blue-500"
                   onClick={() => setForgotPassword(false)}
                 >
                   Back to login

@@ -8,11 +8,7 @@ export default function Home() {
  
     <main >
       <div >
-        {/* <Login/> */}
-  
           <DrawerAppBar/>
-     
-        
       </div>
     </main>
 
