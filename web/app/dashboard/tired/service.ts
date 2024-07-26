@@ -31,7 +31,7 @@ export async function fetchUsersByYear(endYear: string): Promise<User[]> {
 export async function trashUsersByUserId(userId: string): Promise<void> {
   try {
     const response = await fetch(`http://localhost:3333/pcuser/trash/user/tired?userId=${userId}`, {
-      method: 'PUT',
+      method: 'Put',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId }),
     });

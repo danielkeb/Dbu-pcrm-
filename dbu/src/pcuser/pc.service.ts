@@ -14,8 +14,6 @@ import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import * as bwipjs from 'bwip-js';
 @Injectable()
 export class NewPcService {
-  pcuser: any;
-  userRepository: any;
   logger: any;
   constructor(private prisma: PrismaService) {}
 

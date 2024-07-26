@@ -48,11 +48,13 @@ const UserManagePage = () => {
         setLoading(true);
         await trashUsersByUserId(userId);
         setUserId('');
-        setMessage(true);
-        setTimeout(() => {
-          setMessage(true);
-          window.location.reload(); // Refresh page after operation
-        }, 10);
+        if (confirm("Are you sure you want to restore this user?")) {
+          const response = await fetchUsers();
+          const filteredUsers = response.filter((user) =>
+            user.userId.includes(searchQuery)
+          );
+          setUsers(filteredUsers);
+        }
       } catch (error) {
         console.error('Error trashing users:', error);
         alert('Failed to trash users');
