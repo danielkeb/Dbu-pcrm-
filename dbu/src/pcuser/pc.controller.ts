@@ -110,8 +110,7 @@ export class NewPcController {
     }
   }
 
-  @UseGuards(AuthGuard, RoleGuard)
-  @Roles(Role.USER)
+  
   @Put('update')
   pcUserUpdate(
     @Query('userId') userId: string,

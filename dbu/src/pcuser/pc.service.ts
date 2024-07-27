@@ -21,7 +21,10 @@ export class NewPcService {
     const user = await this.prisma.pcuser.findUnique({
       where: { userId: dto.userId },
     });
-    if (user) {
+    const pcSerial = await this.prisma.pcuser.findUnique({
+      where: { serialnumber: dto.serialnumber },
+    });
+    if (user  || pcSerial) {
       throw new ForbiddenException(`User already found`);
     } else {
       const barcodeBuffer = await bwipjs.toBuffer({
@@ -86,17 +89,33 @@ const relativeBarcodePath = `${dto.userId.replace(/\//g, '_')}.png`;
     return newPc;
   }
   async pcUserUpdate(userId: string, dto: NewPcDto) {
-    const user = await this.prisma.pcuser.update({
+    const existuser= await this.prisma.pcuser.findUnique({
+      where:{
+        userId: userId,
+      },
+    });
+    if(!existuser){
+      throw new NotFoundException("user not found");
+    }
+    if(dto.serialnumber && dto.serialnumber!== existuser.serialnumber){
+      const pcSerial= await this.prisma.pcuser.findUnique({
+        where:{
+          serialnumber: dto.serialnumber,
+        },
+      });
+      if(pcSerial){
+        throw new NotAcceptableException("user already found");
+      }
+    }
+    const update= await this.prisma.pcuser.update({
       where: {
         userId: userId,
       },
       data: {
         ...dto,
+        serialnumber: dto.serialnumber ?? existuser.serialnumber,
       },
     });
-    if (!user) {
-      throw new ForbiddenException('user not updated');
-    }
     return { msg: 'user updated successfully' };
   }
 

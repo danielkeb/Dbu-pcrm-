@@ -6,6 +6,7 @@ import { fetchUser } from "./service"; // Ensure this imports the correct servic
 interface UserDetails {
   image: string;
   firstname: string;
+  lastname: string;
   description: string;
   gender: string;
   serialnumber: string;
@@ -34,7 +35,7 @@ const Page = () => {
       setUserDetails(user);
       setError(null); // Reset error state on success
     } catch (err) {
-      setError("Unable to fetch user data. Please try again.");
+      setError("User Not found.");
       setUserDetails(null); // Clear user details on error
     } finally {
       setLoading(false); // Stop loading spinner
@@ -42,9 +43,9 @@ const Page = () => {
   };
 
   return (
-    <main className="flex items-center justify-center h-screen">
+    <main className="mb-4 items-center">
       <div className="text-center">
-        <div className="mb-4">
+        <div className="mb-4 bg-slate-600">
           <input
             type="text"
             placeholder="Search by User Id"
@@ -65,17 +66,26 @@ const Page = () => {
         {error && <div className="text-red-500">{error}</div>}
 
         {userDetails && (
-          <div className="bg-white shadow-md rounded-lg p-6 max-w-md mx-auto">
-            <img src={`http://localhost:3333/pcuser/${userDetails.image}`} alt={userDetails.firstname} className="w-32 h-32" />
-            <div className="text-lg font-semibold">{userDetails.description}</div>
-            <div className="text-gray-600">{userDetails.gender}</div>
-            <div className="text-gray-600">
-              Serial Number: {userDetails.serialnumber}
-            </div>
-            <div className="text-gray-600">
-              Brand Name: {userDetails.brand}
-            </div>
-          </div>
+         <div className="w-auto rounded-lg p-6 bg-green-100 flex items-center justify-start h-auto">
+         <div className="flex-shrink-0">
+           <img
+             src={`http://localhost:3333/pcuser/${userDetails.image}`}
+             alt={userDetails.firstname}
+             className="w-52 h-52 border border-gray-300"
+           />
+         </div>
+         <div className="ml-10 flex flex-col space-y-2">
+           <div className="text-gray-900 font-bold text-lg">
+             Name: {userDetails.firstname} {userDetails.lastname}
+           </div>
+           <div className="text-gray-900">Description: {userDetails.description}</div>
+           <div className="text-gray-900">Sex: {userDetails.gender}</div>
+           <div className="text-gray-900">Serial Number: {userDetails.serialnumber}</div>
+           <div className="text-gray-900">Brand Name: {userDetails.brand}</div>
+           {/* <div className="text-gray-100">Status: {userDetails.status}</div> */}
+         </div>
+       </div>
+       
         )}
       </div>
     </main>

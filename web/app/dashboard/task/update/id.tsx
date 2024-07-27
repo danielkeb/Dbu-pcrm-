@@ -6,6 +6,8 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const UserUpdatePage = () => {
   const router = useRouter();
+  const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const searchParams = useSearchParams();
   const [userUpt, setUserUpt] = useState<string>(""); // State for user id
   const [user, setUser] = useState<User>({
@@ -61,7 +63,14 @@ const UserUpdatePage = () => {
     e.preventDefault();
     if (userUpt) {
       await updateUser(userUpt, user); // Assuming updateUser function exists and updates the user
-      router.push("/dashboard"); // Redirect to dashboard after update
+      setIsSuccess(true);
+      setTimeout(() => setIsSuccess(false), 3000);
+      setMessage("user updated successfully");
+      // router.push("/dashboard/task"); // Redirect to dashboard after update
+    }else{
+      setIsSuccess(true);
+        setTimeout(() => setIsSuccess(false), 3000);
+      setMessage("update fail please try again");
     }
   };
 
@@ -257,6 +266,11 @@ const UserUpdatePage = () => {
         </div>
 
       </form>
+      {message && (
+          <div className={`mt-4 text-sm ${isSuccess ? 'text-green-500' : 'text-red-500'}`}>
+            {message}
+          </div>
+        )}
     </div>
   );
 };
