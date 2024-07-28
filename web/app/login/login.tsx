@@ -3,7 +3,7 @@
 import { AppContext } from '@/components/UserContext';
 import { useRouter } from 'next/navigation';
 import React, { useState, FormEvent, useContext } from 'react';
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import Config from '@/config';
 
 const Login = () => {
@@ -35,7 +35,8 @@ const Login = () => {
       const new_token = data.access_token;
       localStorage.setItem('authToken', new_token);
 
-      const dec = jwt.decode(new_token);
+      const dec = jwt.decode(new_token) as JwtPayload | null; // Cast to JwtPayload or null
+
       setDecodedToken(dec);
 
       if (typeof dec !== "string" && dec?.status !== "active") {
@@ -73,7 +74,7 @@ const Login = () => {
     }
   };
 
-  const containerStyle = {
+  const containerStyle: React.CSSProperties = {
     position: 'relative',
     minHeight: '100vh',
     display: 'flex',
@@ -81,7 +82,7 @@ const Login = () => {
     alignItems: 'center',
   };
 
-  const backgroundStyle = {
+  const backgroundStyle: React.CSSProperties = {
     backgroundImage: 'url("/office-computer-laptop-light-modified.png")',
     backgroundSize: 'cover',
     backgroundPosition: 'center',

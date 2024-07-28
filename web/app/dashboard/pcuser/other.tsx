@@ -424,7 +424,7 @@ const RegisterPage = () => {
           <div {...getRootProps({ className: "dropzone" })}>
             <input {...getInputProps()} />
             <p className="text-blueGray-500 text-center cursor-pointer">
-              Drag 'n' drop a picture here, or click to select one
+              Drag and drop a picture here, or click to select one
             </p>
           </div>
           {selectedFileName && (

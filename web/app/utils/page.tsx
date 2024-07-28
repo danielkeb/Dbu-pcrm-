@@ -1,31 +1,17 @@
-import { useAuth } from '@/components/authcontext';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react'; // Adjust the import path as per your project structure
+"use client";
 
-type AllowedRoles = 'admin' | 'security';
+import React from 'react'; // Adjust the import path according to your file structure
+//import { AllowedRoles } from '@/types'; // Import the type from your types file
+import withAuth from '../dashboard/hoc/withAuth';
 
-export const withAuth = <P extends object>(
-  Component: React.ComponentType<P>,
-  allowedRoles: AllowedRoles[]
-) => {
-  const WithAuth: React.FC<P> = (props) => {
-    const { user, isAuthenticated } = useAuth();
-    const router = useRouter();
-
-    useEffect(() => {
-      if (!isAuthenticated) {
-        router.replace('/login');
-      } else if (!allowedRoles.includes(user?.role as AllowedRoles)) {
-        router.replace('/unauthorized');
-      }
-    }, [isAuthenticated, user]);
-
-    if (!isAuthenticated || !allowedRoles.includes(user?.role as AllowedRoles)) {
-      return <div>Loading...</div>; // Or show a loading spinner or unauthorized component
-    }
-
-    return <Component {...props as P} />;
-  };
-
-  return WithAuth;
+// Create the page component
+const UtilsPage: React.FC = () => {
+  return <div>Welcome to the Utils Page!</div>;
 };
+export type AllowedRoles = 'admin' | 'security';
+
+// Define the roles that are allowed to access this page
+const allowedRoles: AllowedRoles[] = ['admin', 'security']; // Ensure the type is correct
+
+// Export the page component wrapped with the withAuth HOC
+export default withAuth(UtilsPage, allowedRoles);

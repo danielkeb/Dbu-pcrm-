@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useState, ChangeEvent } from "react";
 import { fetchRecentActions, Action } from "./service";
 
@@ -120,7 +121,7 @@ const RecentActionsPage = () => {
         </tbody>
       </table>
 
-      <div className="flex items-end">
+  <div className="flex items-end">
   <button
     onClick={handlePrevious}
     className={`px-4 py-2 mr-2 rounded ${

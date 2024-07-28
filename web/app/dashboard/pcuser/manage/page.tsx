@@ -4,6 +4,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { User, fetchUsersByYear, trashUsersByYear, restoreUsersByYear, trashUsersByUserId, fetchUsers } from './service';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import Image from 'next/image';
 
 const UserManagePage = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -19,7 +20,6 @@ const UserManagePage = () => {
       fetchUserss(); // Fetch users initially when endYear changes
     }
   }, [endYear]);
-  
   useEffect(() => {
     const fetchUsersWithSearch = async () => {
       const response = await fetchUsers();
@@ -187,7 +187,7 @@ const UserManagePage = () => {
               <td className="p-4 border">Serial {user.serialnumber}</td>
               <td className="p-4 border">{user.gender}</td>
               <td className="p-4 border">
-                <img src={`http://localhost:3333/pcuser/${user.image}`} alt={user.firstname} className="w-24 h-24" />
+                <img src={`http://localhost:3333/pcuser/${user.image}`} alt={user.firstname} width ={200} height={200} className="w-24 h-24" />
               </td>
               {/* <td className="p-4 border">
                 <Barcode filename={user.barcode} />
