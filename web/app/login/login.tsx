@@ -152,7 +152,7 @@ const Login = () => {
                 <div className="text-sm text-right">
                   <button
                     type="button"
-                    className="font-medium text-blue-500 hover:text-blue-600"
+                    className="font-medium text-blue-700 hover:text-blue-600"
                     onClick={() => setForgotPassword(true)}
                   >
                     Forgot your password?
@@ -205,7 +205,7 @@ const Login = () => {
               <div className="text-sm text-right">
                 <button
                   type="button"
-                  className="font-medium text-blue-400 hover:text-blue-500"
+                  className="font-medium text-blue-700 hover:text-blue-500"
                   onClick={() => setForgotPassword(false)}
                 >
                   Back to login

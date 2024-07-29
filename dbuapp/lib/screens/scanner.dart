@@ -394,16 +394,21 @@ bool isTorchOn = false;
         _scanError = 'Failed to load user data: ${response.statusCode}';
       });
     }
+  } on http.ClientException catch (_) {
+    setState(() {
+      _scanError = 'Unable to fetch user';
+    });
   } catch (e) {
     setState(() {
       _scanError = 'Error: ${e.toString()}';
     });
   }
 }
-  Future<void> _searchUserInfo(String searchQuery) async {
-    if (searchQuery.isEmpty) return;
 
-    try {
+Future<void> _searchUserInfo(String searchQuery) async {
+  if (searchQuery.isEmpty) return;
+
+  try {
     final response = await http.get(
       Uri.parse('https://3736-196-190-91-32.ngrok-free.app/pcuser/scanner?userId=$searchQuery'),
       headers: {
@@ -429,10 +434,14 @@ bool isTorchOn = false;
         _scanError = 'Failed to load user data: ${response.statusCode}';
       });
     }
+  } on http.ClientException catch (_) {
+    setState(() {
+      _scanError = 'Unable to fetch user';
+    });
   } catch (e) {
     setState(() {
       _scanError = 'Error: ${e.toString()}';
     });
   }
-  }
+}
 }

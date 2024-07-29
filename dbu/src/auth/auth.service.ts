@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthDto, ResetDto, UpdateDto, UpdateDtoProfile } from './dto';
+import { AuthDto, PasswordDto, ResetDto, UpdateDto, UpdateDtoProfile } from './dto';
 import * as argon from 'argon2';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -197,6 +197,31 @@ async signUp(dto: AuthDto) {
     return { msg: 'Operation succeeded' };
   }
   
+  async passwordUpt(id: string, dto: PasswordDto){
+    const user= await this.prisma.users.findUnique({
+      where:{
+        id: id,
+      },
+    });
+
+if(!user){
+  throw new NotFoundException("user not found");
+}
+    const pwMatches = await argon.verify(user.password, dto.currentPassword);
+    if (!pwMatches) {
+      throw new ForbiddenException('Incorrect password');
+    }
+ const hash= await argon.hash(dto.newPassword);
+    const upt= await this.prisma.users.update({
+      where:{
+        id: id,
+      },
+      data: {
+        password: hash,
+      },
+    });
+return upt;
+  }
   
   async profileUpdate(id: string, dto: UpdateDtoProfile) {
     if (!dto) {

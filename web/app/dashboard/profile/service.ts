@@ -1,3 +1,5 @@
+import axios from "axios";
+
 // Custom Error Classes
 class NotFoundError extends Error {
   constructor(message: string) {
@@ -181,4 +183,20 @@ export const updateUser = async (id: string, user: User): Promise<User> => {
   }
 };
 
+export const changeUserPassword = async (
+  id: string,
+  currentPassword: string,
+  newPassword: string
+) => {
+  try {
+    const response = await axios.patch(`http://localhost:3333/auth/users/changepassword?id=${id}`, {
+      currentPassword,
+      newPassword,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to change password:", error);
+    throw error;
+  }
+};
 

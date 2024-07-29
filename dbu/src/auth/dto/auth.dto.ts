@@ -102,3 +102,11 @@ export class UpdateDtoProfile {
   @IsString()
   status?: string;
 }
+
+export class PasswordDto{
+  @IsString()
+  newPassword: string;
+
+  @IsString()
+  currentPassword: string;
+}

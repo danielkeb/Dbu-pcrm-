@@ -14,7 +14,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthDto, ResetDto, UpdateDto, UpdateDtoProfile } from './dto';
+import { AuthDto, PasswordDto, ResetDto, UpdateDto, UpdateDtoProfile } from './dto';
 import { AuthGuard } from './guard/auth.guard';
 import { Roles } from './decorator/roles.decorator';
 import { Role } from './decorator/enums/role.enum';
@@ -82,6 +82,11 @@ resetPassword(@Param('id', ParseIntPipe) id: string, dto: ResetDto){
     return this.authService.searchUser(id);
   }
   
+  @Patch('users/changepassword')
+  passwordUpt(@Query('id') id: string, @Body() dto: PasswordDto){
+    return this.authService.passwordUpt(id, dto);
+
+  }
 
   @Delete('user')
   deleteUser(@Query('id') id: string) {
