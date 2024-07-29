@@ -116,7 +116,7 @@ const Page = () => {
                 alt={userDetails.firstname}
                 width={1000}
                 height={900}
-                className="w-96 h-96 border border-gray-300 rounded-full"
+                className="w-96 h-96 border border-gray-300"
               />
             </div>
             <div className="ml-4 flex flex-col space-y-2">
@@ -127,9 +127,10 @@ const Page = () => {
                 Name: {userDetails.firstname} {userDetails.lastname}
               </div>
               <div className="text-gray-900">
-                Description: {userDetails.description} owner:{" "}
-                {userDetails.pcowner}
-              </div>
+              Description: {userDetails.description} owner:{" "}
+              {userDetails.description === "Staff" ? userDetails.pcowner : "Self/Personal"}
+            </div>
+
               <div className="text-gray-900">Sex: {userDetails.gender}</div>
               <div className="text-gray-900">
                 Serial Number: {userDetails.serialnumber}

@@ -25,6 +25,7 @@ function Manage() {
   const [selectedItem, setSelectedItem] = useState<SecurityData | null>(null);
   const [successMessage, setSuccessMessage]= useState(false);
   const [errorMessage, setErrorMessage]= useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   useEffect(() => {
     axios
@@ -42,18 +43,51 @@ function Manage() {
     setIsOpen(true);
   };
 
+  const deleteItem = async (item: SecurityData) => {
+    // Ask for confirmation before proceeding
+    const isConfirmed = window.confirm(
+      `Are you sure you want to delete ${item.name} ${item.last_name}?`
+    );
+
+    if (!isConfirmed) {
+      return; // Exit if user cancels the action
+    }
+
+    try {
+      await axios.delete(`http://localhost:3333/auth/user/delete?id=${item.id}`);
+      
+      // Re-fetch the updated data
+      const reFetch = await axios.get("http://localhost:3333/auth/getAllSecurity");
+      setData(reFetch.data);
+      
+      // Show success message
+      setSuccessMessage(true);
+      setTimeout(() => setSuccessMessage(false), 2000); // Message will disappear after 2 seconds
+    } catch (error) {
+      console.error("Error deleting item:", error);
+
+      // Show error message
+      setErrorMessage(true);
+      setTimeout(() => setErrorMessage(false), 2000); // Message will disappear after 2 seconds
+    }
+  };
+
   const handleSubmit = async (values: SecurityData) => {
-    try{
-   const res=await axios.patch(`http://localhost:3333/auth/update?id=${values.id}`, values)
-   const reFetch= await axios.get("http://localhost:3333/auth/getAllSecurity")
-   setData(reFetch.data);
-   setSuccessMessage(true);
-        setTimeout(() => setSuccessMessage(false), 1000);
-    }catch(error){
+    try {
+      const res = await axios.patch(
+        `http://localhost:3333/auth/update?id=${values.id}`,
+        values
+      );
+      const reFetch = await axios.get(
+        "http://localhost:3333/auth/getAllSecurity"
+      );
+      setData(reFetch.data);
+      setSuccessMessage(true);
+      setTimeout(() => setSuccessMessage(false), 1000);
+    } catch (error) {
       setErrorMessage(true);
       setTimeout(() => setErrorMessage(false), 1000);
     }
-    //update
     // Handle the update logic here, for example, send the data to the server
     console.log("Updated values:", values);
     // Close the dialog
@@ -151,14 +185,20 @@ function Manage() {
               Update
             </button>
           </td>
+          <td className="border-t-0 px-2 py-2 md:px-6 align-middle border-l-0 border-r-0 text-xs md:text-sm text-left whitespace-nowrap text-blueGray-700">
+            <button
+              className="bg-red-500 text-white active:bg-indigo-600 text-xs md:text-sm font-bold uppercase px-2 md:px-3 py-1 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+              type="button"
+              onClick={() => deleteItem(item)}>
+              Delete
+            </button>
+          </td>
         </tr>
       ))}
     </tbody>
   </table>
 </div>
-
-
-          </div>
+</div>
         </div>
         <div>
             {successMessage && (
@@ -209,23 +249,23 @@ function Manage() {
                         {({ isSubmitting }) => (
                           <Form>
                             <div className="mb-4">
-  <label
-    className="block text-gray-700 text-sm font-bold mb-2"
-    htmlFor="id">
-    User Id
-  </label>
-  <Field
-    name="id"
-    type="text"
-    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-    readOnly
-  />
-  <ErrorMessage
-    name="id"
-    component="div"
-    className="text-red-500 text-xs italic"
-  />
-</div>
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="id">
+                      User Id
+                    </label>
+                    <Field
+                      name="id"
+                      type="text"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      readOnly
+                    />
+                    <ErrorMessage
+                      name="id"
+                      component="div"
+                      className="text-red-500 text-xs italic"
+                    />
+                  </div>
 
                             <div className="mb-4">
                               <label

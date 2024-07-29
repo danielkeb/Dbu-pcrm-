@@ -182,7 +182,7 @@ const UserManagePage = () => {
             <tr key={user.userId} className="bg-gray-50">
               <td className="p-4 border">{user.firstname} {user.lastname}</td>
               <td className="p-4 border">{user.userId}</td>
-              <td className="p-4 border">{user.description}</td>
+              <td className="p-4 border">{user.description} owner: {} {user.description === "Staff" ? user.pcowner : "Self/Personal"}</td>
               <td className="p-4 border">{user.brand}</td>
               <td className="p-4 border">Serial {user.serialnumber}</td>
               <td className="p-4 border">{user.gender}</td>

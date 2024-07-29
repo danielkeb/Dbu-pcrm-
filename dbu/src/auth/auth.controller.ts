@@ -88,7 +88,7 @@ resetPassword(@Param('id', ParseIntPipe) id: string, dto: ResetDto){
 
   }
 
-  @Delete('user')
+  @Delete('user/delete')
   deleteUser(@Query('id') id: string) {
     return this.authService.deleteUser(id);
   }
@@ -103,6 +103,5 @@ resetPassword(@Param('id', ParseIntPipe) id: string, dto: ResetDto){
   async forgetPasswordShortCode(@Body() dto: any) {
     return this.authService.forgetPasswordShortCode(dto);
   }
-
   
 }

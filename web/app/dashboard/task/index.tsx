@@ -101,7 +101,7 @@ const UserListPage = () => {
                   {user.firstname} {user.lastname}
                 </td>
                 <td className="p-4 border">{user.userId}</td>
-                <td className="p-4 border">{user.description}</td>
+                <td className="p-4 border">{user.description} owner:{} {user.description === "Staff" ? user.pcowner : "Self/Personal"}</td>
                 <td className="p-4 border">{user.brand}</td>
                 <td className="p-4 border">{user.serialnumber}</td>
                 <td className="p-4 border">{user.phonenumber}</td>

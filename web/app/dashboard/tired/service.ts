@@ -100,6 +100,7 @@ export interface User {
   image: string;
   brand: string;
   endYear: string;
+  pcowner: string;
   serialnumber: string;
   gender: string;
   barcode: string;
