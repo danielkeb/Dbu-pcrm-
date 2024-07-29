@@ -67,7 +67,6 @@ const UserProfilePage = () => {
     e.preventDefault();
     if (id !== "") {
       try {
-        console.log("User data before sending:", user); // Check the user object
         await updateUser(id, user);
         setSuccessMessage(true);
         setTimeout(() => setSuccessMessage(false), 1000);
@@ -108,7 +107,7 @@ const UserProfilePage = () => {
       setTimeout(() => setPasswordChangeSuccess(false), 3000);
     } catch (error) {
       setPasswordChangeError(true);
-      setError("Password change failed.");
+      // setError("Password change failed.");
       setTimeout(() => setPasswordChangeError(false), 3000);
     }
   };
